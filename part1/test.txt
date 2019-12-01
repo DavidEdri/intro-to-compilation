@@ -1,6 +1,4 @@
 function void goo(){
 
 }
-function void goo2(){
-
-}
+end

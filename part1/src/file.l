@@ -28,6 +28,5 @@
 [1-9][0-9]*|0 return INTEGER;
 \n {yylineno++;}
 [ \t] ;
-. return yytext[0]; ;
 
 %%

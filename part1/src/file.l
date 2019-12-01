@@ -2,7 +2,7 @@
     #include <string.h> 
     #define YYSTYPE struct node *
     #include "y.tab.h"
-    int counter=1;
+    int yylineno;
 %}
 
 %%
@@ -26,7 +26,7 @@
 ")" return RIGHTPAREN;
 [a-zA-Z][a-zA-Z0-9_]* return ID;
 [1-9][0-9]*|0 return INTEGER;
-\n {counter++;}
+\n {yylineno++;}
 [ \t] ;
 . return yytext[0]; ;
 

@@ -21,7 +21,12 @@ code:
     |%empty {$$ = mknode("CODE", NULL, NULL);};
 
 function_decleration:
-    FUNCTION type ID LEFTPAREN params_decleration RIGHTPAREN code_block;
+    FUNCTION type id LEFTPAREN params_decleration RIGHTPAREN code_block {
+        $$ = mknode("FUNCTION", $3,NULL);
+        };
+
+id:
+    ID {$$ = mknode(yytext, NULL, NULL);};
 
 type:
     VOID
@@ -46,7 +51,7 @@ int main(){
 }
 
 int yyerror(char* s){
-    printf ("%s: found line:%d token [%s]\n",  s,counter, yytext);
+    printf ("%s: found line:%d token [%s]\n", s, yylineno, yytext);
     return 0;
 }
 

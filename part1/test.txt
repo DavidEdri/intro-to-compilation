@@ -1,3 +1,6 @@
 function void goo(){
 
 }
+function void goo2(){
+
+}

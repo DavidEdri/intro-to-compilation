@@ -12,37 +12,36 @@
 
 %%
 
-s: code {
-        printf("ok\n");
-        printtree($1, 0);
-    };
-code:
-    function_decleration {$$ = mknode("CODE", $1, NULL);}
-    |%empty {$$ = mknode("CODE", NULL, NULL);};
+s
+: code {printf("ok\n"); printtree($1, 0);};
 
-function_decleration:
-    FUNCTION type id LEFTPAREN params_decleration RIGHTPAREN code_block {
+code
+    : function_decleration {$$ = mknode("CODE", $1, NULL);}
+    | %empty {$$ = mknode("CODE", NULL, NULL);};
+
+function_decleration
+    : FUNCTION type id LEFTPAREN params_decleration RIGHTPAREN code_block {
         $$ = mknode("FUNCTION", $3,NULL);
         };
 
-id:
-    ID {$$ = mknode(yytext, NULL, NULL);};
+id
+    : ID {$$ = mknode(yytext, NULL, NULL);};
 
-type:
-    VOID
-    |INT    
-    |REAL;
+type
+    : VOID
+    | INT    
+    | REAL;
 
-code_block:
-    LEFTBRACE RIGHTBRACE;
+code_block
+    : LEFTBRACE RIGHTBRACE;
 
-params_decleration:
-    type params SEMICOLON
-    |%empty;
+params_decleration
+    : type params SEMICOLON
+    | %empty;
 
-params:
-    ID COMMA params
-    |ID;
+params
+    : ID COMMA params
+    | ID;
 
 %%
 

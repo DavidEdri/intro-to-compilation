@@ -16,7 +16,6 @@
 "int*" return INTPTR;
 "char*" return CHARPTR;
 "double*" return DOUBLEPTR;
-"return" return RETURN;
 "string" return STRDECLARE;
 "real" return REAL;
 "char" return CHAR;
@@ -56,15 +55,9 @@
 ":" return COLON;
 [a-zA-Z][a-zA-Z0-9_]* return ID;
 [-?][1-9][0-9]*|0 return INTEGER;
-\n {yylineno++;}
 0(x|X)0[0-9A-F] return HEX;
 "\""[a-zA-z0-9][A-z]"\"" return STR; 
-<comment>[^\n] ;
-<comment>\n     ;/*counter++;*/
-<comment>"*/" BEGIN 0;
-[ \t\n] ;
-
-
-
-
+[ \t\r] ;
+\n {yylineno++;}
+.  yyerror("Error in Syntax!");
 %%

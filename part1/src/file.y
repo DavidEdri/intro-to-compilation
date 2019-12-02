@@ -14,20 +14,33 @@
 %%
 
 s
-: code {printf("ok\n"); printtree($1, 0);}
+: global {printf("ok\n"); printtree($1, 0);}
 ;
 
-code
-    : function_decleration {$$ = mknode("CODE", $1, NULL);}
-    | %empty {$$ = mknode("CODE", NULL, NULL);}
+global
+    : actions {$$ = mknode("CODE", $1, NULL);}
+    ;
+
+actions
+    : actions action {$$ = mknode("", $1, $2);}
+    | action {$$ = mknode("", $1, NULL);}
+    ;
+
+action
+    : function_decleration {$$ = mknode("FUNCTION", $1, NULL);}
+    | expression {$$ = mknode("EXP", $1, NULL);}
     ;
 
 function_decleration
-    : FUNCTION type id LEFTPAREN params_decleration RIGHTPAREN code_block {
+    : FUNCTION type id LEFTPAREN func_args RIGHTPAREN code_block
+        {
         $$ = mknode("FUNCTION", $3,NULL);
         }
     ;
-
+expression
+    : expression PLUS expression {$$ = mknode("+", $1, $2);}
+    | INTEGER {$$ = mknode("yytext", NULL, NULL);}
+    ;
 id
     : ID {$$ = mknode(yytext, NULL, NULL);}
     ;
@@ -36,15 +49,21 @@ type
     : VOID
     | INT    
     | REAL
+    | CHAR
     ;
 
 code_block
     : LEFTBRACE RIGHTBRACE
     ;
 
-params_decleration
-    : type params SEMICOLON
+func_args
+    : params_decleration SEMICOLON
+    | func_args params_decleration
     | %empty
+    ;
+
+params_decleration
+    : type params 
     ;
 
 params

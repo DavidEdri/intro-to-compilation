@@ -1,4 +1,10 @@
-function void goo(){
+function void foo(int x, y, z; real f){
+    3+5
+}
+function void foo(int x, y, z; real f){
 
 }
-end
+
+function char goo(){
+    
+};

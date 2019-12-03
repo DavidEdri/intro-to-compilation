@@ -1,10 +1,7 @@
 function void foo(int x, y, z; real f){
 
 }
-function void foo(int x, y, z; real f){
-
-}
 
 function char goo(){
-    return
+
 };

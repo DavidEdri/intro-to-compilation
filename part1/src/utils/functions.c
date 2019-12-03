@@ -1,34 +1,70 @@
 #include "functions.h"
+#define NUM_OF_STRINGS 2
 
-void printtree (node *tree, int tab){
-    int i; 
-    char* token = tree->token;
-    for (i = 0; i< tab; i++){
-        printf ("\t");
-    }
-    printf ("(%s\n", token);
+int should_print(char *str){
+    char ignore_list[NUM_OF_STRINGS][10] = {
+        "",
+        "GLOBAL"
+    };
 
-    if (tree -> left){
-        printtree (tree-> left, tab + 1);
-    }
-          
-    if (tree -> right){
-        printtree (tree-> right, tab + 1); 
+    for(int i = 0; i < NUM_OF_STRINGS; i++){
+        if(strcmp(str, ignore_list[i]) == 0){
+            return 0;
+        }
     }
 
-    for (i = 0; i< tab; i++){
-        printf ("\t");
-    }
-
-    printf(")\n");
+    return 1;
 }
 
-node *mknode (char *token, node *left, node *right){
+void printtree (node *tree, int tab, int one_line){
+    int i; 
+    char* token = tree->token;
+    int print_value = should_print(token);
+
+    if(print_value){
+        for (i = 0; i< tab; i++){
+            printf ("\t");
+        }
+
+        if(one_line){
+            printf("(");
+        }
+        printf ("%s\n", token);
+    }
+
+    if (tree -> first){
+        printtree (tree-> first, tab + print_value, strcmp(token, "FUNCTION"));
+    }
+
+    if (tree -> second){
+        printtree (tree-> second, tab + print_value, 1);
+    }
+
+    if (tree -> third){
+        printtree (tree-> third, tab + print_value, 1);
+    }
+          
+    if (tree -> fourth){
+        printtree (tree-> fourth, tab + print_value, 1); 
+    }
+
+    if(print_value && one_line){
+        for (i = 0; i< tab; i++){
+            printf ("\t");
+        }
+
+        printf(")\n");
+    }
+}
+
+node *mknode (char *token, node *first, node *second, node *third, node *fourth){
     node *newnode = (node*)malloc (sizeof(node));
     char    *newstr = (char*)malloc (sizeof(token)+1);
     strcpy (newstr, token);
-    newnode -> left = left;
-    newnode -> right = right;
+    newnode -> first = first;
+    newnode -> second = second;
+    newnode -> third = third;
+    newnode -> fourth = fourth;
     newnode -> token = newstr;
     return newnode;
 }

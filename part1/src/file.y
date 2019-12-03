@@ -15,62 +15,82 @@
 %%
 
 s
-: global {printf("ok\n"); printtree($1, 0);}
+: code_wrapper { printf("ok\n"); printtree($1, 0, 1); }
 ;
 
+code_wrapper
+    : global main   { $$ = mknode("CODE", $1, $2, NULL, NULL); }
+    | main          { $$ = mknode("CODE", $1, NULL, NULL, NULL); }
+    | global        { $$ = mknode("CODE", $1, NULL, NULL, NULL); }
+    ;
+
 global
-    : actions {$$ = mknode("CODE", $1, NULL);}
+    :statements { $$ = mknode("GLOBAL", $1, NULL, NULL, NULL); }
     ;
 
-actions
-    : actions action {$$ = mknode("", $1, $2);}
-    | action {$$ = mknode("", $1, NULL);}
+main
+    : VOID MAIN RIGHTPAREN LEFTPAREN LEFTBRACKET RIGHTBRACKET 
+        { $$ = mknode("MAIN", NULL, NULL, NULL, NULL); }
     ;
 
-action
-    : function_decleration {$$ = mknode("FUNCTION", $1, NULL);}
-    | expression {$$ = mknode("EXP", $1, NULL);}
+statements
+    : statements statement  { $$ = mknode("", $1, $2, NULL, NULL); }
+    | statement             { $$ = mknode("", $1, NULL, NULL, NULL); }
+    ;
+
+statement
+    : function_decleration
+    | if_else
+    ;
+
+expression
+    : expression PLUS expression
+    | expression MULTI expression
+    | id
+    | number
     ;
 
 function_decleration
-    : FUNCTION type id LEFTPAREN func_args RIGHTPAREN code_block
-        {
-        $$ = mknode("FUNCTION", $3,NULL);
-        }
+    : FUNCTION type id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block_wrapper
+        { $$ = mknode("FUNCTION", $3, $5, $2, $7); }
     ;
-expression
-    : expression PLUS expression {$$ = mknode("+", $1, $2);}
-    | INTEGER {$$ = mknode("yytext", NULL, NULL);}
+
+function_args_decleration_wrapper
+    : function_args_decleration SEMICOLON function_args_decleration 
+        {$$ = mknode("ARGS", $1, $3, NULL, NULL);}
+    | function_args_decleration {$$ = mknode("ARGS", $1, NULL, NULL, NULL);}
     ;
+
+function_args_decleration
+    : INT id function_args_decleration      { $$ = mknode("INT", $2, $3, NULL, NULL); }
+    | REAL id function_args_decleration     { $$ = mknode("REAL", $2, $3, NULL, NULL); }
+    | COMMA id function_args_decleration    { $$ = mknode("", $2, $3, NULL, NULL); }
+    | %empty                                { $$ = NULL; }
+    ;
+
+
+if_else
+    : IF ELSE
+    ;
+
 id
-    : ID {$$ = mknode(yytext, NULL, NULL);}
+    : ID { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    ;
+
+number
+    : INTEGER { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     ;
 
 type
-    : VOID
-    | INT    
-    | REAL
-    | CHAR
+    : VOID  { $$ = mknode("VOID", NULL, NULL, NULL, NULL); }
+    | INT   { $$ = mknode("INT", NULL, NULL, NULL, NULL); }
+    | REAL  { $$ = mknode("REAL", NULL, NULL, NULL, NULL); }
+    | CHAR  { $$ = mknode("CHAR", NULL, NULL, NULL, NULL); }
     ;
 
-code_block
-    : LEFTBRACE RETURN RIGHTBRACE
-    |LEFTBRACE RIGHTBRACE
-    ;
-
-func_args
-    : params_decleration SEMICOLON
-    | func_args params_decleration
-    | %empty
-    ;
-
-params_decleration
-    : type params 
-    ;
-
-params
-    : ID COMMA params
-    | ID
+code_block_wrapper
+    : LEFTBRACE RIGHTBRACE { $$ = NULL; }
+    | LEFTBRACE statements RIGHTBRACE { $$ = mknode("", NULL, NULL, NULL, NULL); }
     ;
 
 %%

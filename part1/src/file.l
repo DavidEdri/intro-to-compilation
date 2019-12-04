@@ -29,6 +29,7 @@
 "," return COMMA;
 "if" return IF;
 "else" return ELSE;
+"var" return VAR;
 "{" return LEFTBRACE;
 "}" return RIGHTBRACE;
 "(" return LEFTPAREN;

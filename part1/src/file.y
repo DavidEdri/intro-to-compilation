@@ -6,11 +6,10 @@
 #include "utils/functions.c"
 %}
 
-%token FUNCTION VOID INT REAL SEMICOLON IF ELSE ASSIGNMENT GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR
+%token FUNCTION VOID INT REAL FOR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR MINUSMINUS
 
-%left PLUS MINUS
+%left PLUS MINUS SEMICOLON
 %left MULTI DIVISION
-%left ASSIGNMENT
 
 %%
 
@@ -40,17 +39,32 @@ statements
 
 statement
     : function_decleration      { $$ = $1; }
+    | if                        { $$ = $1; }
+    | for                       { $$ = $1; }
     | if_else                   { $$ = $1; }
     | expression  SEMICOLON     { $$ = $1; }
     | return      SEMICOLON     { $$ = $1; }
     | declare_var SEMICOLON     { $$ = $1; }
     | assignment  SEMICOLON     { $$ = $1; }
+    | while                     { $$ = $1; }
     ;
 
 expression
     : expression GREATER expression { $$ = mknode(">", $1, $3, NULL, NULL); }
     | expression PLUS expression    { $$ = mknode("+", $1, $3, NULL, NULL); }
     | expression MULTI expression   { $$ = mknode("*", $1, $3, NULL, NULL); }
+    | expression DIVISION expression { $$ = mknode("/", $1, $3, NULL, NULL); }
+    | expression MINUS expression { $$ = mknode("-", $1, $3, NULL, NULL); }
+    | expression EQUAL expression { $$ = mknode("==", $1, $3, NULL, NULL); }
+    | expression GREATEREQUAL expression { $$ = mknode(">=", $1, $3, NULL, NULL); }
+    | expression LESS expression { $$ = mknode("<", $1, $3, NULL, NULL); }
+    | expression LESSEQUAL expression { $$ = mknode("<=", $1, $3, NULL, NULL); }
+    | expression NOTEQUAL expression { $$ = mknode("!=", $1, $3, NULL, NULL); }
+    | expression AND expression { $$ = mknode("&&", $1, $3, NULL, NULL); }
+    | expression OR expression { $$ = mknode("||", $1, $3, NULL, NULL); }
+    | expression MINUSMINUS { $$ = mknode("--", $1, NULL, NULL, NULL); }
+    | NOT expression { $$ = mknode("NOT", NULL, NULL, NULL, NULL); }
+    | ADDRESS id { $$ = mknode("&", $2, NULL, NULL, NULL); }
     | id                            { $$ = $1; }
     | number                        { $$ = $1; }
     ;
@@ -81,6 +95,29 @@ if_else
         }
     ;
 
+if
+    : IF LEFTPAREN expression RIGHTPAREN code_block 
+        { 
+            $$ = mknode("IF-ELSE", $3, mknode("BLOCK", $5, NULL, NULL, NULL), NULL, NULL); 
+        }
+    ;
+
+while
+    : WHILE LEFTPAREN expression RIGHTPAREN code_block 
+        { 
+            $$ = mknode("WHILE", $3, mknode("BLOCK", $5, NULL, NULL, NULL), NULL, NULL); 
+        }
+    ;
+
+for
+    : FOR LEFTPAREN expression RIGHTPAREN code_block  //mabye dosent work
+        { 
+            $$ = mknode("WHILE", $3, mknode("BLOCK", $5, NULL, NULL, NULL), NULL, NULL); 
+        }
+    ;
+
+
+
 return
     : RETURN id {$$ = mknode("RET", $2, NULL, NULL, NULL); }
     | RETURN type { $$=mknode("RET", mknode(yytext, NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
@@ -101,16 +138,23 @@ number
 decleration_type
     : VOID  { $$ = mknode("TYPE VOID", NULL, NULL, NULL, NULL); }
     | INT   { $$ = mknode("TYPE INT", NULL, NULL, NULL, NULL); }
+    | INTPTR  { $$ = mknode("TYPE INTPTR", NULL, NULL, NULL, NULL); }
     | REAL  { $$ = mknode("TYPE REAL", NULL, NULL, NULL, NULL); }
+    | REALPTR { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
     | CHAR  { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
+    | CHARPTR { $$ = mknode("TYPE CHARPTR", NULL, NULL, NULL, NULL); }
+    | BOOL  { $$ = mknode("TYPE BOOL", NULL, NULL, NULL, NULL); }
+    | STR  { $$ = mknode("TYPE STR", NULL, NULL, NULL, NULL); }
+    
     ;
 
 declare_var
     : decleration_type id  
         { $$ = mknode(yytext, $2, NULL, NULL, NULL); }                  
-    | decleration_type id COMMA decleration_type 
+    | decleration_type id COMMA declare_var
         { $$ = mknode(yytext, $2, $3, NULL, NULL); }
-    | id { $$ =$1; }
+    | id  COMMA decleration_type { $$ =mknode("",$1, $3, NULL, NULL ); }
+    | id        { $$ =$1; }
     ;
 
 assignment

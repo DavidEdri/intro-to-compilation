@@ -10,12 +10,15 @@
 "function" return FUNCTION;
 "return" return RETURN;
 "void" return VOID;
+"for" return FOR;
+"while" return WHILE;
 "boolean" return BOOL;
 "main" return MAIN;
 "int" return INT;
 "int*" return INTPTR;
 "char*" return CHARPTR;
 "double*" return DOUBLEPTR;
+"real*" return REALPTR;
 "string" return STRDECLARE;
 "real" return REAL;
 "char" return CHAR;
@@ -39,6 +42,7 @@
 "&&" return AND;
 \/ return DIVISION;
 "==" return EQUAL;
+"--" return MINUSMINUS;
 ">" return GREATER;
 ">=" return GREATEREQUAL;
 "<" return LESS;

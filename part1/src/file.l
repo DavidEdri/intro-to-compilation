@@ -57,7 +57,10 @@
 [-]?[1-9][0-9]*|0 return INTEGER;
 0(x|X)0[0-9A-F] return HEX;
 "\""[a-zA-z0-9][A-z]"\"" return STR; 
+'[a-zA-z]' return CHARACTER;
+\177 return;
 [ \t\r] ;
 \n {yylineno++;}
-.  yyerror("Error in Syntax!");
+.    { return yytext[0]; }
+
 %%

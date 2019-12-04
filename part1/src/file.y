@@ -6,12 +6,8 @@
 #include "utils/functions.c"
 %}
 
-%token FUNCTION VOID INT REAL SEMICOLON IF ELSE ASSIGNMENT GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHAR RETURN COMMA BOOL MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR
+%token FUNCTION VOID INT REAL SEMICOLON IF ELSE ASSIGNMENT GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR
   
-%left MINUS ASSIGNMENT
-%right PLUS SEMICOLON
-%start s
-
 %%
 
 s
@@ -35,26 +31,28 @@ main
 
 statements
     : statements statement  { $$ = mknode("", $1, $2, NULL, NULL); }
-    | statement             { $$ = mknode("", $1, NULL, NULL, NULL); }
+    | statement             { $$ = $1;}
     ;
 
 statement
-    : function_decleration
-    | if_else
+    : function_decleration      { $$ = $1; }
+    | if_else                   { $$ = $1; }
+    | expression                { $$ = $1; }
+    | return                    { $$ = $1; }
     ;
 
 expression
     : expression GREATER expression { $$ = mknode(">", $1, $3, NULL, NULL); }
     | expression PLUS expression { $$ = mknode("+", $1, $3, NULL, NULL); }
     | expression MULTI expression
-    | expression ASSIGNMENT expression{ $$ = mknode("=", $1, $3, NULL, NULL); }
+    | expression ASSIGNMENT expression { $$ = mknode("=", $1, $3, NULL, NULL); }
     | id
     | number
     ;
 
 function_decleration
-    : FUNCTION type id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block_wrapper
-        { $$ = mknode("FUNCTION", $3, $5, $2, $7); }
+    : FUNCTION decleration_type id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block
+        { $$ = mknode("FUNCTION", $3, $5, $2, mknode("BODY", $7, NULL, NULL, NULL)); }
     ;
 
 function_args_decleration_wrapper
@@ -72,20 +70,18 @@ function_args_decleration
 
 
 if_else
-    : IF LEFTPAREN expression RIGHTPAREN if_body { $$ = mknode("IF-ELSE", $3, $5, NULL, NULL);}
+    : IF LEFTPAREN expression RIGHTPAREN code_block ELSE code_block
+        { $$ = mknode("IF-ELSE", $3, $5, $7, NULL); }
     ;
 
-if_body
-     : block expression  block {$$ = mknode("", $1, $2, $3, NULL); }
-     | block expression  block  else {$$ = mknode("", $1, $2, $3, $4); printf("fsdgesgse\n\n\n\n"); }
+return
+    : RETURN id {$$ = mknode("RET", $2, NULL, NULL, NULL); }
+    | RETURN type { $$=mknode("RET", mknode(yytext, NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
 
-
-else
-    : ELSE LEFTBRACE expression RIGHTBRACE { $$ = mknode("", $2, $3, NULL, NULL); } 
-
-block
-    : LEFTBRACE {$$ = mknode("BLOCK", NULL, NULL, NULL, NULL); }
-    | RIGHTBRACE {$$ = mknode("BLOCK", NULL, NULL, NULL, NULL); }
+code_block
+    : LEFTBRACE RIGHTBRACE {$$ = mknode("BLOCK", NULL, NULL, NULL, NULL); }
+    | LEFTBRACE statements RIGHTBRACE {$$ = mknode("BLOCK", $2, NULL, NULL, NULL); }
+    ;
 
 id
     : ID { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
@@ -95,24 +91,21 @@ number
     : INTEGER { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     ;
 
-type
+decleration_type
     : VOID  { $$ = mknode("TYPE VOID", NULL, NULL, NULL, NULL); }
     | INT   { $$ = mknode("TYPE INT", NULL, NULL, NULL, NULL); }
     | REAL  { $$ = mknode("TYPE REAL", NULL, NULL, NULL, NULL); }
     | CHAR  { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
     ;
 
-
-
-code_block_wrapper
-    : LEFTBRACE RIGHTBRACE { $$ = mknode("BODY", NULL, NULL, NULL, NULL); }
-    | LEFTBRACE statements RIGHTBRACE { $$ = mknode("BODY", $2, NULL, NULL, NULL); }
+type
+    : CHARACTER { }
     ;
 
 %%
 
-int main(){
-   return yyparse();
+void main(){
+    yyparse();
 }
 
 int yyerror(char* s){

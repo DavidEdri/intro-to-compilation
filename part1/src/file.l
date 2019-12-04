@@ -30,6 +30,7 @@
 "if" return IF;
 "else" return ELSE;
 "var" return VAR;
+"do" return DO;
 "{" return LEFTBRACE;
 "}" return RIGHTBRACE;
 "(" return LEFTPAREN;
@@ -56,7 +57,6 @@
 "*" return MULTI;
 "&" return ADDRESS;
 "^" return DEREFERENCE;
-"|" return ABSUOLUTE;
 ":" return COLON;
 [a-zA-Z][a-zA-Z0-9_]* return ID;
 [-]?[1-9][0-9]*|0 return INTEGER;

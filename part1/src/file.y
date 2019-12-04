@@ -6,7 +6,7 @@
 #include "utils/functions.c"
 %}
 
-%token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR MINUSMINUS
+%token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL DO MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR MINUSMINUS
 
 %left PLUS MINUS SEMICOLON
 %left MULTI DIVISION
@@ -47,6 +47,7 @@ statement
     | declare_var SEMICOLON     { $$ = $1; }
     | assignment  SEMICOLON     { $$ = $1; }
     | while                     { $$ = $1; }
+    | do_while                  { $$ = $1; }
     ;
 
 expression
@@ -62,15 +63,14 @@ expression
     | expression NOTEQUAL expression { $$ = mknode("!=", $1, $3, NULL, NULL); }
     | expression AND expression { $$ = mknode("&&", $1, $3, NULL, NULL); }
     | expression OR expression { $$ = mknode("||", $1, $3, NULL, NULL); }
-    | expression MINUSMINUS { $$ = mknode("--", $1, NULL, NULL, NULL); }
-    | NOT expression { $$ = mknode("NOT", NULL, NULL, NULL, NULL); }
-    | ADDRESS id { $$ = mknode("&", $2, NULL, NULL, NULL); }
+    | NOT expression { $$ = mknode("NOT", $2, NULL, NULL, NULL); }
+    | ADDRESS id { $$ = mknode("&", $2, NULL, NULL, NULL); printf("sdfsfs\n\n"); }
     | id                            { $$ = $1; }
     | number                        { $$ = $1; }
     ;
 
 function_decleration
-    : FUNCTION decleration_type id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block
+    : FUNCTION function_types id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block
         { $$ = mknode("FUNCTION", $3, $5, $2, mknode("BODY", $7, NULL, NULL, NULL)); }
     ;
 
@@ -91,7 +91,7 @@ function_args_decleration
     | BOOL id function_args_decleration     { $$ = mknode("BOOL", $2, $3, NULL, NULL); }
     | STR id function_args_decleration     { $$ = mknode("STR", $2, $3, NULL, NULL); }
     | COMMA id function_args_decleration    { $$ = mknode("", $2, $3, NULL, NULL); }
-    | %empty                                { $$ = NULL; }
+    | %empty                                { $$ = mknode("NONE", NULL, NULL, NULL, NULL); }
     ;
 
 
@@ -116,10 +116,18 @@ while
         }
     ;
 
-for
-    : FOR LEFTPAREN expression RIGHTPAREN code_block  //mabye dosent work
+do_while
+    : DO code_block WHILE LEFTPAREN expression RIGHTPAREN SEMICOLON
         { 
-            $$ = mknode("FOR", $3, mknode("BLOCK", $5, NULL, NULL, NULL), NULL, NULL); 
+            $$ = mknode("DO-WHILE", $5, mknode("BLOCK", $2, NULL, NULL, NULL), NULL, NULL); 
+        }
+    ;
+
+
+for
+    : FOR LEFTPAREN assignment SEMICOLON expression SEMICOLON expression RIGHTPAREN code_block
+        { 
+            $$ = mknode("FOR", $3, $5, $7, mknode("BLOCK", $9, NULL, NULL, NULL)); 
         }
     ;
 
@@ -142,9 +150,20 @@ number
     : INTEGER { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     ;
 
-decleration_type
-    : VOID  { $$ = mknode("TYPE VOID", NULL, NULL, NULL, NULL); }
-    | INT   { $$ = mknode("TYPE INT", NULL, NULL, NULL, NULL); }
+var_types
+    : INT   { $$ = mknode("INT", NULL, NULL, NULL, NULL); }
+    | INTPTR  { $$ = mknode("INTPTR", NULL, NULL, NULL, NULL); }
+    | REAL  { $$ = mknode("REAL", NULL, NULL, NULL, NULL); }
+    | REALPTR { $$ = mknode("CHAR", NULL, NULL, NULL, NULL); }
+    | CHAR  { $$ = mknode("CHAR", NULL, NULL, NULL, NULL); }
+    | CHARPTR { $$ = mknode("CHARPTR", NULL, NULL, NULL, NULL); }
+    | BOOL  { $$ = mknode("BOOL", NULL, NULL, NULL, NULL); }
+    | STR  { $$ = mknode("STR", NULL, NULL, NULL, NULL); }
+    | VAR { $$ = mknode("VAR", NULL, NULL, NULL, NULL); }
+    ;
+
+function_types
+    : INT   { $$ = mknode("TYPE INT", NULL, NULL, NULL, NULL); }
     | INTPTR  { $$ = mknode("TYPE INTPTR", NULL, NULL, NULL, NULL); }
     | REAL  { $$ = mknode("TYPE REAL", NULL, NULL, NULL, NULL); }
     | REALPTR { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
@@ -152,21 +171,24 @@ decleration_type
     | CHARPTR { $$ = mknode("TYPE CHARPTR", NULL, NULL, NULL, NULL); }
     | BOOL  { $$ = mknode("TYPE BOOL", NULL, NULL, NULL, NULL); }
     | STR  { $$ = mknode("TYPE STR", NULL, NULL, NULL, NULL); }
-    | VAR { $$ = mknode("TYPE STR", NULL, NULL, NULL, NULL); }
-    
+    | VOID { $$ = mknode("TYPE VOID", NULL, NULL, NULL, NULL); }
     ;
 
 declare_var
-    : decleration_type id  
-        { $$ = mknode("", $1, $2, NULL, NULL); }                  
-    | decleration_type id COMMA declare_var
-        { $$ = mknode("", $1, $2, $3, NULL); }
-    | id  COMMA decleration_type { $$ =mknode("",$1, $3, NULL, NULL ); }
+    : var_types id  
+        { $$ = mknode($1->token, $2, NULL, NULL, NULL); }                  
+    | var_types id ASSIGNMENT expression  
+        { $$ = mknode($1->token, mknode("=", NULL, NULL, NULL, NULL), $2, $4, NULL); }                  
+    | var_types id COMMA declare_var
+        { $$ = mknode($1->token, $2, $4, NULL, NULL); }
+    | id  COMMA declare_var { $$ =mknode("",$1, $3, NULL, NULL ); }
     | id        { $$ =$1; }
+    | ASSIGNMENT expression        { $$ = mknode("=", $2, NULL, NULL, NULL); }
     ;
 
 assignment
     : id ASSIGNMENT expression { $$ = mknode("=", $1, $3, NULL, NULL); }
+    | id ASSIGNMENT CSNULL { $$ = mknode("=", $1, mknode("CSNULL", NULL, NULL, NULL, NULL), NULL, NULL); }
     ;
 
 type

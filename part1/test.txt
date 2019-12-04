@@ -10,4 +10,4 @@ z--;
 }
 function char goo(){
 return 'a';
-};
+}

@@ -1,8 +1,6 @@
 #!/bin/bash
-dir=./src
-file=./test.txt
 
-while inotifywait -qqre modify "$dir" "$file" ;
+while inotifywait -qqre modify ./src ./test.txt;
 do
     clear
     make run

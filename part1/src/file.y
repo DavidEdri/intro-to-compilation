@@ -98,7 +98,7 @@ if_else
 if
     : IF LEFTPAREN expression RIGHTPAREN code_block 
         { 
-            $$ = mknode("IF-ELSE", $3, mknode("BLOCK", $5, NULL, NULL, NULL), NULL, NULL); 
+            $$ = mknode("IF", $3, mknode("BLOCK", $5, NULL, NULL, NULL), NULL, NULL); 
         }
     ;
 
@@ -112,7 +112,7 @@ while
 for
     : FOR LEFTPAREN expression RIGHTPAREN code_block  //mabye dosent work
         { 
-            $$ = mknode("WHILE", $3, mknode("BLOCK", $5, NULL, NULL, NULL), NULL, NULL); 
+            $$ = mknode("FOR", $3, mknode("BLOCK", $5, NULL, NULL, NULL), NULL, NULL); 
         }
     ;
 
@@ -120,7 +120,7 @@ for
 
 return
     : RETURN id {$$ = mknode("RET", $2, NULL, NULL, NULL); }
-    | RETURN type { $$=mknode("RET", mknode(yytext, NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
+    | RETURN type { $$=mknode("RET", $2, NULL, NULL, NULL); }
 
 code_block
     : LEFTBRACE RIGHTBRACE {$$ = NULL; }
@@ -162,7 +162,7 @@ assignment
     ;
 
 type
-    : CHARACTER { }
+    : CHARACTER { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     ;
 
 %%
@@ -177,5 +177,5 @@ int yyerror(char* s){
 }
 
 int yywrap(){
-    return 0;
+    return 1;
 }

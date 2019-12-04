@@ -6,6 +6,7 @@
 #include "utils/functions.c"
 %}
 
+
 %token FUNCTION VOID INT REAL FOR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR MINUSMINUS
 
 %left PLUS MINUS SEMICOLON
@@ -150,9 +151,9 @@ decleration_type
 
 declare_var
     : decleration_type id  
-        { $$ = mknode(yytext, $2, NULL, NULL, NULL); }                  
+        { $$ = mknode("", $1, $2, NULL, NULL); }                  
     | decleration_type id COMMA declare_var
-        { $$ = mknode(yytext, $2, $3, NULL, NULL); }
+        { $$ = mknode("", $1, $2, $3, NULL); }
     | id  COMMA decleration_type { $$ =mknode("",$1, $3, NULL, NULL ); }
     | id        { $$ =$1; }
     ;
@@ -163,6 +164,9 @@ assignment
 
 type
     : CHARACTER { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    | INTEGER   { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    | id        { $$ = $1; }
+    | REAL      { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     ;
 
 %%
@@ -172,7 +176,7 @@ void main(){
 }
 
 int yyerror(char* s){
-    printf ("%s: found line:%d token [%s]\n", s, yylineno, yytext);
+    printf ("%s: found line:%d unexpected token \"%s\"\n", s, yylineno, yytext);
     return 0;
 }
 

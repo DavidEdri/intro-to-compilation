@@ -5,9 +5,9 @@ x = x + f;
 else {
 y = x + y + z;
 x = f * 2;
-z--;
+z = f;
 }
 }
 function char goo(){
-return 'a';
+return asd;
 }

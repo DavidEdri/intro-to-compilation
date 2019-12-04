@@ -7,7 +7,11 @@
 %}
 
 %token FUNCTION VOID INT REAL SEMICOLON IF ELSE ASSIGNMENT GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR
-  
+
+%left PLUS MINUS
+%left MULTI DIVISION
+%left ASSIGNMENT
+
 %%
 
 s
@@ -37,17 +41,18 @@ statements
 statement
     : function_decleration      { $$ = $1; }
     | if_else                   { $$ = $1; }
-    | expression                { $$ = $1; }
-    | return                    { $$ = $1; }
+    | expression  SEMICOLON     { $$ = $1; }
+    | return      SEMICOLON     { $$ = $1; }
+    | declare_var SEMICOLON     { $$ = $1; }
+    | assignment  SEMICOLON     { $$ = $1; }
     ;
 
 expression
     : expression GREATER expression { $$ = mknode(">", $1, $3, NULL, NULL); }
-    | expression PLUS expression { $$ = mknode("+", $1, $3, NULL, NULL); }
-    | expression MULTI expression
-    | expression ASSIGNMENT expression { $$ = mknode("=", $1, $3, NULL, NULL); }
-    | id
-    | number
+    | expression PLUS expression    { $$ = mknode("+", $1, $3, NULL, NULL); }
+    | expression MULTI expression   { $$ = mknode("*", $1, $3, NULL, NULL); }
+    | id                            { $$ = $1; }
+    | number                        { $$ = $1; }
     ;
 
 function_decleration
@@ -71,7 +76,9 @@ function_args_decleration
 
 if_else
     : IF LEFTPAREN expression RIGHTPAREN code_block ELSE code_block
-        { $$ = mknode("IF-ELSE", $3, $5, $7, NULL); }
+        { 
+            $$ = mknode("IF-ELSE", $3, mknode("BLOCK", $5, NULL, NULL, NULL), mknode("BLOCK", $7, NULL, NULL, NULL), NULL); 
+        }
     ;
 
 return
@@ -79,8 +86,8 @@ return
     | RETURN type { $$=mknode("RET", mknode(yytext, NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
 
 code_block
-    : LEFTBRACE RIGHTBRACE {$$ = mknode("BLOCK", NULL, NULL, NULL, NULL); }
-    | LEFTBRACE statements RIGHTBRACE {$$ = mknode("BLOCK", $2, NULL, NULL, NULL); }
+    : LEFTBRACE RIGHTBRACE {$$ = NULL; }
+    | LEFTBRACE statements RIGHTBRACE {$$ = mknode("", $2, NULL, NULL, NULL); }
     ;
 
 id
@@ -96,6 +103,18 @@ decleration_type
     | INT   { $$ = mknode("TYPE INT", NULL, NULL, NULL, NULL); }
     | REAL  { $$ = mknode("TYPE REAL", NULL, NULL, NULL, NULL); }
     | CHAR  { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
+    ;
+
+declare_var
+    : decleration_type id  
+        { $$ = mknode(yytext, $2, NULL, NULL, NULL); }                  
+    | decleration_type id COMMA decleration_type 
+        { $$ = mknode(yytext, $2, $3, NULL, NULL); }
+    | id { $$ =$1; }
+    ;
+
+assignment
+    : id ASSIGNMENT expression { $$ = mknode("=", $1, $3, NULL, NULL); }
     ;
 
 type

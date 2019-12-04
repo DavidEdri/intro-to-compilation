@@ -1,7 +1,8 @@
 function void foo(int x, y, z; real f){
-
-}
-
-function char goo(){
-
+    if(x>y){
+        x=x+f
+    }
+    else{
+        y=x+y+z
+    }
 };

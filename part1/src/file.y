@@ -6,7 +6,7 @@
 #include "utils/functions.c"
 %}
 
-%token FUNCTION VOID INT REAL FOR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR MINUSMINUS
+%token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR MINUSMINUS
 
 %left PLUS MINUS SEMICOLON
 %left MULTI DIVISION
@@ -83,6 +83,13 @@ function_args_decleration_wrapper
 function_args_decleration
     : INT id function_args_decleration      { $$ = mknode("INT", $2, $3, NULL, NULL); }
     | REAL id function_args_decleration     { $$ = mknode("REAL", $2, $3, NULL, NULL); }
+    | INTPTR id function_args_decleration     { $$ = mknode("INTPTR", $2, $3, NULL, NULL); }
+    | VOID id function_args_decleration     { $$ = mknode("VOID", $2, $3, NULL, NULL); }
+    | REALPTR id function_args_decleration     { $$ = mknode("REALPTR", $2, $3, NULL, NULL); }
+    | CHAR id function_args_decleration     { $$ = mknode("CHAR", $2, $3, NULL, NULL); }
+    | CHARPTR id function_args_decleration     { $$ = mknode("CHARPTR", $2, $3, NULL, NULL); }
+    | BOOL id function_args_decleration     { $$ = mknode("BOOL", $2, $3, NULL, NULL); }
+    | STR id function_args_decleration     { $$ = mknode("STR", $2, $3, NULL, NULL); }
     | COMMA id function_args_decleration    { $$ = mknode("", $2, $3, NULL, NULL); }
     | %empty                                { $$ = NULL; }
     ;
@@ -145,6 +152,7 @@ decleration_type
     | CHARPTR { $$ = mknode("TYPE CHARPTR", NULL, NULL, NULL, NULL); }
     | BOOL  { $$ = mknode("TYPE BOOL", NULL, NULL, NULL, NULL); }
     | STR  { $$ = mknode("TYPE STR", NULL, NULL, NULL, NULL); }
+    | VAR { $$ = mknode("TYPE STR", NULL, NULL, NULL, NULL); }
     
     ;
 

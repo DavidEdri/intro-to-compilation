@@ -4,6 +4,6 @@ file=./test.txt
 
 while inotifywait -qqre modify "$dir" "$file";
 do
-    clean
+    clear
     make run
 done

@@ -8,5 +8,5 @@ all:
 
 run:
 	$(MAKE) all
-	./dist/file < test.txt
+	./dist/file < input.c
 

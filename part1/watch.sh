@@ -1,6 +1,6 @@
 #!/bin/bash
 dir=./src
-file=./test.txt
+file=./input.c
 
 while inotifywait -qqre modify "$dir" "$file";
 do

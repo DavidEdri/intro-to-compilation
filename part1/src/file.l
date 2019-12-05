@@ -63,6 +63,7 @@
 0(x|X)0[0-9A-F] return HEX;
 "\""[a-zA-z0-9][A-z]"\"" return STR; 
 '[a-zA-z]' return CHARACTER;
+"\""[^"]*"\"" return STRING;
 \177 ;
 [ \t\r] ;
 \n {yylineno++;}

@@ -4,9 +4,11 @@
 #include <stdlib.h>
 #include "lex.yy.c"
 #include "utils/functions.c"
+
+int yyerror(char *s);
 %}
 
-%token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL DO MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR MINUSMINUS
+%token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL DO MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR STRING MINUSMINUS
 
 %left PLUS MINUS SEMICOLON
 %left MULTI DIVISION
@@ -51,22 +53,24 @@ statement
     ;
 
 expression
-    : expression GREATER expression { $$ = mknode(">", $1, $3, NULL, NULL); }
-    | expression PLUS expression    { $$ = mknode("+", $1, $3, NULL, NULL); }
-    | expression MULTI expression   { $$ = mknode("*", $1, $3, NULL, NULL); }
-    | expression DIVISION expression { $$ = mknode("/", $1, $3, NULL, NULL); }
-    | expression MINUS expression { $$ = mknode("-", $1, $3, NULL, NULL); }
-    | expression EQUAL expression { $$ = mknode("==", $1, $3, NULL, NULL); }
-    | expression GREATEREQUAL expression { $$ = mknode(">=", $1, $3, NULL, NULL); }
-    | expression LESS expression { $$ = mknode("<", $1, $3, NULL, NULL); }
-    | expression LESSEQUAL expression { $$ = mknode("<=", $1, $3, NULL, NULL); }
-    | expression NOTEQUAL expression { $$ = mknode("!=", $1, $3, NULL, NULL); }
-    | expression AND expression { $$ = mknode("&&", $1, $3, NULL, NULL); }
-    | expression OR expression { $$ = mknode("||", $1, $3, NULL, NULL); }
-    | NOT expression { $$ = mknode("NOT", $2, NULL, NULL, NULL); }
-    | ADDRESS id { $$ = mknode("&", $2, NULL, NULL, NULL); printf("sdfsfs\n\n"); }
-    | id                            { $$ = $1; }
-    | number                        { $$ = $1; }
+    : expression GREATER expression         { $$ = mknode(">", $1, $3, NULL, NULL); }
+    | expression PLUS expression            { $$ = mknode("+", $1, $3, NULL, NULL); }
+    | expression MULTI expression           { $$ = mknode("*", $1, $3, NULL, NULL); }
+    | expression DIVISION expression        { $$ = mknode("/", $1, $3, NULL, NULL); }
+    | expression MINUS expression           { $$ = mknode("-", $1, $3, NULL, NULL); }
+    | expression EQUAL expression           { $$ = mknode("==", $1, $3, NULL, NULL); }
+    | expression GREATEREQUAL expression    { $$ = mknode(">=", $1, $3, NULL, NULL); }
+    | expression LESS expression            { $$ = mknode("<", $1, $3, NULL, NULL); }
+    | expression LESSEQUAL expression       { $$ = mknode("<=", $1, $3, NULL, NULL); }
+    | expression NOTEQUAL expression        { $$ = mknode("!=", $1, $3, NULL, NULL); }
+    | expression AND expression             { $$ = mknode("&&", $1, $3, NULL, NULL); }
+    | expression OR expression              { $$ = mknode("||", $1, $3, NULL, NULL); }
+    | NOT expression                        { $$ = mknode("NOT", $2, NULL, NULL, NULL); }
+    | ADDRESS id                            { $$ = mknode("&", $2, NULL, NULL, NULL); }
+    | id                                    { $$ = $1; }
+    | number                                { $$ = $1; }
+    | CHARACTER                             { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    | STRING                                { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     ;
 
 function_decleration
@@ -125,7 +129,11 @@ do_while
 
 
 for
-    : FOR LEFTPAREN assignment SEMICOLON expression SEMICOLON expression RIGHTPAREN code_block
+    : FOR LEFTPAREN assignment SEMICOLON expression SEMICOLON assignment RIGHTPAREN code_block
+        { 
+            $$ = mknode("FOR", $3, $5, $7, mknode("BLOCK", $9, NULL, NULL, NULL)); 
+        }
+    | FOR LEFTPAREN declare_var SEMICOLON expression SEMICOLON assignment RIGHTPAREN code_block
         { 
             $$ = mknode("FOR", $3, $5, $7, mknode("BLOCK", $9, NULL, NULL, NULL)); 
         }
@@ -134,12 +142,12 @@ for
 
 
 return
-    : RETURN id {$$ = mknode("RET", $2, NULL, NULL, NULL); }
-    | RETURN type { $$=mknode("RET", $2, NULL, NULL, NULL); }
+    : RETURN expression             { $$ = mknode("RET", $2, NULL, NULL, NULL); }
+    | RETURN                        { $$ = mknode("RET", NULL, NULL, NULL, NULL); }
 
 code_block
-    : LEFTBRACE RIGHTBRACE {$$ = NULL; }
-    | LEFTBRACE statements RIGHTBRACE {$$ = mknode("", $2, NULL, NULL, NULL); }
+    : LEFTBRACE RIGHTBRACE              {$$ = NULL; }
+    | LEFTBRACE statements RIGHTBRACE   {$$ = mknode("", $2, NULL, NULL, NULL); }
     ;
 
 id
@@ -151,27 +159,27 @@ number
     ;
 
 var_types
-    : INT   { $$ = mknode("INT", NULL, NULL, NULL, NULL); }
-    | INTPTR  { $$ = mknode("INTPTR", NULL, NULL, NULL, NULL); }
-    | REAL  { $$ = mknode("REAL", NULL, NULL, NULL, NULL); }
-    | REALPTR { $$ = mknode("CHAR", NULL, NULL, NULL, NULL); }
-    | CHAR  { $$ = mknode("CHAR", NULL, NULL, NULL, NULL); }
-    | CHARPTR { $$ = mknode("CHARPTR", NULL, NULL, NULL, NULL); }
-    | BOOL  { $$ = mknode("BOOL", NULL, NULL, NULL, NULL); }
-    | STR  { $$ = mknode("STR", NULL, NULL, NULL, NULL); }
-    | VAR { $$ = mknode("VAR", NULL, NULL, NULL, NULL); }
+    : INT       { $$ = mknode("INT", NULL, NULL, NULL, NULL); }
+    | INTPTR    { $$ = mknode("INTPTR", NULL, NULL, NULL, NULL); }
+    | REAL      { $$ = mknode("REAL", NULL, NULL, NULL, NULL); }
+    | REALPTR   { $$ = mknode("CHAR", NULL, NULL, NULL, NULL); }
+    | CHAR      { $$ = mknode("CHAR", NULL, NULL, NULL, NULL); }
+    | CHARPTR   { $$ = mknode("CHARPTR", NULL, NULL, NULL, NULL); }
+    | BOOL      { $$ = mknode("BOOL", NULL, NULL, NULL, NULL); }
+    | STR       { $$ = mknode("STR", NULL, NULL, NULL, NULL); }
+    | VAR       { $$ = mknode("VAR", NULL, NULL, NULL, NULL); }
     ;
 
 function_types
-    : INT   { $$ = mknode("TYPE INT", NULL, NULL, NULL, NULL); }
-    | INTPTR  { $$ = mknode("TYPE INTPTR", NULL, NULL, NULL, NULL); }
-    | REAL  { $$ = mknode("TYPE REAL", NULL, NULL, NULL, NULL); }
-    | REALPTR { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
-    | CHAR  { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
-    | CHARPTR { $$ = mknode("TYPE CHARPTR", NULL, NULL, NULL, NULL); }
-    | BOOL  { $$ = mknode("TYPE BOOL", NULL, NULL, NULL, NULL); }
-    | STR  { $$ = mknode("TYPE STR", NULL, NULL, NULL, NULL); }
-    | VOID { $$ = mknode("TYPE VOID", NULL, NULL, NULL, NULL); }
+    : INT       { $$ = mknode("TYPE INT", NULL, NULL, NULL, NULL); }
+    | INTPTR    { $$ = mknode("TYPE INTPTR", NULL, NULL, NULL, NULL); }
+    | REAL      { $$ = mknode("TYPE REAL", NULL, NULL, NULL, NULL); }
+    | REALPTR   { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
+    | CHAR      { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
+    | CHARPTR   { $$ = mknode("TYPE CHARPTR", NULL, NULL, NULL, NULL); }
+    | BOOL      { $$ = mknode("TYPE BOOL", NULL, NULL, NULL, NULL); }
+    | STR       { $$ = mknode("TYPE STR", NULL, NULL, NULL, NULL); }
+    | VOID      { $$ = mknode("TYPE VOID", NULL, NULL, NULL, NULL); }
     ;
 
 declare_var
@@ -187,15 +195,9 @@ declare_var
     ;
 
 assignment
-    : id ASSIGNMENT expression { $$ = mknode("=", $1, $3, NULL, NULL); }
-    | id ASSIGNMENT CSNULL { $$ = mknode("=", $1, mknode("CSNULL", NULL, NULL, NULL, NULL), NULL, NULL); }
-    ;
-
-type
-    : CHARACTER { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
-    | INTEGER   { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
-    | id        { $$ = $1; }
-    | REAL      { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    : id ASSIGNMENT expression  { $$ = mknode("=", $1, $3, NULL, NULL); }
+    | id ASSIGNMENT CSNULL
+        { $$ = mknode("=", $1, mknode("CSNULL", NULL, NULL, NULL, NULL), NULL, NULL); }
     ;
 
 %%
@@ -204,11 +206,11 @@ void main(){
     yyparse();
 }
 
-int yyerror(char* s){
-    printf ("%s: found line:%d unexpected token \"%s\"\n", s, yylineno, yytext);
-    return 0;
-}
-
 int yywrap(){
     return 1;
+}
+
+int yyerror(char* s){
+    printf ("%s: found line:%d unexpected token: \"%s\"\n", s, yylineno, yytext);
+    return 0;
 }

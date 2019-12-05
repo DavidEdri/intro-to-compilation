@@ -1,6 +1,13 @@
-for(int i = 0; i < 10; i = i+1){
-    int a = 'a';
-    for(int j=0; j < 10; j = j+1){
-        a = "asdas123d";
-    }
+function void foo(int x, y, z; real f){
+if (x>y) {
+x = x + f;
+}
+else {
+y = x + y + z;
+x = f * 2;
+z = f;
+}
+}
+function char goo(){
+return 'a';
 }

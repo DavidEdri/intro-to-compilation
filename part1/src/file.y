@@ -32,8 +32,8 @@ global
     ;
 
 main
-    : FUNCTION VOID MAIN LEFTPAREN RIGHTPAREN code_block  
-        { $$ = mknode("MAIN", NULL, NULL, NULL, NULL); }
+    : FUNCTION VOID MAIN LEFTPAREN RIGHTPAREN code_block 
+        { $$ = mknode("MAIN",mknode("BODY", $6, NULL, NULL, NULL) , NULL, NULL, NULL); }
     ;
 
 statements
@@ -84,8 +84,11 @@ expression
     | CHARACTER                             { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | STRING                                { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | '|' id '|'                            { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
+    | char_array_wrapper                            { $$ = $1;}
     ;
     
+
+
 
 function_decleration
     : FUNCTION function_types id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block
@@ -223,6 +226,19 @@ number
     : INTEGER   { $$ = mknode(yytext, NULL, NULL, NULL, NULL); printf("asd\n"); }
     | HEX       { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | REALVALUE { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    ;
+
+char_array_wrapper
+    : LEFTBRACKET char_array RIGHTBRACKET { $$ = mknode("CHAR_ARRAY", $2 ,NULL , NULL, NULL); }
+    ;
+
+char_array // dosent work take care of this you two lazy fuckers
+    : expression COMMA char_array { $$ = mknode("", $1 ,$3 , NULL, NULL); }
+    | CHARACTER { $$ = mknode(yytext, NULL, NULL, NULL, NULL); printf("%s",yytext);}
+    ;
+
+character
+    : CHARACTER {$$= mknode(yytext, NULL, NULL, NULL, NULL); printf("%c\n\n",yytext[1]);}
     ;
 
 %%

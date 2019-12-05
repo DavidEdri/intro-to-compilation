@@ -48,8 +48,8 @@ statement
     | loops                     { $$ = $1; }
     | expression  SEMICOLON     { $$ = $1; }
     | return      SEMICOLON     { $$ = $1; }
-    | declare_var SEMICOLON     { $$ = $1; }
     | declare_VAR SEMICOLON     { $$ = $1; }
+    | declare_str SEMICOLON     { $$ = $1; }
     | assignment  SEMICOLON     { $$ = $1; }
     ;
 
@@ -185,18 +185,17 @@ for
     ;
 
 var_types
-    : INT       { $$ = mknode("INT", NULL, NULL, NULL, NULL); }
-    | INTPTR    { $$ = mknode("INTPTR", NULL, NULL, NULL, NULL); }
-    | REAL      { $$ = mknode("REAL", NULL, NULL, NULL, NULL); }
-    | REALPTR   { $$ = mknode("REALPTR", NULL, NULL, NULL, NULL); }
-    | CHAR      { $$ = mknode("CHAR", NULL, NULL, NULL, NULL); }
-    | CHARPTR   { $$ = mknode("CHARPTR", NULL, NULL, NULL, NULL); }
-    | BOOL      { $$ = mknode("BOOL", NULL, NULL, NULL, NULL); }
-    | STR       { $$ = mknode("STR", NULL, NULL, NULL, NULL); }
+    : INT           { $$ = mknode("INT", NULL, NULL, NULL, NULL); }
+    | INTPTR        { $$ = mknode("INTPTR", NULL, NULL, NULL, NULL); }
+    | REAL          { $$ = mknode("REAL", NULL, NULL, NULL, NULL); }
+    | REALPTR       { $$ = mknode("REALPTR", NULL, NULL, NULL, NULL); }
+    | CHAR          { $$ = mknode("CHAR", NULL, NULL, NULL, NULL); }
+    | CHARPTR       { $$ = mknode("CHARPTR", NULL, NULL, NULL, NULL); }
+    | BOOL          { $$ = mknode("BOOL", NULL, NULL, NULL, NULL); }
     ;
 
 declare_VAR
-    : VAR declare_var { $$ = mknode("VAR", $2, NULL, NULL, NULL); }
+    : VAR declare_var { $$ = $2; }
     ;
 
 declare_var
@@ -209,6 +208,20 @@ declare_var
 var
     : id { $$ = $1; }
     | assignment { $$ = $1; }
+    ;
+
+declare_str
+    : STRDECLARE str COMMA declare_str 
+                            { $$ = mknode("STR", $2, $4, NULL, NULL); }
+    | STRDECLARE str        { $$ = mknode("STR", $2, NULL, NULL, NULL); } 
+    | str COMMA declare_str { $$ = mknode("", $1, $3, NULL, NULL); } 
+    | str                   { $$ = $1; } 
+    ;
+
+str
+    : id LEFTBRACKET expression RIGHTBRACKET { $$ = mknode($1->token, $3, NULL, NULL, NULL); }
+    | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT expression
+        { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
     ;
 
 assignment
@@ -226,7 +239,7 @@ id
     ;
 
 number
-    : INTEGER   { $$ = mknode(yytext, NULL, NULL, NULL, NULL); printf("asd\n"); }
+    : INTEGER   { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | HEX       { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | REALVALUE { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     ;

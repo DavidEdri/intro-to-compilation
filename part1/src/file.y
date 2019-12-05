@@ -5,6 +5,7 @@
 #include "lex.yy.c"
 #include "utils/functions.c"
 
+int yylex();
 int yyerror(char *s);
 %}
 
@@ -23,6 +24,7 @@ code_wrapper
     : global main   { $$ = mknode("CODE", $1, $2, NULL, NULL); }
     | main          { $$ = mknode("CODE", $1, NULL, NULL, NULL); }
     | global        { $$ = mknode("CODE", $1, NULL, NULL, NULL); }
+    | %empty        { $$ = NULL; exit(0); }
     ;
 
 global
@@ -30,7 +32,7 @@ global
     ;
 
 main
-    : VOID MAIN RIGHTPAREN LEFTPAREN LEFTBRACKET RIGHTBRACKET 
+    : FUNCTION VOID MAIN LEFTPAREN RIGHTPAREN code_block  
         { $$ = mknode("MAIN", NULL, NULL, NULL, NULL); }
     ;
 
@@ -47,6 +49,7 @@ statement
     | expression  SEMICOLON     { $$ = $1; }
     | return      SEMICOLON     { $$ = $1; }
     | declare_var SEMICOLON     { $$ = $1; }
+    | declare_VAR SEMICOLON     { $$ = $1; }
     | assignment  SEMICOLON     { $$ = $1; }
     ;
 
@@ -74,10 +77,12 @@ expression
     | expression OR expression              { $$ = mknode("||", $1, $3, NULL, NULL); }
     | NOT expression                        { $$ = mknode("NOT", $2, NULL, NULL, NULL); }
     | ADDRESS id                            { $$ = mknode("&", $2, NULL, NULL, NULL); }
+    | MULTI id                              { $$ = mknode("DEREF", $2, NULL, NULL, NULL); }
     | id                                    { $$ = $1; }
     | number                                { $$ = $1; }
     | CHARACTER                             { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | STRING                                { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    | '|' id '|'                            { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
     ;
 
 function_decleration
@@ -86,23 +91,22 @@ function_decleration
     ;
 
 function_args_decleration_wrapper
-    : function_args_decleration SEMICOLON function_args_decleration 
-        {$$ = mknode("ARGS", $1, $3, NULL, NULL); }
-    | function_args_decleration {$$ = mknode("ARGS", $1, NULL, NULL, NULL);}
+    : function_args_group
+        { $$ = mknode("ARGS", $1, NULL, NULL, NULL); }
+    | %empty                    { $$ = mknode("ARGS", mknode("NONE", NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
+    ;
+
+function_args_group
+    : function_args_group SEMICOLON function_args_decleration 
+        { $$ = mknode("", $1, $3, NULL, NULL); }
+    | function_args_decleration { $$ = mknode("", $1, NULL, NULL, NULL); }
     ;
 
 function_args_decleration
-    : INT id function_args_decleration      { $$ = mknode("INT", $2, $3, NULL, NULL); }
-    | REAL id function_args_decleration     { $$ = mknode("REAL", $2, $3, NULL, NULL); }
-    | INTPTR id function_args_decleration   { $$ = mknode("INTPTR", $2, $3, NULL, NULL); }
-    | VOID id function_args_decleration     { $$ = mknode("VOID", $2, $3, NULL, NULL); }
-    | REALPTR id function_args_decleration  { $$ = mknode("REALPTR", $2, $3, NULL, NULL); }
-    | CHAR id function_args_decleration     { $$ = mknode("CHAR", $2, $3, NULL, NULL); }
-    | CHARPTR id function_args_decleration  { $$ = mknode("CHARPTR", $2, $3, NULL, NULL); }
-    | BOOL id function_args_decleration     { $$ = mknode("BOOL", $2, $3, NULL, NULL); }
-    | STR id function_args_decleration      { $$ = mknode("STR", $2, $3, NULL, NULL); }
-    | COMMA id function_args_decleration    { $$ = mknode("", $2, $3, NULL, NULL); }
-    | %empty                                { $$ = mknode("NONE", NULL, NULL, NULL, NULL); }
+    : var_types id function_args_decleration    { $$ = mknode($1->token, $2, $3, NULL, NULL); }
+    | COMMA id function_args_decleration        { $$ = mknode("", $2, $3, NULL, NULL); }
+    | id                                        { $$ = mknode($1->token, NULL, NULL, NULL, NULL); }
+    | %empty                                    { $$ = NULL; }
     ;
 
 function_types
@@ -172,7 +176,10 @@ var_types
     | CHARPTR   { $$ = mknode("CHARPTR", NULL, NULL, NULL, NULL); }
     | BOOL      { $$ = mknode("BOOL", NULL, NULL, NULL, NULL); }
     | STR       { $$ = mknode("STR", NULL, NULL, NULL, NULL); }
-    | VAR       { $$ = mknode("VAR", NULL, NULL, NULL, NULL); }
+    ;
+
+declare_VAR
+    : VAR declare_var { $$ = mknode("VAR", $2, NULL, NULL, NULL); }
     ;
 
 declare_var
@@ -207,15 +214,12 @@ number
 
 %%
 
-void main(){
-    yyparse();
-}
-
-int yywrap(){
-    return 1;
+int main(){
+   return yyparse();
 }
 
 int yyerror(char* s){
+    // int yydebug=1; 
     printf ("%s: found line:%d unexpected token: \"%s\"\n", s, yylineno, yytext);
     return 0;
 }

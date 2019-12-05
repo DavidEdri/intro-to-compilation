@@ -1,4 +1,4 @@
-function void foo(int x, y, z; real f){
+function void foo(int x, y, z; int x, y, z; real f){
 if (x>y) {
 x = x + f;
 }

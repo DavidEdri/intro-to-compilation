@@ -9,7 +9,7 @@ int yylex();
 int yyerror(char *s);
 %}
 
-%token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL DO MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR STRING MINUSMINUS
+%token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL DO MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE COLON HEX STR STRING REALVALUE MINUSMINUS
 
 %left PLUS MINUS SEMICOLON
 %left MULTI DIVISION
@@ -78,16 +78,31 @@ expression
     | NOT expression                        { $$ = mknode("NOT", $2, NULL, NULL, NULL); }
     | ADDRESS id                            { $$ = mknode("&", $2, NULL, NULL, NULL); }
     | MULTI id                              { $$ = mknode("DEREF", $2, NULL, NULL, NULL); }
+    | function_call                         { $$ = $1; }
     | id                                    { $$ = $1; }
     | number                                { $$ = $1; }
     | CHARACTER                             { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | STRING                                { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | '|' id '|'                            { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
     ;
+    
 
 function_decleration
     : FUNCTION function_types id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block
         { $$ = mknode("FUNCTION", $3, $5, $2, mknode("BODY", $7, NULL, NULL, NULL)); }
+    ;
+function_call
+    : id LEFTPAREN function_call_args_wrapper RIGHTPAREN 
+        { $$ = mknode("FUNCTION-CALL", $1, $3, NULL, NULL); }
+
+function_call_args_wrapper
+    : function_call_args  { $$ = mknode("ARGS", $1, NULL, NULL, NULL); }
+    | %empty                    { $$ = mknode("ARGS", mknode("NONE", NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
+    ;
+
+function_call_args
+    : expression COMMA function_call_args  { $$ = mknode("", $1, $3, NULL, NULL); } 
+    | expression { $$ = mknode("", $1, NULL, NULL, NULL); }
     ;
 
 function_args_decleration_wrapper
@@ -113,7 +128,7 @@ function_types
     : INT       { $$ = mknode("TYPE INT", NULL, NULL, NULL, NULL); }
     | INTPTR    { $$ = mknode("TYPE INTPTR", NULL, NULL, NULL, NULL); }
     | REAL      { $$ = mknode("TYPE REAL", NULL, NULL, NULL, NULL); }
-    | REALPTR   { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
+    | REALPTR   { $$ = mknode("TYPE REALPTR", NULL, NULL, NULL, NULL); }
     | CHAR      { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
     | CHARPTR   { $$ = mknode("TYPE CHARPTR", NULL, NULL, NULL, NULL); }
     | BOOL      { $$ = mknode("TYPE BOOL", NULL, NULL, NULL, NULL); }
@@ -171,7 +186,7 @@ var_types
     : INT       { $$ = mknode("INT", NULL, NULL, NULL, NULL); }
     | INTPTR    { $$ = mknode("INTPTR", NULL, NULL, NULL, NULL); }
     | REAL      { $$ = mknode("REAL", NULL, NULL, NULL, NULL); }
-    | REALPTR   { $$ = mknode("CHAR", NULL, NULL, NULL, NULL); }
+    | REALPTR   { $$ = mknode("REALPTR", NULL, NULL, NULL, NULL); }
     | CHAR      { $$ = mknode("CHAR", NULL, NULL, NULL, NULL); }
     | CHARPTR   { $$ = mknode("CHARPTR", NULL, NULL, NULL, NULL); }
     | BOOL      { $$ = mknode("BOOL", NULL, NULL, NULL, NULL); }
@@ -210,6 +225,8 @@ id
 
 number
     : INTEGER { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    | HEX { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    | REALVALUE { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     ;
 
 %%

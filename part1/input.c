@@ -1,1 +1,7 @@
-int x,y=3;
+function void main(){
+    
+    int x=y;
+    return 0;
+}
+
+int x=y;

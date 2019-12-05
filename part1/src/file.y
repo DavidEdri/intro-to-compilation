@@ -170,7 +170,6 @@ do_while
         }
     ;
 
-
 for
     : FOR LEFTPAREN assignment SEMICOLON expression SEMICOLON assignment RIGHTPAREN code_block_wrapper
         { 
@@ -198,15 +197,12 @@ declare_VAR
     ;
 
 declare_var
-    : var_types id  
-        { $$ = mknode($1->token, $2, NULL, NULL, NULL); }                  
-    | var_types id ASSIGNMENT expression  
-        { $$ = mknode($1->token, mknode("=", NULL, NULL, NULL, NULL), $2, $4, NULL); }                  
-    | var_types id COMMA declare_var
-        { $$ = mknode($1->token, $2, $4, NULL, NULL); }
-    | id  COMMA declare_var { $$ =mknode("",$1, $3, NULL, NULL ); }
-    | id        { $$ =$1; }
-    | ASSIGNMENT expression        { $$ = mknode("=", $2, NULL, NULL, NULL); }
+    : var_types id                      { $$ = mknode($1->token, $2, NULL, NULL, NULL); }
+    | var_types id declare_var          { $$ = mknode($1->token, $2, $3, NULL, NULL); } 
+    | COMMA declare_var                 { $$ = mknode("",$2, NULL, NULL, NULL ); }
+    | id  declare_var                   { $$ = mknode("", $1, $2, NULL, NULL); }
+    | ASSIGNMENT expression declare_var { $$ = mknode("=", $2, $3, NULL, NULL); }
+    | %empty                            { $$ = NULL; }
     ;
 
 assignment
@@ -224,8 +220,8 @@ id
     ;
 
 number
-    : INTEGER { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
-    | HEX { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    : INTEGER   { $$ = mknode(yytext, NULL, NULL, NULL, NULL); printf("asd\n"); }
+    | HEX       { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | REALVALUE { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     ;
 
@@ -236,7 +232,6 @@ int main(){
 }
 
 int yyerror(char* s){
-    // int yydebug=1; 
     printf ("%s: found line:%d unexpected token: \"%s\"\n", s, yylineno, yytext);
     return 0;
 }

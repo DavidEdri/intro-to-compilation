@@ -200,12 +200,15 @@ declare_VAR
     ;
 
 declare_var
-    : var_types id                      { $$ = mknode($1->token, $2, NULL, NULL, NULL); }
-    | var_types id declare_var          { $$ = mknode($1->token, $2, $3, NULL, NULL); } 
-    | COMMA declare_var                 { $$ = mknode("",$2, NULL, NULL, NULL ); }
-    | id  declare_var                   { $$ = mknode("", $1, $2, NULL, NULL); }
-    | ASSIGNMENT expression declare_var { $$ = mknode("=", $2, $3, NULL, NULL); }
-    | %empty                            { $$ = NULL; }
+    : var_types var                     { $$ = mknode($1->token, $2, NULL, NULL, NULL); }    
+    | var_types var COMMA declare_var   { $$ = mknode($1->token, $2, $4, NULL, NULL); }  
+    | var COMMA declare_var             { $$ = mknode("", $1, $3, NULL, NULL); }
+    | var                               { $$ = $1; }
+    ;
+
+var
+    : id { $$ = $1; }
+    | assignment { $$ = $1; }
     ;
 
 assignment

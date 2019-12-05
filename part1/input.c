@@ -1,1 +1,1 @@
-int x = 0;
+int x = a+b+c, y, z = func(1,2, a+b) + 3;

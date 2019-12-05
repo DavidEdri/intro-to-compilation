@@ -51,6 +51,7 @@ statement
     | declare_VAR SEMICOLON     { $$ = $1; }
     | declare_str SEMICOLON     { $$ = $1; }
     | assignment  SEMICOLON     { $$ = $1; }
+    | code_block                { $$ = $1; }
     ;
 
 code_block_wrapper
@@ -84,7 +85,9 @@ expression
     | CHARACTER                             { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | STRING                                { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | '|' id '|'                            { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
-    | char_array_wrapper                            { $$ = $1;}
+    | char_array_wrapper                    { $$ = $1;}
+    | BOOLTRUE                              { $$ = mknode("TRUE", NULL, NULL, NULL, NULL); }
+    | BOOLFALSE                             { $$ = mknode("FALSE", NULL, NULL, NULL, NULL); }
     ;
     
 

@@ -1,7 +1,7 @@
 ASK:
 
-is 30+50 REAL NUMBER if yes fix REAL REGEX  
-ask what error msg u expect  
+is 30+50 REAL NUMBER if not fix REAL REGEX  
+ask what error msg we need to print   
 
 ---
 

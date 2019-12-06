@@ -1,9 +1,7 @@
-function int foo(){
- return 0;
-}
-
 function void main()
 {
- var int a;
- a = foo();
+    if(true) 
+        x = 3;
+        y = 6;
+
 }

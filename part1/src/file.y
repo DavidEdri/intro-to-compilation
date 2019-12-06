@@ -150,14 +150,14 @@ function_call_args
     ;
 
 if_else
-    : IF LEFTPAREN expression RIGHTPAREN code_block_wrapper ELSE code_block_wrapper
+    : IF LEFTPAREN expression RIGHTPAREN statement ELSE statement
         { 
             $$ = mknode("IF-ELSE", $3, $5, $7, NULL); 
         }
     ;
 
 if
-    : IF LEFTPAREN expression RIGHTPAREN code_block_wrapper 
+    : IF LEFTPAREN expression RIGHTPAREN statement 
         { 
             $$ = mknode("IF", $3, $5, NULL, NULL); 
         }
@@ -170,7 +170,7 @@ loops
     ;
 
 while
-    : WHILE LEFTPAREN expression RIGHTPAREN code_block_wrapper 
+    : WHILE LEFTPAREN expression RIGHTPAREN statement 
         { 
             $$ = mknode("WHILE", $3, $5, NULL, NULL); 
         }
@@ -184,11 +184,11 @@ do_while
     ;
 
 for
-    : FOR LEFTPAREN assignment SEMICOLON expression SEMICOLON assignment RIGHTPAREN code_block_wrapper
+    : FOR LEFTPAREN assignment SEMICOLON expression SEMICOLON assignment RIGHTPAREN statement
         { 
             $$ = mknode("FOR", $3, $5, $7, $9); 
         }
-    | FOR LEFTPAREN declare_var SEMICOLON expression SEMICOLON assignment RIGHTPAREN code_block_wrapper
+    | FOR LEFTPAREN declare_var SEMICOLON expression SEMICOLON assignment RIGHTPAREN statement
         { 
             $$ = mknode("FOR", $3, $5, $7, $9); 
         }

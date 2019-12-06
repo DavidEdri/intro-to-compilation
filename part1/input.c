@@ -1,13 +1,9 @@
-function void foo(int x, y, z; real f){
-if (x>y) {
-x = x + f;
-}
-else {
-y = x + y + z;
-x = f * 2;
-z = f;
-}
-}
-function char goo(){
-return 'a';
+function int foo(int i, j, k)
+{
+string a[30], b[100] = "moshe";
+var char c;
+var int i;
+c = 'e';
+a[19] = 'f';
+
 }

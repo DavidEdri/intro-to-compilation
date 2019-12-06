@@ -114,12 +114,13 @@ function_types
 function_decleration
     : FUNCTION function_types id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block
         { $$ = mknode("FUNCTION", $3, $5, $2, mknode("BODY", $7, NULL, NULL, NULL)); }
+    | FUNCTION function_types id LEFTPAREN  RIGHTPAREN code_block
+        { $$ = mknode("FUNCTION", $3, mknode("ARGS",mknode("NONE",NULL,NULL,NULL,NULL),NULL,NULL,NULL), $2, mknode("BODY", $6, NULL, NULL, NULL)); }
     ;
 
 function_args_decleration_wrapper
     : function_args_group
         { $$ = mknode("ARGS", $1, NULL, NULL, NULL); }
-    | %empty                    { $$ = mknode("ARGS", mknode("NONE", NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
     ;
 
 function_args_group

@@ -21,14 +21,13 @@ s
 ;
 
 code_wrapper
-    : global main   { $$ = mknode("CODE", $1, $2, NULL, NULL); }
-    | main          { $$ = mknode("CODE", $1, NULL, NULL, NULL); }
-    | global        { $$ = mknode("CODE", $1, NULL, NULL, NULL); }
+    : global        { $$ = mknode("CODE", $1, NULL, NULL, NULL); }
     | %empty        { $$ = NULL; exit(0); }
     ;
 
 global
-    :statements { $$ = mknode("GLOBAL", $1, NULL, NULL, NULL); }
+    : declerations main { $$ = mknode("GLOBAL", $1, $2, NULL, NULL); }
+    | main              { $$ = $1; }
     ;
 
 main
@@ -42,16 +41,24 @@ statements
     ;
 
 statement
-    : function_decleration      { $$ = $1; }
-    | if                        { $$ = $1; }
+    : if                        { $$ = $1; }
     | if_else                   { $$ = $1; }
     | loops                     { $$ = $1; }
     | expression  SEMICOLON     { $$ = $1; }
     | return      SEMICOLON     { $$ = $1; }
+    | assignment  SEMICOLON     { $$ = $1; }
+    | code_block_wrapper        { $$ = $1; }
+    ;
+
+declerations
+    : declerations decleration  { $$ = mknode("", $1, $2, NULL, NULL); }
+    | decleration               { $$ = $1;}
+    ;
+
+decleration
+    : function_decleration      { $$ = $1; }
     | declare_VAR SEMICOLON     { $$ = $1; }
     | declare_str SEMICOLON     { $$ = $1; }
-    | assignment  SEMICOLON     { $$ = $1; }
-    | code_block                { $$ = $1; }
     ;
 
 code_block_wrapper
@@ -59,8 +66,10 @@ code_block_wrapper
     ;
 
 code_block
-    : LEFTBRACE RIGHTBRACE              {$$ = NULL; }
-    | LEFTBRACE statements RIGHTBRACE   {$$ = mknode("", $2, NULL, NULL, NULL); }
+    : LEFTBRACE RIGHTBRACE                           {$$ = NULL; }
+    | LEFTBRACE declerations statements RIGHTBRACE   {$$ = mknode("", $2, $3, NULL, NULL); }
+    | LEFTBRACE declerations RIGHTBRACE              {$$ = mknode("", $2, $3, NULL, NULL); }
+    | LEFTBRACE statements RIGHTBRACE                {$$ = mknode("", $2, $3, NULL, NULL); }
     ;
 
 expression
@@ -85,30 +94,25 @@ expression
     | CHARACTER                             { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | STRING                                { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | '|' id '|'                            { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
-    | char_array_wrapper                    { $$ = $1;}
     | BOOLTRUE                              { $$ = mknode("TRUE", NULL, NULL, NULL, NULL); }
     | BOOLFALSE                             { $$ = mknode("FALSE", NULL, NULL, NULL, NULL); }
     ;
-    
 
-
+function_types
+    : INT       { $$ = mknode("TYPE INT", NULL, NULL, NULL, NULL); }
+    | INTPTR    { $$ = mknode("TYPE INTPTR", NULL, NULL, NULL, NULL); }
+    | REAL      { $$ = mknode("TYPE REAL", NULL, NULL, NULL, NULL); }
+    | REALPTR   { $$ = mknode("TYPE REALPTR", NULL, NULL, NULL, NULL); }
+    | CHAR      { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
+    | CHARPTR   { $$ = mknode("TYPE CHARPTR", NULL, NULL, NULL, NULL); }
+    | BOOL      { $$ = mknode("TYPE BOOL", NULL, NULL, NULL, NULL); }
+    | STR       { $$ = mknode("TYPE STR", NULL, NULL, NULL, NULL); }
+    | VOID      { $$ = mknode("TYPE VOID", NULL, NULL, NULL, NULL); }
+    ;
 
 function_decleration
     : FUNCTION function_types id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block
         { $$ = mknode("FUNCTION", $3, $5, $2, mknode("BODY", $7, NULL, NULL, NULL)); }
-    ;
-function_call
-    : id LEFTPAREN function_call_args_wrapper RIGHTPAREN 
-        { $$ = mknode("FUNCTION-CALL", $1, $3, NULL, NULL); }
-
-function_call_args_wrapper
-    : function_call_args  { $$ = mknode("ARGS", $1, NULL, NULL, NULL); }
-    | %empty                    { $$ = mknode("ARGS", mknode("NONE", NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-    ;
-
-function_call_args
-    : expression COMMA function_call_args  { $$ = mknode("", $1, $3, NULL, NULL); } 
-    | expression { $$ = mknode("", $1, NULL, NULL, NULL); }
     ;
 
 function_args_decleration_wrapper
@@ -130,16 +134,19 @@ function_args_decleration
     | %empty                                    { $$ = NULL; }
     ;
 
-function_types
-    : INT       { $$ = mknode("TYPE INT", NULL, NULL, NULL, NULL); }
-    | INTPTR    { $$ = mknode("TYPE INTPTR", NULL, NULL, NULL, NULL); }
-    | REAL      { $$ = mknode("TYPE REAL", NULL, NULL, NULL, NULL); }
-    | REALPTR   { $$ = mknode("TYPE REALPTR", NULL, NULL, NULL, NULL); }
-    | CHAR      { $$ = mknode("TYPE CHAR", NULL, NULL, NULL, NULL); }
-    | CHARPTR   { $$ = mknode("TYPE CHARPTR", NULL, NULL, NULL, NULL); }
-    | BOOL      { $$ = mknode("TYPE BOOL", NULL, NULL, NULL, NULL); }
-    | STR       { $$ = mknode("TYPE STR", NULL, NULL, NULL, NULL); }
-    | VOID      { $$ = mknode("TYPE VOID", NULL, NULL, NULL, NULL); }
+function_call
+    : id LEFTPAREN function_call_args_wrapper RIGHTPAREN 
+        { $$ = mknode("FUNCTION-CALL", $1, $3, NULL, NULL); }
+    ;
+
+function_call_args_wrapper
+    : function_call_args  { $$ = mknode("ARGS", $1, NULL, NULL, NULL); }
+    | %empty                    { $$ = mknode("ARGS", mknode("NONE", NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
+    ;
+
+function_call_args
+    : expression COMMA function_call_args  { $$ = mknode("", $1, $3, NULL, NULL); } 
+    | expression { $$ = mknode("", $1, NULL, NULL, NULL); }
     ;
 
 if_else
@@ -245,19 +252,6 @@ number
     : INTEGER   { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | HEX       { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | REALVALUE { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
-    ;
-
-char_array_wrapper
-    : LEFTBRACKET char_array RIGHTBRACKET { $$ = mknode("CHAR_ARRAY", $2 ,NULL , NULL, NULL); }
-    ;
-
-char_array // dosent work take care of this you two lazy fuckers
-    : expression COMMA char_array { $$ = mknode("", $1 ,$3 , NULL, NULL); }
-    | CHARACTER { $$ = mknode(yytext, NULL, NULL, NULL, NULL); printf("%s",yytext);}
-    ;
-
-character
-    : CHARACTER {$$= mknode(yytext, NULL, NULL, NULL, NULL); printf("%c\n\n",yytext[1]);}
     ;
 
 %%

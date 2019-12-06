@@ -74,15 +74,15 @@ code_block
     ;
 
 expression
-    : expr op expr              { $$ = mknode($2->token, $1, $3, NULL, NULL); }
-    | ADDRESS id LEFTBRACKET expr RIGHTBRACKET                   
-                                            { $$ = mknode("&", mknode($2->token, $4, NULL, NULL, NULL), NULL, NULL, NULL); }
-    | expr  {$$ = $1;}
+    : additive_expression {$$=$1;}
+    | additive_expression relop additive_expression 
+            {$$ = mknode($2->token, $1, $3, NULL, NULL);}
+    | ADDRESS id LEFTBRACKET additive_expression RIGHTBRACKET                   
+            { $$ = mknode("&", mknode($2->token, $4, NULL, NULL, NULL), NULL, NULL, NULL); }
     | not   {$$ = $1;}
-
     ;
 
-op
+relop
     : GREATER       { $$ = mknode(">", NULL, NULL, NULL, NULL); }
     | EQUAL         { $$ = mknode("==", NULL, NULL, NULL, NULL); }
     | GREATEREQUAL  { $$ = mknode(">=", NULL, NULL, NULL, NULL); }
@@ -93,15 +93,15 @@ op
     | OR            { $$ = mknode("||", NULL, NULL, NULL, NULL); }
     ;
 
-expr
-    : term              { $$ = $1; }
-    | expr MINUS term   { $$ = mknode("-", $1, $3, NULL, NULL); }
-    | expr PLUS term    { $$ = mknode("+", $1, $3, NULL, NULL); }
+additive_expression
+    : term                              { $$ = $1; }
+    | additive_expression MINUS term    { $$ = mknode("-", $1, $3, NULL, NULL); }
+    | additive_expression PLUS term     { $$ = mknode("+", $1, $3, NULL, NULL); }
     ;
 
 term
     : factor                { $$ = $1; }
-    | term term_op factor  { $$ = mknode($2 -> token, $1, $3, NULL, NULL); }
+    | term term_op factor   { $$ = mknode($2 -> token, $1, $3, NULL, NULL); }
     ;
 
 term_op
@@ -120,6 +120,7 @@ factor
     | STRING                                { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | ADDRESS id                            { $$ = mknode("&", $2, NULL, NULL, NULL); }
     | '|' id '|'                            { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
+    | LEFTPAREN expression RIGHTPAREN       { $$=$2; }
     ;
 
 not
@@ -128,8 +129,8 @@ not
 
 
 dref
-    : MULTI id                                 { $$ = mknode("DREF", $2, NULL, NULL, NULL); }
-    | MULTI LEFTPAREN expression RIGHTPAREN { $$ = mknode("DREF", $3, NULL, NULL, NULL); }
+    : MULTI id                                  { $$ = mknode("DREF", $2, NULL, NULL, NULL); }
+    | MULTI LEFTPAREN expression RIGHTPAREN     { $$ = mknode("DREF", $3, NULL, NULL, NULL); }
     ;
 
 

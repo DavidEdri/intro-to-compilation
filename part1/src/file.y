@@ -75,9 +75,11 @@ code_block
 
 expression
     : expr op expr              { $$ = mknode($2->token, $1, $3, NULL, NULL); }
-    | ADDRESS id LEFTBRACKET expression RIGHTBRACKET                   
+    | ADDRESS id LEFTBRACKET expr RIGHTBRACKET                   
                                             { $$ = mknode("&", mknode($2->token, $4, NULL, NULL, NULL), NULL, NULL, NULL); }
-    | expr {$$ = $1;}
+    | expr  {$$ = $1;}
+    | not   {$$ = $1;}
+
     ;
 
 op
@@ -95,14 +97,16 @@ expr
     : term              { $$ = $1; }
     | expr MINUS term   { $$ = mknode("-", $1, $3, NULL, NULL); }
     | expr PLUS term    { $$ = mknode("+", $1, $3, NULL, NULL); }
-    | LEFTPAREN expr RIGHTPAREN       { $$ = $2; }
-    | not  {$$ = $1;}
     ;
 
 term
     : factor                { $$ = $1; }
-    | term DIVISION factor  { $$ = mknode("/", $1, $3, NULL, NULL); }
-    | term MULTI factor     { $$ = mknode("*", $1, $3, NULL, NULL); }
+    | term term_op factor  { $$ = mknode($2 -> token, $1, $3, NULL, NULL); }
+    ;
+
+term_op
+    : DIVISION  { $$ = mknode("/", NULL, NULL, NULL, NULL);}
+    | MULTI     { $$ = mknode("*", NULL, NULL, NULL, NULL);}
     ;
 
 factor
@@ -262,10 +266,7 @@ declare_str
 
 str
     : id LEFTBRACKET expression RIGHTBRACKET { $$ = mknode($1->token, $3, NULL, NULL, NULL); }
-    | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT expression
-        { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
-    | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT csnull
-        { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
+    | assignment {$$ = $1;}
     ;
 
 assignment
@@ -273,6 +274,8 @@ assignment
     | id ASSIGNMENT csnull
         { $$ = mknode("=", $1, $3, NULL, NULL); }
     | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT expression 
+        { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
+    | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT csnull
         { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
     ;
 

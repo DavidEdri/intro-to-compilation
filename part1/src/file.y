@@ -88,7 +88,9 @@ expression
     | expression OR expression              { $$ = mknode("||", $1, $3, NULL, NULL); }
     | NOT expression                        { $$ = mknode("NOT", $2, NULL, NULL, NULL); }
     | ADDRESS id                            { $$ = mknode("&", $2, NULL, NULL, NULL); }
-    | MULTI id                              { $$ = mknode("DEREF", $2, NULL, NULL, NULL); }
+    | ADDRESS id LEFTBRACKET expression RIGHTBRACKET                   
+                                            { $$ = mknode("&", mknode($2->token, $4, NULL, NULL, NULL), NULL, NULL, NULL); }
+    | dref                                  { $$ = $1; }
     | function_call                         { $$ = $1; }
     | id                                    { $$ = $1; }
     | number                                { $$ = $1; }
@@ -97,7 +99,15 @@ expression
     | '|' id '|'                            { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
     | BOOLTRUE                              { $$ = mknode("TRUE", NULL, NULL, NULL, NULL); }
     | BOOLFALSE                             { $$ = mknode("FALSE", NULL, NULL, NULL, NULL); }
+    | LEFTPAREN expression RIGHTPAREN       {$$ = $2; }
     ;
+
+
+dref
+    : MULTI id                                 { $$ = mknode("DREF", $2, NULL, NULL, NULL); }
+    | MULTI LEFTPAREN expression RIGHTPAREN { $$ = mknode("DREF", $3, NULL, NULL, NULL); }
+    ;
+
 
 function_types
     : INT       { $$ = mknode("TYPE INT", NULL, NULL, NULL, NULL); }
@@ -242,6 +252,8 @@ assignment
     : id ASSIGNMENT expression  { $$ = mknode("=", $1, $3, NULL, NULL); }
     | id ASSIGNMENT csnull
         { $$ = mknode("=", $1, $3, NULL, NULL); }
+    | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT expression 
+        { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
     ;
 
 return

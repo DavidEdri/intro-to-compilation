@@ -8,6 +8,7 @@ ask if u must have main
 ---
 
 #TODO :
-add support for '(expression)'  
-add support for 'b[3] = c;'  
-add support for '\*ptr = expr;'
+  
+2. add support for '\*ptr = expr;'
+3. last statment of non void function must be return       statment
+

@@ -1,10 +1,13 @@
-function int foo()
-{
- var int x;
- {
- x = 1;
- var int y;
-/* must declare all variables before any statement */
- }
- return 0;
+function void foo(int x, y, z; real f){
+if (x>y) {
+x = x + f;
+}
+else {
+y = x + y + z;
+x = f * 2;
+z = f;
+}
+}
+function char goo(){
+return 'a';
 }

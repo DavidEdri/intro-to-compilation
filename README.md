@@ -1,11 +1,13 @@
 ASK:
 
 is 30+50 REAL NUMBER if not fix REAL REGEX  
-ask what error msg we need to print   
+if we do i = i+1 then +1 is real and not expression  
+ask what error msg we need to print  
+ask if u must have main
 
 ---
 
 #TODO :
-
-add support for while, for, if, else, for 1 statment without { }  
-arrange th code that all the delerations are above and then statements  
+add support for '(expression)'  
+add support for 'b[3] = c;'  
+add support for '\*ptr = expr;'

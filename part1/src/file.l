@@ -12,7 +12,7 @@
 "void" return VOID;
 "for" return FOR;
 "while" return WHILE;
-"boolean" return BOOL;
+"bool" return BOOL;
 "main" return MAIN;
 "int" return INT;
 "int*" return INTPTR;

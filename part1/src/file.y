@@ -190,7 +190,7 @@ for
         { 
             $$ = mknode("FOR", $3, $5, $7, $9); 
         }
-    | FOR LEFTPAREN declare_var SEMICOLON expression SEMICOLON assignment RIGHTPAREN statement
+    | FOR LEFTPAREN declare_VAR SEMICOLON expression SEMICOLON assignment RIGHTPAREN statement
         { 
             $$ = mknode("FOR", $3, $5, $7, $9); 
         }
@@ -234,12 +234,14 @@ str
     : id LEFTBRACKET expression RIGHTBRACKET { $$ = mknode($1->token, $3, NULL, NULL, NULL); }
     | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT expression
         { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
+    | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT csnull
+        { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
     ;
 
 assignment
     : id ASSIGNMENT expression  { $$ = mknode("=", $1, $3, NULL, NULL); }
-    | id ASSIGNMENT CSNULL
-        { $$ = mknode("=", $1, mknode("CSNULL", NULL, NULL, NULL, NULL), NULL, NULL); }
+    | id ASSIGNMENT csnull
+        { $$ = mknode("=", $1, $3, NULL, NULL); }
     ;
 
 return
@@ -254,6 +256,10 @@ number
     : INTEGER   { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | HEX       { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | REALVALUE { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    ;
+
+csnull
+    : CSNULL { $$ = mknode("CSNULL", NULL, NULL, NULL, NULL); }
     ;
 
 %%

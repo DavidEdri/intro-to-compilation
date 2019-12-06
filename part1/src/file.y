@@ -27,6 +27,7 @@ code_wrapper
 
 global
     : declerations main { $$ = mknode("GLOBAL", $1, $2, NULL, NULL); }
+    | declerations      { $$ = $1; }
     | main              { $$ = $1; }
     ;
 

@@ -74,32 +74,52 @@ code_block
     ;
 
 expression
-    : expression GREATER expression         { $$ = mknode(">", $1, $3, NULL, NULL); }
-    | expression PLUS expression            { $$ = mknode("+", $1, $3, NULL, NULL); }
-    | expression MULTI expression           { $$ = mknode("*", $1, $3, NULL, NULL); }
-    | expression DIVISION expression        { $$ = mknode("/", $1, $3, NULL, NULL); }
-    | expression MINUS expression           { $$ = mknode("-", $1, $3, NULL, NULL); }
-    | expression EQUAL expression           { $$ = mknode("==", $1, $3, NULL, NULL); }
-    | expression GREATEREQUAL expression    { $$ = mknode(">=", $1, $3, NULL, NULL); }
-    | expression LESS expression            { $$ = mknode("<", $1, $3, NULL, NULL); }
-    | expression LESSEQUAL expression       { $$ = mknode("<=", $1, $3, NULL, NULL); }
-    | expression NOTEQUAL expression        { $$ = mknode("!=", $1, $3, NULL, NULL); }
-    | expression AND expression             { $$ = mknode("&&", $1, $3, NULL, NULL); }
-    | expression OR expression              { $$ = mknode("||", $1, $3, NULL, NULL); }
-    | NOT expression                        { $$ = mknode("NOT", $2, NULL, NULL, NULL); }
-    | ADDRESS id                            { $$ = mknode("&", $2, NULL, NULL, NULL); }
+    : expr op expr              { $$ = mknode($2->token, $1, $3, NULL, NULL); }
     | ADDRESS id LEFTBRACKET expression RIGHTBRACKET                   
                                             { $$ = mknode("&", mknode($2->token, $4, NULL, NULL, NULL), NULL, NULL, NULL); }
-    | dref                                  { $$ = $1; }
-    | function_call                         { $$ = $1; }
+    | expr {$$ = $1;}
+    ;
+
+op
+    : GREATER       { $$ = mknode(">", NULL, NULL, NULL, NULL); }
+    | EQUAL         { $$ = mknode("==", NULL, NULL, NULL, NULL); }
+    | GREATEREQUAL  { $$ = mknode(">=", NULL, NULL, NULL, NULL); }
+    | LESS          { $$ = mknode("<", NULL, NULL, NULL, NULL); }
+    | LESSEQUAL     { $$ = mknode("<=", NULL, NULL, NULL, NULL); }  
+    | NOTEQUAL      { $$ = mknode("!=", NULL, NULL, NULL, NULL); } 
+    | AND           { $$ = mknode("&&", NULL, NULL, NULL, NULL); } 
+    | OR            { $$ = mknode("||", NULL, NULL, NULL, NULL); }
+    ;
+
+expr
+    : term              { $$ = $1; }
+    | expr MINUS term   { $$ = mknode("-", $1, $3, NULL, NULL); }
+    | expr PLUS term    { $$ = mknode("+", $1, $3, NULL, NULL); }
+    | LEFTPAREN expr RIGHTPAREN       { $$ = $2; }
+    | not  {$$ = $1;}
+    ;
+
+term
+    : factor                { $$ = $1; }
+    | term DIVISION factor  { $$ = mknode("/", $1, $3, NULL, NULL); }
+    | term MULTI factor     { $$ = mknode("*", $1, $3, NULL, NULL); }
+    ;
+
+factor
+    : dref                                  { $$ = $1; }
     | id                                    { $$ = $1; }
     | number                                { $$ = $1; }
-    | CHARACTER                             { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
-    | STRING                                { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
-    | '|' id '|'                            { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
+    | function_call                         { $$ = $1; }
     | BOOLTRUE                              { $$ = mknode("TRUE", NULL, NULL, NULL, NULL); }
     | BOOLFALSE                             { $$ = mknode("FALSE", NULL, NULL, NULL, NULL); }
-    | LEFTPAREN expression RIGHTPAREN       {$$ = $2; }
+    | CHARACTER                             { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    | STRING                                { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    | ADDRESS id                            { $$ = mknode("&", $2, NULL, NULL, NULL); }
+    | '|' id '|'                            { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
+    ;
+
+not
+    : NOT expression                        { $$ = mknode("NOT", $2, NULL, NULL, NULL); }
     ;
 
 

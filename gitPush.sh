@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [-z "$1"]
+if [ -z "$1" ]
 then
     echo "must have a message to commit"
 else

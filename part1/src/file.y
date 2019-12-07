@@ -11,6 +11,7 @@ int yyerror(char *s);
 
 %token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL DO MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS HEX STR STRING REALVALUE
 
+%nonassoc ELSE
 %left PLUS MINUS SEMICOLON
 %left MULTI DIVISION
 %left NOT
@@ -42,8 +43,7 @@ statements
     ;
 
 statement
-    : if                        { $$ = $1; }
-    | if_else                   { $$ = $1; }
+    : if_else                   { $$ = $1; }
     | loops                     { $$ = $1; }
     | expression  SEMICOLON     { $$ = $1; }
     | return      SEMICOLON     { $$ = $1; }
@@ -168,7 +168,6 @@ function_args_decleration
     | var_types id                              { $$ = mknode($1->token, $2, NULL, NULL, NULL); }
     | COMMA id function_args_decleration        { $$ = mknode("", $2, $3, NULL, NULL); }
     | COMMA id                                  { $$ = mknode("", $2, NULL, NULL, NULL); }
-    | id                                        { $$ = mknode($1->token, NULL, NULL, NULL, NULL); }
     ;
 
 function_call
@@ -187,13 +186,14 @@ function_call_args
     ;
 
 if_else
-    : IF LEFTPAREN expression RIGHTPAREN statement ELSE statement
-        { $$ = mknode("IF-ELSE", $3, $5, $7, NULL); }
+    : IF LEFTPAREN expression RIGHTPAREN statement else 
+        { $$ = mknode("IF-ELSE", $3, $5, $6, NULL); }
+    | IF LEFTPAREN expression RIGHTPAREN statement 
+        { $$ = mknode("IF", $3, $5, NULL, NULL); }
     ;
 
-if
-    : IF LEFTPAREN expression RIGHTPAREN statement 
-        { $$ = mknode("IF", $3, $5, NULL, NULL); }
+else
+    : ELSE statement    { $$ = $2; }
     ;
 
 loops

@@ -58,7 +58,6 @@
 "*"             return MULTI;
 "&"             return ADDRESS;
 "^"             return DEREFERENCE;
-":"             return COLON;
 \'.\'           return CHARACTER;
 [a-zA-Z][a-zA-Z0-9_]*                   return ID;
 [-]?([1-9][0-9]*|0)                     return INTEGER;

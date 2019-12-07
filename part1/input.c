@@ -1,3 +1,6 @@
-function void foo(int x, y, z; real f){
-    var bool a = true || false && a  ;
+function void fee(int a, b) { 
+    /*asd
+    
+    *a/sd**/
+    ;
 }

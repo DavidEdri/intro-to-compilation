@@ -13,7 +13,7 @@ int yyerror(char *s);
 
 %left PLUS MINUS SEMICOLON
 %left MULTI DIVISION
-
+%left NOT
 %%
 
 s
@@ -75,11 +75,8 @@ code_block
 
 expression
     : additive_expression {$$=$1;}
-    | additive_expression relop additive_expression 
-            {$$ = mknode($2->token, $1, $3, NULL, NULL);}
     | ADDRESS id LEFTBRACKET additive_expression RIGHTBRACKET                   
             { $$ = mknode("&", mknode($2->token, $4, NULL, NULL, NULL), NULL, NULL, NULL); }
-    | not   {$$ = $1;}
     ;
 
 relop
@@ -91,12 +88,13 @@ relop
     | NOTEQUAL      { $$ = mknode("!=", NULL, NULL, NULL, NULL); } 
     | AND           { $$ = mknode("&&", NULL, NULL, NULL, NULL); } 
     | OR            { $$ = mknode("||", NULL, NULL, NULL, NULL); }
+    | MINUS         { $$ = mknode("-", NULL, NULL, NULL, NULL); }
+    | PLUS           { $$ = mknode("+", NULL, NULL, NULL, NULL); }
     ;
 
 additive_expression
     : term                              { $$ = $1; }
-    | additive_expression MINUS term    { $$ = mknode("-", $1, $3, NULL, NULL); }
-    | additive_expression PLUS term     { $$ = mknode("+", $1, $3, NULL, NULL); }
+    | additive_expression relop term    { $$ = mknode($2 -> token, $1, $3, NULL, NULL); }
     ;
 
 term
@@ -121,10 +119,11 @@ factor
     | ADDRESS id                            { $$ = mknode("&", $2, NULL, NULL, NULL); }
     | '|' id '|'                            { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
     | LEFTPAREN expression RIGHTPAREN       { $$=$2; }
+    | not                                   { $$ = $1;}
     ;
 
 not
-    : NOT expression                        { $$ = mknode("NOT", $2, NULL, NULL, NULL); }
+    : NOT factor                        { $$ = mknode("NOT", $2, NULL, NULL, NULL); }
     ;
 
 

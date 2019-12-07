@@ -278,6 +278,8 @@ assignment
         { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
     | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT csnull
         { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
+    | MULTI id ASSIGNMENT expression       
+        { $$ = mknode("=", mknode("ADDRESS", $2, NULL, NULL, NULL), $4, NULL, NULL); }
     ;
 
 return

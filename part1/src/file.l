@@ -38,14 +38,12 @@
 ")"             return RIGHTPAREN;
 "["             return LEFTBRACKET;
 "]"             return RIGHTBRACKET;
-"%"             return PERCENT;
 "'"             return QUOTES;
 "\""            return DOUBLEQUOTES;
 "="             return ASSIGNMENT;
 "&&"            return AND;
 \/              return DIVISION;
 "=="            return EQUAL;
-"--"            return MINUSMINUS;
 ">"             return GREATER;
 ">="            return GREATEREQUAL;
 "<"             return LESS;
@@ -57,8 +55,9 @@
 "+"             return PLUS;
 "*"             return MULTI;
 "&"             return ADDRESS;
-"^"             return DEREFERENCE;
 \'.\'           return CHARACTER;
+
+
 [a-zA-Z][a-zA-Z0-9_]*                   return ID;
 [-]?([1-9][0-9]*|0)                     return INTEGER;
 0(x|X)[0-9A-Fa-f]+                      return HEX;

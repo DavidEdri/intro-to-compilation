@@ -9,7 +9,7 @@ int yylex();
 int yyerror(char *s);
 %}
 
-%token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL DO MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET PERCENT QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS DEREFERENCE ABSUOLUTE HEX STR STRING REALVALUE MINUSMINUS
+%token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL DO MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS HEX STR STRING REALVALUE
 
 %left PLUS MINUS SEMICOLON
 %left MULTI DIVISION
@@ -59,7 +59,7 @@ declerations
 decleration
     : function_decleration      { $$ = $1; }
     | declare_VAR SEMICOLON     { $$ = $1; }
-    | declare_str SEMICOLON     { $$ = $1; }
+    | declare_STR SEMICOLON     { $$ = $1; }
     ;
 
 code_block_wrapper
@@ -67,10 +67,10 @@ code_block_wrapper
     ;
 
 code_block
-    : LEFTBRACE RIGHTBRACE                           {$$ = NULL; }
-    | LEFTBRACE declerations statements RIGHTBRACE   {$$ = mknode("", $2, $3, NULL, NULL); }
-    | LEFTBRACE declerations RIGHTBRACE              {$$ = mknode("", $2, $3, NULL, NULL); }
-    | LEFTBRACE statements RIGHTBRACE                {$$ = mknode("", $2, $3, NULL, NULL); }
+    : LEFTBRACE RIGHTBRACE                           { $$ = NULL; }
+    | LEFTBRACE declerations statements RIGHTBRACE   { $$ = mknode("", $2, $3, NULL, NULL); }
+    | LEFTBRACE declerations RIGHTBRACE              { $$ = mknode("", $2, $3, NULL, NULL); }
+    | LEFTBRACE statements RIGHTBRACE                { $$ = mknode("", $2, $3, NULL, NULL); }
     ;
 
 expression
@@ -89,7 +89,7 @@ relop
     | AND           { $$ = mknode("&&", NULL, NULL, NULL, NULL); } 
     | OR            { $$ = mknode("||", NULL, NULL, NULL, NULL); }
     | MINUS         { $$ = mknode("-", NULL, NULL, NULL, NULL); }
-    | PLUS           { $$ = mknode("+", NULL, NULL, NULL, NULL); }
+    | PLUS          { $$ = mknode("+", NULL, NULL, NULL, NULL); }
     ;
 
 additive_expression
@@ -177,27 +177,23 @@ function_call
     ;
 
 function_call_args_wrapper
-    : function_call_args  { $$ = mknode("ARGS", $1, NULL, NULL, NULL); }
+    : function_call_args        { $$ = mknode("ARGS", $1, NULL, NULL, NULL); }
     | %empty                    { $$ = mknode("ARGS", mknode("NONE", NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
     ;
 
 function_call_args
-    : expression COMMA function_call_args  { $$ = mknode("", $1, $3, NULL, NULL); } 
-    | expression { $$ = mknode("", $1, NULL, NULL, NULL); }
+    : expression COMMA function_call_args   { $$ = mknode("", $1, $3, NULL, NULL); } 
+    | expression                            { $$ = mknode("", $1, NULL, NULL, NULL); }
     ;
 
 if_else
     : IF LEFTPAREN expression RIGHTPAREN statement ELSE statement
-        { 
-            $$ = mknode("IF-ELSE", $3, $5, $7, NULL); 
-        }
+        { $$ = mknode("IF-ELSE", $3, $5, $7, NULL); }
     ;
 
 if
     : IF LEFTPAREN expression RIGHTPAREN statement 
-        { 
-            $$ = mknode("IF", $3, $5, NULL, NULL); 
-        }
+        { $$ = mknode("IF", $3, $5, NULL, NULL); }
     ;
 
 loops
@@ -208,27 +204,19 @@ loops
 
 while
     : WHILE LEFTPAREN expression RIGHTPAREN statement 
-        { 
-            $$ = mknode("WHILE", $3, $5, NULL, NULL); 
-        }
+        { $$ = mknode("WHILE", $3, $5, NULL, NULL); }
     ;
 
 do_while
     : DO code_block_wrapper WHILE LEFTPAREN expression RIGHTPAREN SEMICOLON
-        { 
-            $$ = mknode("DO-WHILE", $5, $2, NULL, NULL); 
-        }
+        { $$ = mknode("DO-WHILE", $5, $2, NULL, NULL); }
     ;
 
 for
     : FOR LEFTPAREN assignment SEMICOLON expression SEMICOLON assignment RIGHTPAREN statement
-        { 
-            $$ = mknode("FOR", $3, $5, $7, $9); 
-        }
+        { $$ = mknode("FOR", $3, $5, $7, $9); }
     | FOR LEFTPAREN declare_VAR SEMICOLON expression SEMICOLON assignment RIGHTPAREN statement
-        { 
-            $$ = mknode("FOR", $3, $5, $7, $9); 
-        }
+        { $$ = mknode("FOR", $3, $5, $7, $9); }
     ;
 
 var_types
@@ -253,25 +241,27 @@ declare_var
     ;
 
 var
-    : id { $$ = $1; }
-    | assignment { $$ = $1; }
+    : id            { $$ = $1; }
+    | assignment    { $$ = $1; }
+    ;
+
+declare_STR
+    : STRDECLARE declare_str    { $$ = mknode("STR", $2, NULL, NULL, NULL); } 
     ;
 
 declare_str
-    : STRDECLARE str COMMA declare_str 
-                            { $$ = mknode("STR", $2, $4, NULL, NULL); }
-    | STRDECLARE str        { $$ = mknode("STR", $2, NULL, NULL, NULL); } 
-    | str COMMA declare_str { $$ = mknode("", $1, $3, NULL, NULL); } 
+    : str COMMA declare_str { $$ = mknode("", $1, $3, NULL, NULL); } 
     | str                   { $$ = $1; } 
     ;
 
 str
-    : id LEFTBRACKET expression RIGHTBRACKET { $$ = mknode($1->token, $3, NULL, NULL, NULL); }
-    | assignment {$$ = $1;}
+    : id LEFTBRACKET expression RIGHTBRACKET    { $$ = mknode($1->token, $3, NULL, NULL, NULL); }
+    | assignment                                { $$ = $1; }
     ;
 
 assignment
-    : id ASSIGNMENT expression  { $$ = mknode("=", $1, $3, NULL, NULL); }
+    : id ASSIGNMENT expression  
+        { $$ = mknode("=", $1, $3, NULL, NULL); }
     | id ASSIGNMENT csnull
         { $$ = mknode("=", $1, $3, NULL, NULL); }
     | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT expression 

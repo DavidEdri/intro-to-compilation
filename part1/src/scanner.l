@@ -62,7 +62,9 @@
 [-]?([1-9][0-9]*|0)                     return INTEGER;
 0(x|X)[0-9A-Fa-f]+                      return HEX;
 "\""[a-zA-z0-9][A-z]"\""                return STR;
-[-+]?[0-9]*\.?[0-9]?[eE]?[-+]?[0-9]+    return REALVALUE; 
+[0-9]*\.[0-9]?[eE]?[-+]?[0-9]+          return REALVALUE;
+[-+][0-9]*\.[0-9]?[eE]?[-+]?[0-9]+      return REALVALUE;
+[-+][0-9]*[eE][-+]?[0-9]+               return REALVALUE;
 "\""[^"^\n]*"\""                        return STRING;
 
 "/*" BEGIN comment;

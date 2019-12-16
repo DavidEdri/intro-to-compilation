@@ -109,18 +109,19 @@ term_op
     ;
 
 factor
-    : dref                                  { $$ = $1; }
-    | id                                    { $$ = $1; }
-    | number                                { $$ = $1; }
-    | function_call                         { $$ = $1; }
-    | BOOLTRUE                              { $$ = mknode("TRUE", NULL, NULL, NULL, NULL); }
-    | BOOLFALSE                             { $$ = mknode("FALSE", NULL, NULL, NULL, NULL); }
-    | CHARACTER                             { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
-    | STRING                                { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
-    | ADDRESS id                            { $$ = mknode("&", $2, NULL, NULL, NULL); }
-    | '|' id '|'                            { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
-    | LEFTPAREN expression RIGHTPAREN       { $$=$2; }
-    | not                                   { $$ = $1;}
+    : dref                                      { $$ = $1; }
+    | id                                        { $$ = $1; }
+    | number                                    { $$ = $1; }
+    | function_call                             { $$ = $1; }
+    | BOOLTRUE                                  { $$ = mknode("TRUE", NULL, NULL, NULL, NULL); }
+    | BOOLFALSE                                 { $$ = mknode("FALSE", NULL, NULL, NULL, NULL); }
+    | CHARACTER                                 { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    | STRING                                    { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
+    | ADDRESS id                                { $$ = mknode("&", $2, NULL, NULL, NULL); }
+    | '|' id '|'                                { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
+    | id LEFTBRACKET expression RIGHTBRACKET    { $$ = mknode("STRCHAR", $1, $3, NULL, NULL); }
+    | LEFTPAREN expression RIGHTPAREN           { $$=$2; }
+    | not                                       { $$ = $1;}
     ;
 
 not

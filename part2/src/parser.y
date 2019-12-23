@@ -19,7 +19,7 @@ int yyerror(char *s);
 %%
 
 s
-: code_wrapper { printf("ok\n"); printtree($1, 0, 1); }
+: code_wrapper { printf("ok\n"); test();}//printtree($1, 0, 1); }
 ;
 
 code_wrapper

@@ -3,15 +3,15 @@ ASK:
 ---
 
 # TODO :
-main  
-if_else + validate condition
-for  + validate condition 
-while + validate condition 
-do while  + validate condition
-expressions  + validate types
-assignments  + validate types
-var initial assignments  + validate types
-str support  
+main    
+if_else + validate condition  
+for  + validate condition   
+while + validate condition   
+do while  + validate condition  
+expressions  + validate types  
+assignments  + validate types  
+var initial assignments  + validate types  
+str support    
 
 
 ---

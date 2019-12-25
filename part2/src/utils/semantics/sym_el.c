@@ -1,5 +1,3 @@
-
-
 typedef struct sym_el{
     int type;
     struct func *f;

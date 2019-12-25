@@ -1,6 +1,6 @@
 typedef struct func{
     char *id;
-    struct arg **args;
+    struct arg_arr *args;
     int args_count;
     int type;
 } func;
@@ -19,6 +19,16 @@ func *new_func(char *id, int type){
 
     return res;
 }
+
+void ast_to_func(struct node* tree){
+    char *id, *type;
+    
+    id = tree->first->token;
+    type = tree->third->token;
+    
+    printf("new func id: %s type: %s\n", id, type);
+}
+
 
 void print_func(struct func *f){
     // TODO : print args

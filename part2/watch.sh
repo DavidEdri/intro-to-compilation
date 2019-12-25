@@ -4,6 +4,6 @@ file=./input.code
 
 while inotifywait -qqre modify "$dir" "$file";
 do
-    clean
+    clear
     make run
 done

@@ -1,16 +1,4 @@
-/* long
-comment long
-comment */
-
-function bool foo1(int a, b, y; char c)
+function bool foo1(int a, b, y; char c; real x,y,z)
 {
-	var bool res = true;
-	{
-		var char x = 'd', b;
-		var int y;
-		b = '&';
-		a = (y * 7)/a-y;
-		res = (b == c) && (y > a);
-	}
-    	return res ;
+
 }

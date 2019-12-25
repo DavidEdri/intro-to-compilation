@@ -22,7 +22,7 @@ void printtree(node *tree, int tab, int one_line)
 {
     int i;
     char *token = tree->token;
-    int print_value = should_print(token);
+    int print_value = 1;//should_print(token);
 
     if (print_value)
     {

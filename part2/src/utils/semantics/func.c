@@ -1,12 +1,4 @@
-typedef struct func{
-    char *id;
-    struct arg_arr *args;
-    int args_count;
-    int type;
-} func;
-
 func *new_func(char *id, int type){
-    // TODO : add support for args
     func* res = (func*)malloc(sizeof(func));
     char* tmp_id = (char*)malloc(sizeof(id) + 1);
     
@@ -14,23 +6,44 @@ func *new_func(char *id, int type){
 
     res->id = tmp_id;
     res->type = type;
-    res->args_count = 0;
-    res->args = NULL;
+    res->args = new_arg_arr();
 
     return res;
 }
 
+int func_type_to_int(char *type){
+    if(strcmp(type, "TYPE BOOL") == 0){
+        return TYPE_BOOL;
+    }
+    return -1;
+}
+
 void ast_to_func(struct node* tree){
     char *id, *type;
-    
+    struct func *res = NULL;
+    struct sym_el *tmp_se = NULL;
+    struct sym_table *top = main_stack->top;
+
     id = tree->first->token;
     type = tree->third->token;
+
+    if(st_is_declared(top, id)){
+        printf("id: [%s] already declared in scope\n", id);
+        exit(1);
+    }
     
-    printf("new func id: %s type: %s\n", id, type);
+    res  = new_func(id, func_type_to_int(type));
+    ast_to_args(res, tree->second);
+    tmp_se = new_sym_el();
+    se_add_func(tmp_se, res);
+    st_add_item(top, tmp_se);
+    handle_code_block(tree->fourth, res);
+
 }
 
 
 void print_func(struct func *f){
-    // TODO : print args
     printf("id:%s\ttype:%d\n", f->id, f->type);
+    printf("args:");
+    print_arg_arr(f->args);
 }

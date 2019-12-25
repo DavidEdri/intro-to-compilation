@@ -1,4 +1,6 @@
-function bool foo1(int a, b, y; char c; real x,y,z)
+function bool foo1(int a, b, y; char c; real x,g,z)
 {
-
+    var int num;
 }
+
+

@@ -1,29 +1,15 @@
 #define NUM_OF_IGNOORES 3
-void handle_children(struct node* tree);
-
-int sem_ignore(char *str){
-    char ignore_list[NUM_OF_IGNOORES][10] = {
-        "",
-        "GLOBAL",
-        "CODE"
-        };
-
-    for (int i = 0; i < NUM_OF_IGNOORES; i++)
-    {
-        if (strcmp(str, ignore_list[i]) == 0)
-        {
-            return 1;
-        }
-    }
-
-    return 0;
-}
 
 void handle_token(struct node* tree){
     char *token = tree->token;
 
-    if(strcmp(token, "FUNCTION") == 0){
+    if(strcmp(token, "CODE") == 0){
+        main_stack = new_code_stack();
+        cs_push(main_stack, new_sym_table());
+        handle_children(tree);
+    }else if(strcmp(token, "FUNCTION") == 0){
         ast_to_func(tree);
+        print_cs(main_stack);
     }else if(strcmp(token, "BLOCK") == 0){
         // handle new block
     }else{
@@ -56,4 +42,8 @@ if (tree->first)
 
 void apply_semantics(struct node* tree){
     handle_token(tree);
+}
+
+void handle_code_block(struct node* tree, struct func *f){
+    
 }

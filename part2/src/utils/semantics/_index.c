@@ -1,7 +1,7 @@
 #include "_types.c"
+#include "func.c"
 #include "arg.c"
 #include "var.c"
-#include "func.c"
 #include "sym_el.c"
 #include "sym_table.c"
 #include "code_stack.c"

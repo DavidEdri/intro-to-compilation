@@ -1,9 +1,3 @@
-typedef struct sym_el{
-    int type;
-    struct func *f;
-    struct var *v;
-} sym_el;
-
 sym_el *new_sym_el(){
     sym_el *res = (sym_el*)malloc(sizeof(sym_el));
     

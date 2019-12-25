@@ -1,8 +1,3 @@
-typedef struct code_stack{
-    struct sym_table *top;
-    struct code_stack *next;
-}code_stack;
-
 code_stack *new_code_stack(){
     struct code_stack *res = (struct code_stack*)malloc(sizeof(struct code_stack));
     
@@ -14,7 +9,7 @@ code_stack *new_code_stack(){
 
 void cs_push(struct code_stack* cs, struct sym_table *item){
     struct code_stack *tmp = new_code_stack();
-
+    
     if(!cs->top){
         cs->top = item;
         return;
@@ -32,6 +27,12 @@ sym_table *cs_pop(struct code_stack* cs){
 
     if(!cs->top){
         printf("cannot pop empty stack\n");
+        return NULL;
+    }
+
+    if(!tmp){
+        // only 1 item
+        cs->top = NULL;
         return NULL;
     }
 

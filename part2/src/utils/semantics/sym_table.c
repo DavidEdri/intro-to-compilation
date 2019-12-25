@@ -1,8 +1,3 @@
-typedef struct sym_table{
-    struct sym_el *data;
-    struct sym_table *next;
-}sym_table;
-
 sym_table *new_sym_table(){
     struct sym_table *res = (struct sym_table*)malloc(sizeof(struct sym_table));
 
@@ -16,7 +11,7 @@ int st_is_declared(struct sym_table *st, char *id){
     struct sym_table *current = st;
 
     while(current){
-        if(strcmp(se_get_id(current->data), id) == 0){
+        if(current->data && strcmp(se_get_id(current->data), id) == 0){
             return 1;
         }
         

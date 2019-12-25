@@ -3,6 +3,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include "lex.yy.c" 
+#include "utils/semantics/_structs.h"
+#include "utils/semantics/_declerations.c"
+
+struct code_stack *main_stack = NULL;
 #include "utils/index.c"
 
 int yylex();
@@ -19,7 +23,7 @@ int yyerror(char *s);
 %%
 
 s
-: code_wrapper { test();}
+: code_wrapper { printtree($1,0,0);} //apply_semantics($1);}
 ;
 
 code_wrapper

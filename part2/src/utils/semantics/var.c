@@ -1,9 +1,3 @@
-typedef struct var{
-    char *id;
-    char *val;
-    int type;
-} var;
-
 var *new_var(char *id, int type, char *val){
     var* res = (var*)malloc(sizeof(var));
     char* tmp_id = (char*)malloc(sizeof(id) + 1);

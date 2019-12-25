@@ -31,11 +31,6 @@ void st_add_item(struct sym_table *st, struct sym_el *data){
         return;
     }
 
-    if(st_is_declared(st, data_id)){
-        printf("%s is already declared in current scope!\n", data_id);
-        return;
-    }
-    
     while(current->next){
         current = current->next;
     }

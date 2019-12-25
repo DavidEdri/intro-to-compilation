@@ -24,6 +24,8 @@ void validate_ret(struct node *tree, struct func *f);
 // var
 var *new_var(char *id, int type, char *val);
 void print_var(var *v);
+int var_type_to_int(char *type);
+void validate_var_decleration(struct node * tree, int type);
 
 // sym_el
 sym_el *new_sym_el();

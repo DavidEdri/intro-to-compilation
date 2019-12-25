@@ -1,6 +1,7 @@
 void apply_semantics(struct node* tree){
     handle_token(tree);
     print_cs(main_stack);
+    cs_pop(main_stack);
 }
 
 void handle_token(struct node* tree){
@@ -18,6 +19,12 @@ void handle_token(struct node* tree){
         // skip
     }else if(strcmp(token, "FUNCTION-CALL") == 0){
         validate_func_call(tree);
+    }else if(strcmp(token, "INT") == 0
+            || strcmp(token, "REAL") == 0
+            || strcmp(token, "BOOL") == 0
+            || strcmp(token, "CHAR") == 0
+        ){
+        validate_var_decleration(tree, var_type_to_int(token));
     }else{
         printf("unsuported token : %s\n", token);
         handle_children(tree);
@@ -49,6 +56,7 @@ if (tree->first)
 
 void handle_code_block(struct node* tree, struct func *f){
     cs_push(main_stack, new_sym_table());
+   
     if(f){
         args_to_st(f);
         validate_return(tree, f);

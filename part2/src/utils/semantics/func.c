@@ -27,6 +27,10 @@ int func_type_to_int(char *type){
     else if(strcmp(type, "TYPE CHAR") == 0){
         return TYPE_CHAR;
     }
+
+    printf("unexpected type: %s in func_type_to_int\n", type);
+    exit(1);
+
     return -1;
 }
 

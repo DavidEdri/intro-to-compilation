@@ -51,7 +51,10 @@ int se_cmp_id(struct sym_el *se, char *id){
 }
 
 void print_se(struct sym_el *se){
-        switch(se->type){
+    if(!se){
+        return;
+    }
+    switch(se->type){
         case TYPE_FUNC:
             printf("se func - ");
             print_func(se->f);

@@ -51,5 +51,5 @@ void handle_code_block(struct node* tree, struct func *f){
     }
     
     handle_children(tree);
-    cs_pop(main_stack);
+    //cs_pop(main_stack);
 }

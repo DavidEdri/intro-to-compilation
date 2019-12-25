@@ -108,6 +108,7 @@ void ast_to_args(struct func *f, struct node *tree){
 }
 
 void print_arg(arg* a) {
+    if(!a) return;
     printf("id:%s,type:%d\n", a->id, a->type);
 }
 

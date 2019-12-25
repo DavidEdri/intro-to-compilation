@@ -56,6 +56,6 @@ void ast_to_func(struct node* tree){
 
 void print_func(struct func *f){
     printf("id:%s\ttype:%d\n", f->id, f->type);
-    printf("args:");
+    printf("args:\n");
     print_arg_arr(f->args);
 }

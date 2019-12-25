@@ -18,6 +18,8 @@ int func_type_to_int(char *type);
 void ast_to_func(struct node* tree);
 void print_func(struct func *f);
 void validate_return(struct node *tree, struct func *f);
+void validate_rets(struct node *tree, struct func *f);
+void validate_ret(struct node *tree, struct func *f);
 
 // var
 var *new_var(char *id, int type, char *val);

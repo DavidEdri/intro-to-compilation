@@ -55,15 +55,47 @@ void ast_to_func(struct node* tree){
 }
 
 void validate_return(struct node *tree, struct func *f){
-    struct node *ret_tree = NULL;//tree_find(tree, "RET");
+    int got_ret = tree_find(tree, "RET") != NULL;
     int is_void = f->type == TYPE_VOID;
 
-    if(!ret_tree && !is_void){
+    if(got_ret){
+        validate_rets(tree, f);
+    }
+
+    if(!got_ret && !is_void){
         printf("func: %s has no return\n", f->id);
         exit(1);
-    }else if(!is_void){
-        //got return TODO: validate type
-        printf("ret - %s, t: %d\n", ret_tree->first->token, f->type);
+    }
+}
+
+void validate_ret(struct node *tree, struct func *f){
+    int f_type = f->type;
+    int is_void = f_type == TYPE_VOID;
+
+    if(is_void && strcmp(tree->first->token, "VOID") !=0){
+        printf("func %s must return void\n", f->id);
+        exit(1);
+    }
+
+    // TODO : validate types
+}
+
+void validate_rets(struct node *tree, struct func *f){
+    if(strcmp(tree->token, "RET") == 0){
+        validate_ret(tree, f);
+    }else{
+        if(tree->first){
+            validate_rets(tree->first, f);
+        }
+        if(tree->second){
+            validate_rets(tree->second, f);
+        }
+        if(tree->third){
+            validate_rets(tree->third, f);
+        }
+        if(tree->fourth){
+            validate_rets(tree->fourth, f);
+        }
     }
 }
 

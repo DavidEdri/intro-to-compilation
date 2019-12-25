@@ -23,7 +23,7 @@ int yyerror(char *s);
 %%
 
 s
-: code_wrapper { printtree($1,0,0);} //apply_semantics($1);}
+: code_wrapper { apply_semantics($1); } // apply_semantics($1);   printtree($1,0,0);
 ;
 
 code_wrapper
@@ -281,7 +281,7 @@ assignment
 
 return
     : RETURN expression             { $$ = mknode("RET", $2, NULL, NULL, NULL); }
-    | RETURN                        { $$ = mknode("RET", NULL, NULL, NULL, NULL); }
+    | RETURN                        { $$ = mknode("RET", mknode("VOID", NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
 
 id
     : ID { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }

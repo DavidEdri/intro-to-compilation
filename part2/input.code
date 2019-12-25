@@ -1,6 +1,7 @@
-function bool foo1(int a, b, y; char c; real x,g,z)
-{
-    var int num;
+function void foo1(int a, b, y; char c; real x,g,z){
+    function void foo2(){
+
+    }
 }
 
 

@@ -1,4 +1,7 @@
-#define NUM_OF_IGNOORES 3
+void apply_semantics(struct node* tree){
+    handle_token(tree);
+    print_cs(main_stack);
+}
 
 void handle_token(struct node* tree){
     char *token = tree->token;
@@ -9,7 +12,6 @@ void handle_token(struct node* tree){
         handle_children(tree);
     }else if(strcmp(token, "FUNCTION") == 0){
         ast_to_func(tree);
-        print_cs(main_stack);
     }else if(strcmp(token, "BLOCK") == 0){
         // handle new block
     }else{
@@ -40,10 +42,14 @@ if (tree->first)
     }
 }
 
-void apply_semantics(struct node* tree){
-    handle_token(tree);
-}
 
 void handle_code_block(struct node* tree, struct func *f){
+    cs_push(main_stack, new_sym_table());
+    if(f){
+    // args_to_st(f);
+    // validate_return(f);
+    }
     
+    handle_children(tree);
+    cs_pop(main_stack);
 }

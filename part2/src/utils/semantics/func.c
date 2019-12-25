@@ -15,6 +15,18 @@ int func_type_to_int(char *type){
     if(strcmp(type, "TYPE BOOL") == 0){
         return TYPE_BOOL;
     }
+    else if(strcmp(type, "TYPE VOID") == 0){
+        return TYPE_VOID;
+    }
+    else if(strcmp(type, "TYPE REAL") == 0){
+        return TYPE_REAL;
+    }
+    else if(strcmp(type, "TYPE INT") == 0){
+        return TYPE_INT;
+    }
+    else if(strcmp(type, "TYPE CHAR") == 0){
+        return TYPE_CHAR;
+    }
     return -1;
 }
 
@@ -37,8 +49,8 @@ void ast_to_func(struct node* tree){
     tmp_se = new_sym_el();
     se_add_func(tmp_se, res);
     st_add_item(top, tmp_se);
-    handle_code_block(tree->fourth, res);
 
+    handle_code_block(tree->fourth, res);
 }
 
 

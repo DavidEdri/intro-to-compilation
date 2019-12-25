@@ -44,3 +44,4 @@ void print_cs(struct code_stack* cs);
 // _functions
 void handle_children(struct node* tree);
 void handle_code_block(struct node* tree, struct func *f);
+void handle_token(struct node* tree);

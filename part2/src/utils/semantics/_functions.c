@@ -6,7 +6,7 @@ void apply_semantics(struct node* tree){
 
 void handle_token(struct node* tree){
     char *token = tree->token;
-
+    
     if(strcmp(token, "CODE") == 0){
         main_stack = new_code_stack();
         cs_push(main_stack, new_sym_table());

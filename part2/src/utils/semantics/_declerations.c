@@ -10,6 +10,8 @@ void print_arg_arr(arg_arr* a);
 void args_to_st(struct func *f);
 int num_of_args(struct arg_arr* args);
 int count_tree_args(struct node* tree);
+//int check_args_types(struct node* tree,arg_arr*);
+
 
 
 // func

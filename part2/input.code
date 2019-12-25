@@ -1,12 +1,9 @@
-function void foo1(int a, b, y; char c; real x,g,z){
-    var int num1, num2, num3;
-    var char ch;
+function void func1(int a){
+  function void func(int x){}
+  func(a,g,k,j);
 }
 
-function int foo2(int a, b, y; char c; real x,g,z){
-    var int num1, num2, num3;
-    var char ch;
 
-    return;
-}
+
+
 

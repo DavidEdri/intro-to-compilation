@@ -1,3 +1,6 @@
+//core dumped when there are no args
+
+
 arg *new_arg(char* id, int type) {
     arg* res = (arg*)malloc(sizeof(arg));
     char* tmp_id = (char*)malloc(sizeof(id) + 1);
@@ -138,31 +141,34 @@ int num_of_args(struct arg_arr* args){
     int count= 0;
     struct arg_arr* tmp = args;
     
-    while(tmp->data){
+    while(tmp){
         count++;
         tmp=tmp->next;
     }
+  
     return count;
 }
 
-int count_tree_args(struct node* tree){
-    char *token = tree->token;
-
-
-    if (strcmp(token, "ARGS") == 0 || strcmp(token, "") == 0)
-    {
-        if (tree->first)
+int count_tree_args(struct node* tree){   
+    int x=0;   
+    if (!tree){return 0;}    
+        if (tree->first && tree->second)
         {
-            count_tree_args(tree->first);
+            x++;
         }
-
-        if (tree->second)
-        {
-            count_tree_args(tree->second);
-        }
-        
-    }else{
-        return 1;
+        x=x+(count_tree_args(tree->first) + count_tree_args(tree->second));
+        return x;
     }
     
-}
+//     int check_args_types(struct node* tree, arg_arr* args, char* type){
+
+    
+//     if(strcmp(tree->token,"INT")==0 || strcmp(tree->token,"REAL")==0 || strcmp(tree->token,"CHAR")==0 || strcmp(tree->token,"BOOL")==0){
+//         type=tree->token;
+//     }
+//     else if(strcmp(tree->token,"ARGS") || strcmp(tree->token,"FUNCTION_CALL") || strcmp(tree->token,"")){ check_args_types(tree->first)}
+//     }
+
+
+
+

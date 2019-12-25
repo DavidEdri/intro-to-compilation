@@ -107,6 +107,18 @@ void ast_to_args(struct func *f, struct node *tree){
     }
 }
 
+void args_to_st(struct func *f){
+    struct arg_arr *a = f->args;
+    struct sym_el *s_tmp = NULL;
+
+    while(a){
+        s_tmp = new_sym_el();
+        se_add_var(s_tmp, new_var(a->data->id, a->data->type, ""));
+        st_add_item(main_stack->top, s_tmp);
+        a = a->next;
+    }
+}
+
 void print_arg(arg* a) {
     if(!a) return;
     printf("id:%s,type:%d\n", a->id, a->type);

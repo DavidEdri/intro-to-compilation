@@ -7,12 +7,14 @@ void add_arg_to_f(struct func *f, struct node *tree, int type);
 void ast_to_args(struct func *f, struct node *tree);
 void print_arg(arg* a);
 void print_arg_arr(arg_arr* a);
+void args_to_st(struct func *f);
 
 // func
 func *new_func(char *id, int type);
 int func_type_to_int(char *type);
 void ast_to_func(struct node* tree);
 void print_func(struct func *f);
+void validate_return(struct node *tree, struct func *f);
 
 // var
 var *new_var(char *id, int type, char *val);
@@ -45,3 +47,4 @@ void print_cs(struct code_stack* cs);
 void handle_children(struct node* tree);
 void handle_code_block(struct node* tree, struct func *f);
 void handle_token(struct node* tree);
+struct node *tree_find(struct node *tree, char *id);

@@ -14,6 +14,8 @@ void handle_token(struct node* tree){
         ast_to_func(tree);
     }else if(strcmp(token, "BLOCK") == 0){
         // handle new block
+    }else if(strcmp(token, "RET") == 0){
+        // validate_return(tree);
     }else{
         printf("unsuported token : %s\n", token);
         handle_children(tree);
@@ -46,10 +48,33 @@ if (tree->first)
 void handle_code_block(struct node* tree, struct func *f){
     cs_push(main_stack, new_sym_table());
     if(f){
-    // args_to_st(f);
-    // validate_return(f);
+        args_to_st(f);
+        validate_return(tree, f);
     }
     
     handle_children(tree);
-    //cs_pop(main_stack);
+    cs_pop(main_stack);
+}
+
+struct node *tree_find(struct node *tree, char *id){
+    struct node *res = NULL;
+
+    if(strcmp(tree->token, id) == 0){
+        return tree;
+    }else{
+        if(tree->first){
+            res = tree_find(tree->first, id);
+        }
+        if(tree->second){
+            res = tree_find(tree->second, id);
+        }
+        if(tree->third){
+            res = tree_find(tree->third, id);
+        }
+        if(tree->fourth){
+            res = tree_find(tree->fourth, id);
+        }
+    }
+
+    return res;
 }

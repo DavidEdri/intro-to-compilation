@@ -51,11 +51,24 @@ void ast_to_func(struct node* tree){
     st_add_item(top, tmp_se);
 
     handle_code_block(tree->fourth, res);
+
 }
 
+void validate_return(struct node *tree, struct func *f){
+    struct node *ret_tree = NULL;//tree_find(tree, "RET");
+    int is_void = f->type == TYPE_VOID;
+
+    if(!ret_tree && !is_void){
+        printf("func: %s has no return\n", f->id);
+        exit(1);
+    }else if(!is_void){
+        //got return TODO: validate type
+        printf("ret - %s, t: %d\n", ret_tree->first->token, f->type);
+    }
+}
 
 void print_func(struct func *f){
     printf("id:%s\ttype:%d\n", f->id, f->type);
-    printf("args:\n");
-    print_arg_arr(f->args);
+    // printf("args:\n");
+    // print_arg_arr(f->args);
 }

@@ -133,3 +133,36 @@ void print_arg_arr(arg_arr* a) {
         tmp = tmp->next;
     }
 }
+
+int num_of_args(struct arg_arr* args){
+    int count= 0;
+    struct arg_arr* tmp = args;
+    
+    while(tmp->data){
+        count++;
+        tmp=tmp->next;
+    }
+    return count;
+}
+
+int count_tree_args(struct node* tree){
+    char *token = tree->token;
+
+
+    if (strcmp(token, "ARGS") == 0 || strcmp(token, "") == 0)
+    {
+        if (tree->first)
+        {
+            count_tree_args(tree->first);
+        }
+
+        if (tree->second)
+        {
+            count_tree_args(tree->second);
+        }
+        
+    }else{
+        return 1;
+    }
+    
+}

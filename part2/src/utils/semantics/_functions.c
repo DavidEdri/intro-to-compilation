@@ -15,7 +15,9 @@ void handle_token(struct node* tree){
     }else if(strcmp(token, "BLOCK") == 0){
         // handle new block
     }else if(strcmp(token, "RET") == 0){
-        // validate_return(tree);
+        // skip
+    }else if(strcmp(token, "FUNCTION-CALL") == 0){
+        validate_func_call(tree);
     }else{
         printf("unsuported token : %s\n", token);
         handle_children(tree);

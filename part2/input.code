@@ -1,6 +1,6 @@
 function void foo1(int a, b, y; char c; real x,g,z){
     var int num1, num2;
+    var int x=foo1(x,j,f);
     return 3;
 }
-
 

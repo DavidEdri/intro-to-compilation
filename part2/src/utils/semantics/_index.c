@@ -7,3 +7,4 @@
 #include "code_stack.c"
 #include "_functions.c"
 #include "_test.c"
+#include "string.c"

@@ -59,3 +59,28 @@ void print_func(struct func *f){
     printf("args:\n");
     print_arg_arr(f->args);
 }
+
+//handle exp as args
+void validate_func_call(struct node* t){
+    char *f_id = t->first->token;
+    struct sym_el *tmp = cs_find(main_stack,f_id);
+    struct func* tmp_func = tmp->f;
+    int n;
+
+    if(!tmp){
+        printf("%s is undefined\n",f_id);
+        exit(1);
+    }
+
+    if(se_get_type(tmp)!=TYPE_FUNC){
+        printf("%s is not a function\n",f_id);
+        exit(1);
+    }
+    n = num_of_args(tmp_func->args);
+    count_tree_args(t->second);
+
+
+
+
+
+}

@@ -23,7 +23,7 @@ int yyerror(char *s);
 %%
 
 s
-: code_wrapper { apply_semantics($1); } // apply_semantics($1);   printtree($1,0,0);
+: code_wrapper {  printtree($1,0,0); } // apply_semantics($1);   printtree($1,0,0);
 ;
 
 code_wrapper

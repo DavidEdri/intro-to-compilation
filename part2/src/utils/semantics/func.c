@@ -90,7 +90,7 @@ void print_func(struct func *f){
 void validate_func_call(struct node* t){
     char *f_id = t->first->token;
     struct sym_el *tmp = cs_find(main_stack,f_id);
-    struct func* tmp_func = tmp->f;  
+    struct func* tmp_func = NULL;  
     int func_args_count , func_call_args_count;
     struct node* tmp_tree = t;
     
@@ -103,10 +103,11 @@ void validate_func_call(struct node* t){
         printf("%s is not a function\n",f_id);
         exit(1);
     }
-    
+    tmp_func = tmp->f;
+
     func_args_count = num_of_args(tmp_func->args);
-    func_call_args_count = count_tree_args(tmp_tree); 
-    
+    func_call_args_count = count_tree_args(tmp_tree->second); 
+
     if(func_args_count != func_call_args_count){
         printf("expected: %d arguments and got: %d\n",func_args_count, func_call_args_count);
         exit(1);

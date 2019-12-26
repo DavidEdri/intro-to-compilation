@@ -145,7 +145,7 @@ int num_of_args(struct arg_arr* args){
     int count= 0;
     struct arg_arr* tmp = args;
     
-    while(tmp){
+    while(tmp->data){
         count++;
         tmp=tmp->next;
     }
@@ -154,15 +154,23 @@ int num_of_args(struct arg_arr* args){
 }
 
 int count_tree_args(struct node* tree){   
-    int x=0;   
-    if (!tree){return 0;}    
-        if (tree->first && tree->second)
-        {
-            x++;
-        }
-        x=x+(count_tree_args(tree->first) + count_tree_args(tree->second));
-        return x;
+    char *token = tree->token;
+    int x = 0;   
+    
+    if(strcmp(token, "") != 0 && strcmp(token, "NONE") != 0 && strcmp(token, "ARGS") != 0){
+        x++;
     }
+
+    if(!is_operator(token)){
+        if(tree->first){
+            x += count_tree_args(tree->first);
+        }
+        if(tree->second){
+            x += count_tree_args(tree->second);
+        }
+    }
+    return x;
+}
     
 //     int check_args_types(struct node* tree, arg_arr* args, char* type){
 

@@ -82,6 +82,13 @@ int get_operand_type(struct node *tree){
     int check_real = f == '+' || f == '-' || f == '.' || isdigit(f);
     int check_id = isalpha(f);
 
+    if(strcmp(token , "FUNCTION-CALL") == 0){
+        char *f_id = tree->first->token;
+        validate_func_call(tree);
+        printf("asdas\n");
+        exit(1);
+    }
+
     if(strcmp(token , "TRUE") == 0 || strcmp(token, "FALSE") == 0){
         return TYPE_BOOL;
     }

@@ -18,6 +18,10 @@ int is_operator(char *token){
 
 }
 
+int is_singel_op(char *token){
+    return strcmp(token, "STRLEN") == 0 || strcmp(token, "NOT") == 0;
+}
+
 void print_exp_error(char *op, int type1, int type2){
     printf("cannot %s between %s and %s\n", op, type_to_str(type1), type_to_str(type2));
     exit(1);
@@ -107,7 +111,39 @@ int match_exp_types(struct node *first, struct node *second, char *op){
         return TYPE_BOOL;
     }
 
-    printf("fock\n");
+    printf("error in match_exp_types op:%s\n", op);
+    exit(1);
+
+    return -1;
+}
+
+int match_singal_type(struct node *first, char *op){
+    char *token = first->token;
+    int type;
+
+    if(is_operator(token)){
+        type = validate_expression_type(first);
+    }else{
+        type = get_operand_type(first);
+    }
+
+    if(strcmp(op, "NOT") == 0){
+        if(type != TYPE_BOOL){
+            printf("cannot ! on %s\n", type_to_str(type));
+        }
+
+        return TYPE_BOOL;
+    }
+
+    if(strcmp(op, "STRLEN") == 0){
+        if(type != TYPE_STR){
+            printf("cannot get len of %s\n", type_to_str(type));
+        }
+
+        return TYPE_INT;
+    }
+
+    printf("error in match_singal_type op:%s\n", op);
     exit(1);
 
     return -1;
@@ -115,6 +151,6 @@ int match_exp_types(struct node *first, struct node *second, char *op){
 
 int validate_expression_type(struct node *tree){
     char *token = tree->token;
-
+    if(is_singel_op(token)) return match_singal_type(tree->first, token);
     return match_exp_types(tree->first, tree->second, token);
 }

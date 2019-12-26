@@ -16,7 +16,7 @@ void handle_token(struct node* tree){
     }else if(strcmp(token, "BLOCK") == 0){
         // handle new block
     }else if(is_operator(token)){
-        validate_expression_type(tree);
+        get_expression_type(tree);
     }else if(strcmp(token, "RET") == 0){
         // skip
     }else if(strcmp(token, "FUNCTION-CALL") == 0){

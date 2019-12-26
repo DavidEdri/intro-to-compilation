@@ -64,13 +64,13 @@ int match_exp_types(struct node *first, struct node *second, char *op){
     int type1, type2;
 
     if(is_operator(f_token)){
-        type1 = validate_expression_type(first);
+        type1 = get_expression_type(first);
     }else{
         type1 = get_operand_type(first);
     }
 
     if(is_operator(s_token)){
-        type2 = validate_expression_type(second);
+        type2 = get_expression_type(second);
     }else{
         type2 = get_operand_type(second);
     }
@@ -122,7 +122,7 @@ int match_singal_type(struct node *first, char *op){
     int type;
 
     if(is_operator(token)){
-        type = validate_expression_type(first);
+        type = get_expression_type(first);
     }else{
         type = get_operand_type(first);
     }
@@ -149,7 +149,7 @@ int match_singal_type(struct node *first, char *op){
     return -1;
 }
 
-int validate_expression_type(struct node *tree){
+int get_expression_type(struct node *tree){
     char *token = tree->token;
     if(is_singel_op(token)) return match_singal_type(tree->first, token);
     return match_exp_types(tree->first, tree->second, token);

@@ -59,7 +59,7 @@ void validate_func_call(struct node* tree);
 
 // expression
 int is_operator(char *token);
-int validate_expression_type(struct node *tree);
+int get_expression_type(struct node *tree);
 int match_exp_types(struct node *first, struct node *second, char *op);
 int get_operand_type(struct node *tree);
 

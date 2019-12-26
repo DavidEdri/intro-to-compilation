@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "lex.yy.c" 
 #include "utils/semantics/_structs.h"
 #include "utils/semantics/_declerations.c"

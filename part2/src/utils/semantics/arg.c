@@ -114,6 +114,10 @@ void args_to_st(struct func *f){
     struct arg_arr *a = f->args;
     struct sym_el *s_tmp = NULL;
 
+    if(!a->data){
+        return;
+    }
+
     while(a){
         s_tmp = new_sym_el();
         se_add_var(s_tmp, new_var(a->data->id, a->data->type, ""));

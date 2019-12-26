@@ -41,23 +41,6 @@ void validate_var_decleration(struct node *tree, int type){
     }
 }
 
-int var_type_to_int(char *type){
-    if(strcmp(type, "BOOL") == 0){
-        return TYPE_BOOL;
-    }else if(strcmp(type, "INT") == 0){
-        return TYPE_BOOL;
-    }else if(strcmp(type, "REAL") == 0){
-        return TYPE_BOOL;
-    }else if(strcmp(type, "CHAR") == 0){
-        return TYPE_BOOL;
-    }
-
-    printf("unexpected type: %s in var_type_to_int\n", type);
-    exit(1);
-
-    return -1;
-
-}
 
 void print_var(var *v){
     int is_empty = strcmp(v->val, "") == 0;

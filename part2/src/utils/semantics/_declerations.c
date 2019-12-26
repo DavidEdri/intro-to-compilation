@@ -16,7 +16,6 @@ int count_tree_args(struct node* tree);
 
 // func
 func *new_func(char *id, int type);
-int func_type_to_int(char *type);
 void ast_to_func(struct node* tree);
 void print_func(struct func *f);
 void validate_return(struct node *tree, struct func *f);
@@ -26,7 +25,6 @@ void validate_ret(struct node *tree, struct func *f);
 // var
 var *new_var(char *id, int type, char *val);
 void print_var(var *v);
-int var_type_to_int(char *type);
 void validate_var_decleration(struct node * tree, int type);
 
 // sym_el
@@ -59,3 +57,14 @@ void handle_token(struct node* tree);
 struct node *tree_find(struct node *tree, char *id);
 void validate_func_call(struct node* tree);
 
+// expression
+int is_operator(char *token);
+int validate_expression_type(struct node *tree);
+int match_exp_types(struct node *first, struct node *second, char *op);
+int get_operand_type(struct node *tree);
+
+// types
+int var_type_to_int(char *type);
+int func_type_to_int(char *type);
+char *type_to_str(int type);
+int get_operand_type(struct node *tree);

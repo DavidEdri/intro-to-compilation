@@ -11,29 +11,6 @@ func *new_func(char *id, int type){
     return res;
 }
 
-int func_type_to_int(char *type){
-    if(strcmp(type, "TYPE BOOL") == 0){
-        return TYPE_BOOL;
-    }
-    else if(strcmp(type, "TYPE VOID") == 0){
-        return TYPE_VOID;
-    }
-    else if(strcmp(type, "TYPE REAL") == 0){
-        return TYPE_REAL;
-    }
-    else if(strcmp(type, "TYPE INT") == 0){
-        return TYPE_INT;
-    }
-    else if(strcmp(type, "TYPE CHAR") == 0){
-        return TYPE_CHAR;
-    }
-
-    printf("unexpected type: %s in func_type_to_int\n", type);
-    exit(1);
-
-    return -1;
-}
-
 void ast_to_func(struct node* tree){
     char *id, *type;
     struct func *res = NULL;
@@ -131,13 +108,9 @@ void validate_func_call(struct node* t){
     func_call_args_count = count_tree_args(tmp_tree); 
     
     if(func_args_count != func_call_args_count){
-        printf("expected: %d arguments and got: %d\n",func_call_args_count,func_args_count);
+        printf("expected: %d arguments and got: %d\n",func_args_count, func_call_args_count);
         exit(1);
     }
 
     //check_args_types(t,tmp->args);
-
-
-
-
 }

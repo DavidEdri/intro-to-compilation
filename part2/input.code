@@ -1,6 +1,5 @@
 function void func1(int a){
-  function void func(int x){}
-  func(a,g,k,j);
+  3 > 5 == false;
 }
 
 

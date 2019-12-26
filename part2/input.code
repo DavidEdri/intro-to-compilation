@@ -1,5 +1,7 @@
-function char func1(int a){
-  
+function void func1(int a){
+
+  for(var int  x; 3 == 3; x=x + 1 ){}
+ 
 }
 
 

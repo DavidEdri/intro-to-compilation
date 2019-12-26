@@ -13,6 +13,8 @@ int count_tree_args(struct node* tree);
 int comapre_args(struct arg_arr *a1, struct arg_arr *a2);
 arg *get_arg_by_index(struct arg_arr *arr, int index);
 
+
+
 // func
 func *new_func(char *id, int type);
 void ast_to_func(struct node* tree);
@@ -20,6 +22,8 @@ void print_func(struct func *f);
 void validate_return(struct node *tree, struct func *f);
 void validate_rets(struct node *tree, struct func *f);
 void validate_ret(struct node *tree, struct func *f);
+
+
 
 // var
 var *new_var(char *id, int type, char *val);
@@ -56,6 +60,9 @@ void handle_code_block(struct node* tree, struct func *f);
 void handle_token(struct node* tree);
 struct node *tree_find(struct node *tree, char *id);
 int validate_func_call(struct node* tree);
+void validate_if(struct node* tree,char* token);
+void validate_for(struct node* tree);
+void validate_assignment(struct node* tree);
 
 // expression
 int is_operator(char *token);

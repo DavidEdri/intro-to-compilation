@@ -221,9 +221,7 @@ do_while
     ;
 
 for
-    : FOR LEFTPAREN assignment SEMICOLON expression SEMICOLON assignment RIGHTPAREN statement
-        { $$ = mknode("FOR", $3, $5, $7, $9); }
-    | FOR LEFTPAREN declare_VAR SEMICOLON expression SEMICOLON assignment RIGHTPAREN statement
+    : FOR LEFTPAREN declare_VAR SEMICOLON expression SEMICOLON assignment RIGHTPAREN statement
         { $$ = mknode("FOR", $3, $5, $7, $9); }
     ;
 

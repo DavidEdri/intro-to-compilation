@@ -10,9 +10,8 @@ void print_arg_arr(arg_arr* a);
 void args_to_st(struct func *f);
 int num_of_args(struct arg_arr* args);
 int count_tree_args(struct node* tree);
-//int check_args_types(struct node* tree,arg_arr*);
-
-
+int comapre_args(struct arg_arr *a1, struct arg_arr *a2);
+arg *get_arg_by_index(struct arg_arr *arr, int index);
 
 // func
 func *new_func(char *id, int type);
@@ -26,6 +25,7 @@ void validate_ret(struct node *tree, struct func *f);
 var *new_var(char *id, int type, char *val);
 void print_var(var *v);
 void validate_var_decleration(struct node * tree, int type);
+void func_call_to_args(struct arg_arr *arr, struct node *tree);
 
 // sym_el
 sym_el *new_sym_el();
@@ -55,7 +55,7 @@ void handle_children(struct node* tree);
 void handle_code_block(struct node* tree, struct func *f);
 void handle_token(struct node* tree);
 struct node *tree_find(struct node *tree, char *id);
-void validate_func_call(struct node* tree);
+int validate_func_call(struct node* tree);
 
 // expression
 int is_operator(char *token);
@@ -68,3 +68,5 @@ int var_type_to_int(char *type);
 int func_type_to_int(char *type);
 char *type_to_str(int type);
 int get_operand_type(struct node *tree);
+int is_arg_type(char *token);
+int arg_type_to_int(char *token);

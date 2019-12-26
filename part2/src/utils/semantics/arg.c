@@ -69,6 +69,10 @@ void add_arg_to_f(struct func *f, struct node *tree, int type){
         || strcmp(token, "INT") == 0
         || strcmp(token, "REAL") == 0
         || strcmp(token, "CHAR") == 0
+        || strcmp(token, "BOOL") == 0
+        || strcmp(token, "INTPTR") == 0
+        || strcmp(token, "REALPTR") == 0
+        || strcmp(token, "CHARPTR") == 0
     ){
         if(tree->first){
             add_arg_to_f(f, tree->first, type);
@@ -99,12 +103,8 @@ void ast_to_args(struct func *f, struct node *tree){
         if(tree->second){
             ast_to_args(f, tree->second);
         }
-    }else if(strcmp(token, "INT") == 0){
-        add_arg_to_f(f,tree, TYPE_INT);
-    }else if(strcmp(token, "REAL") == 0){
-        add_arg_to_f(f,tree, TYPE_REAL);
-    }else if(strcmp(token, "CHAR") == 0){
-        add_arg_to_f(f,tree, TYPE_CHAR);
+    }else if(is_arg_type(token)){
+        add_arg_to_f(f,tree, arg_type_to_int(token));
     }else{
         printf("ast_to_args error\n");    
     }
@@ -128,7 +128,7 @@ void args_to_st(struct func *f){
 
 void print_arg(arg* a) {
     if(!a) return;
-    printf("id:%s,type:%d\n", a->id, a->type);
+    printf("id:%s,type:%s\n", a->id, type_to_str(a->type));
 }
 
 void print_arg_arr(arg_arr* a) {
@@ -141,11 +141,26 @@ void print_arg_arr(arg_arr* a) {
     }
 }
 
+arg *get_arg_by_index(struct arg_arr *arr, int index){
+    int current = 0;
+
+    while(arr && current != index){
+        arr = arr->next;
+        current++;
+    }
+
+    return arr->data;
+}
+
 int num_of_args(struct arg_arr* args){
     int count= 0;
     struct arg_arr* tmp = args;
-    
-    while(tmp->data){
+
+    if(!tmp->data){
+        return 0;
+    }
+
+    while(tmp){
         count++;
         tmp=tmp->next;
     }
@@ -171,15 +186,42 @@ int count_tree_args(struct node* tree){
     }
     return x;
 }
-    
-//     int check_args_types(struct node* tree, arg_arr* args, char* type){
 
-    
-//     if(strcmp(tree->token,"INT")==0 || strcmp(tree->token,"REAL")==0 || strcmp(tree->token,"CHAR")==0 || strcmp(tree->token,"BOOL")==0){
-//         type=tree->token;
-//     }
-//     else if(strcmp(tree->token,"ARGS") || strcmp(tree->token,"FUNCTION_CALL") || strcmp(tree->token,"")){ check_args_types(tree->first)}
-//     }
+void func_call_to_args(struct arg_arr *arr, struct node *tree){
+    char *token = tree->token;
+
+    if(strcmp(token, "") != 0 && strcmp(token, "ARGS") != 0 && strcmp(token, "NONE") != 0){
+        if(is_operator(token)){
+            arg_arr_add(arr, new_arg("dummy", get_expression_type(tree)));
+        }else{
+            arg_arr_add(arr, new_arg("dummy", get_operand_type(tree)));
+        }
+    }
+
+    if(!is_operator(token)){
+        if(tree->first){
+            func_call_to_args(arr, tree->first);
+        }
+        
+        if(tree->second){
+            func_call_to_args(arr, tree->second);
+        }
+    }
+}
+
+int comapre_args(struct arg_arr *a1, struct arg_arr *a2){
+    int x = 1;
+    while(a1){
+        if(a1->data->type != a2->data->type){
+            return x;
+        }
+        a1 = a1->next;
+        a2 = a2->next;
+        x++;
+    }
+
+    return 0;
+}
 
 
 

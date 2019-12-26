@@ -52,13 +52,14 @@ void validate_return(struct node *tree, struct func *f){
 void validate_ret(struct node *tree, struct func *f){
     int f_type = f->type;
     int is_void = f_type == TYPE_VOID;
+    int ret_type;
 
     if(is_void && strcmp(tree->first->token, "VOID") !=0){
         printf("func %s must return void\n", f->id);
         exit(1);
     }
 
-    // TODO : validate types
+
 }
 
 void validate_rets(struct node *tree, struct func *f){
@@ -86,13 +87,13 @@ void print_func(struct func *f){
     // print_arg_arr(f->args);
 }
 
-//handle exp as args
-void validate_func_call(struct node* t){
+int validate_func_call(struct node* t){
     char *f_id = t->first->token;
     struct sym_el *tmp = cs_find(main_stack,f_id);
     struct func* tmp_func = NULL;  
-    int func_args_count , func_call_args_count;
+    int func_args_count , func_call_args_count, wrong_arg;
     struct node* tmp_tree = t;
+    struct arg_arr * a_arr = new_arg_arr();
     
     if(!tmp){
         printf("%s is undefined\n",f_id);
@@ -108,10 +109,23 @@ void validate_func_call(struct node* t){
     func_args_count = num_of_args(tmp_func->args);
     func_call_args_count = count_tree_args(tmp_tree->second); 
 
+    func_call_to_args(a_arr, tmp_tree->second);
+
     if(func_args_count != func_call_args_count){
-        printf("expected: %d arguments and got: %d\n",func_args_count, func_call_args_count);
+        printf("in function: %s expected: %d arguments and got: %d\n", tmp_func->id, func_args_count, func_call_args_count);
         exit(1);
     }
 
-    //check_args_types(t,tmp->args);
+    wrong_arg = comapre_args(a_arr, tmp_func->args);
+    
+    if(wrong_arg){
+        struct arg *a_tmp1 = get_arg_by_index(a_arr, wrong_arg - 1);
+        struct arg *a_tmp2 = get_arg_by_index(tmp_func->args, wrong_arg - 1);
+
+        printf("wrong argument type in function call : %s\nin argument %s expected %s and got %s\n", tmp_func->id, a_tmp2->id, type_to_str(a_tmp2->type), type_to_str(a_tmp1->type));
+
+        exit(1);
+    }
+
+    return tmp_func->type;
 }

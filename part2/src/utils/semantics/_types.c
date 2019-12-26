@@ -1,22 +1,25 @@
-#define TYPE_INT     0
-#define TYPE_REAL    1
-#define TYPE_BOOL    2
-#define TYPE_CHAR    3
-#define TYPE_STR     4
-#define TYPE_VOID    5
-#define TYPE_VAR     6
-#define TYPE_FUNC    7
-#define TYPE_ID      8
+#define TYPE_INT        0
+#define TYPE_REAL       1
+#define TYPE_BOOL       2
+#define TYPE_CHAR       3
+#define TYPE_STR        4
+#define TYPE_VOID       5
+#define TYPE_VAR        6
+#define TYPE_FUNC       7
+#define TYPE_ID         8
+#define TYPE_INTPTR     9
+#define TYPE_REALPTR    10
+#define TYPE_CHARPTR    11
 
 int var_type_to_int(char *type){
     if(strcmp(type, "BOOL") == 0){
         return TYPE_BOOL;
     }else if(strcmp(type, "INT") == 0){
-        return TYPE_BOOL;
+        return TYPE_INT;
     }else if(strcmp(type, "REAL") == 0){
-        return TYPE_BOOL;
+        return TYPE_REAL;
     }else if(strcmp(type, "CHAR") == 0){
-        return TYPE_BOOL;
+        return TYPE_CHAR;
     }
 
     printf("unexpected type: %s in var_type_to_int\n", type);
@@ -42,11 +45,52 @@ int func_type_to_int(char *type){
     else if(strcmp(type, "TYPE CHAR") == 0){
         return TYPE_CHAR;
     }
+    else if(strcmp(type, "TYPE INTPTR") == 0){
+        return TYPE_INTPTR;
+    }
+    else if(strcmp(type, "TYPE REALPTR") == 0){
+        return TYPE_REALPTR;
+    }
+    else if(strcmp(type, "TYPE CHARPTR") == 0){
+        return TYPE_CHARPTR;
+    }
 
     printf("unexpected type: %s in func_type_to_int\n", type);
     exit(1);
 
     return -1;
+}
+
+int is_arg_type(char *token){
+    return
+        strcmp(token, "INT") == 0 ||
+        strcmp(token, "REAL") == 0 ||
+        strcmp(token, "CHAR") == 0 ||
+        strcmp(token, "BOOL") == 0 ||
+        strcmp(token, "INTPTR") == 0 ||
+        strcmp(token, "REALPTR") == 0 ||
+        strcmp(token, "CHARPTR") == 0 ;
+}
+
+int arg_type_to_int(char *token){
+    if(strcmp(token, "INT") == 0){
+        return TYPE_INT;
+    }else if(strcmp(token, "REAL") == 0){
+        return TYPE_REAL;
+    }else if(strcmp(token, "CHAR") == 0){
+        return TYPE_CHAR;
+    }else if(strcmp(token, "BOOL") == 0){
+        return TYPE_BOOL;
+    }else if(strcmp(token, "INTPTR") == 0){
+        return TYPE_INTPTR;
+    }else if(strcmp(token, "CHARPTR") == 0){
+        return TYPE_CHARPTR;
+    }else if(strcmp(token, "REALPTR") == 0){
+        return TYPE_REALPTR;
+    }else{
+        printf("incompetibale arg type %s\n", token); 
+        exit(1);
+    }
 }
 
 char *type_to_str(int type){
@@ -84,9 +128,7 @@ int get_operand_type(struct node *tree){
 
     if(strcmp(token , "FUNCTION-CALL") == 0){
         char *f_id = tree->first->token;
-        validate_func_call(tree);
-        printf("asdas\n");
-        exit(1);
+        return validate_func_call(tree);
     }
 
     if(strcmp(token , "TRUE") == 0 || strcmp(token, "FALSE") == 0){
@@ -115,7 +157,6 @@ int get_operand_type(struct node *tree){
             printf("%s is undefined\n", token);
             exit(1);
         }
-
         return se_get_type(id);
     }
 

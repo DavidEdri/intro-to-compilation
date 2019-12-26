@@ -1,9 +1,7 @@
 function void func1(int a){
-  function int asd(){
-    return 1;
-  }
-  5 + asd(a);
+  return false || true;
 }
+
 
 
 

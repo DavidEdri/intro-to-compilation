@@ -14,7 +14,6 @@ var *new_var(char *id, int type, char *val){
 }
 
 void validate_var_decleration(struct node *tree, int type){
-    struct sym_el *tmp = NULL;
     char *token = tree->token;
 
     if( strcmp(token, "") == 0
@@ -30,19 +29,32 @@ void validate_var_decleration(struct node *tree, int type){
             validate_var_decleration(tree->second, type);
         }
     }else{
-        if(st_is_declared(main_stack->top, token)){
-            printf("%s is already declared\n", token);
-            exit(1);
+        if(strcmp(token, "=") == 0){
+            add_ass_var(tree, type);
+        }else{
+            add_empty_var(token, type);
         }
-
-        tmp = new_sym_el();
-        se_add_var(tmp, new_var(token, type, ""));
-        st_add_item(main_stack->top, tmp);
     }
 }
 
+void add_empty_var(char *token, int type){
+    struct sym_el *tmp = NULL;
+
+    if(st_is_declared(main_stack->top, token)){
+        printf("%s is already declared\n", token);
+        exit(1);
+    }
+    tmp = new_sym_el();
+    se_add_var(tmp, new_var(token, type, ""));
+    st_add_item(main_stack->top, tmp);
+}
+
+void add_ass_var(struct node *tree, int type){
+    validate_assignment(tree, 1, type);
+    add_empty_var(tree->first->token, type);
+}
 
 void print_var(var *v){
     int is_empty = strcmp(v->val, "") == 0;
-    printf("id:%s\ttype:%d\tval:%s\n", v->id, v->type, is_empty ? "empty" : v->val);
+    printf("id:%s\ttype:%s\tval:%s\n", v->id, type_to_str(v->type), is_empty ? "empty" : v->val);
 }

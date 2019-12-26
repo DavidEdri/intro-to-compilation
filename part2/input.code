@@ -1,7 +1,11 @@
-function void func1(int a){
+function int func1(int a){
+  var char aa;
+  
+  function int abc(){ return 5 + 3;}
 
-  for(var int  x; 3 == 3; x=x + 1 ){}
- 
+  aa = abc();
+  
+  return 1;
 }
 
 

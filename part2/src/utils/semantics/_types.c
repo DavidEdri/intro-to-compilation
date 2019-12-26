@@ -142,7 +142,6 @@ int get_operand_type(struct node *tree){
     int check_id = isalpha(f);
 
     if(strcmp(token , "FUNCTION-CALL") == 0){
-        char *f_id = tree->first->token;
         return validate_func_call(tree);
     }
 
@@ -176,6 +175,12 @@ int get_operand_type(struct node *tree){
             printf("%s is undefined\n", token);
             exit(1);
         }
+
+        if(id->type == TYPE_FUNC){
+            printf("%s is a function and cannot be used in expression\n", token);
+            exit(1);
+        }
+
         return se_get_type(id);
     }
 

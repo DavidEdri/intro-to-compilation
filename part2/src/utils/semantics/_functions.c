@@ -14,7 +14,7 @@ void handle_token(struct node* tree){
     }else if(strcmp(token, "FUNCTION") == 0){
         ast_to_func(tree);
     }else if(strcmp(token, "BLOCK") == 0){
-        // handle new block
+        handle_code_block(tree, NULL);
     }else if(is_operator(token)){
         get_expression_type(tree);
     }else if(strcmp(token, "RET") == 0){
@@ -29,6 +29,8 @@ void handle_token(struct node* tree){
             || strcmp(token, "CHAR") == 0
         ){
         validate_var_decleration(tree, var_type_to_int(token));
+    }else if(strcmp(token, "=") == 0){
+        validate_assignment(tree,0,0);
     }else{
         if(strcmp(token, "") != 0){
             printf("unsuported token : %s\n", token);
@@ -109,7 +111,6 @@ void validate_if(struct node* tree,char* token){
 
 void validate_for(struct node* tree){
    int x;
-   printtree(tree,0,0);
 
    validate_var_decleration(tree->first,var_type_to_int(tree->first->token));
     x=get_expression_type(tree->second);
@@ -117,8 +118,34 @@ void validate_for(struct node* tree){
         printf(" FOR condition must be of boolean type not %s\n",type_to_str(x));
         exit(1);
     }
-    validate_assignment(tree->third);
+    validate_assignment(tree->third, 0, 0);
 
 }
 
-void validate_assignment(struct node* tree){}
+void validate_assignment(struct node* tree, int new_var, int new_var_type){
+    char *id = tree->first->token;
+    struct sym_el *id_el = cs_find(main_stack, id);
+    int ltype, rtype;
+
+    if(!id_el && !new_var){
+        printf("%s is undefined\n", id);
+        exit(1);
+    }
+
+    if(!new_var && id_el->type == TYPE_FUNC){
+        printf("%s is a function, cannot assign to function\n", id);
+        exit(1);
+    }
+
+    if(new_var){
+        ltype = new_var_type;
+    }else{
+        ltype = se_get_type(id_el);
+    }
+    rtype = get_expression_type(tree->second);
+
+    if(ltype != rtype && !(ltype == TYPE_REAL && rtype == TYPE_INT)){
+        printf("%s is %s cannot assign %s\n", id, type_to_str(ltype), type_to_str(rtype));
+        exit(1);
+    }
+}

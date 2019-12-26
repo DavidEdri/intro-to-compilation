@@ -211,6 +211,9 @@ void func_call_to_args(struct arg_arr *arr, struct node *tree){
 
 int comapre_args(struct arg_arr *a1, struct arg_arr *a2){
     int x = 1;
+    
+    if(!a1->data) return 0;
+
     while(a1){
         if(a1->data->type != a2->data->type){
             return x;

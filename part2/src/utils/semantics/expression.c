@@ -151,7 +151,9 @@ int match_singal_type(struct node *first, char *op){
 
 int get_expression_type(struct node *tree){
     char *token = tree->token;
-
+    if(strcmp(token, "FUNCTION-CALL") == 0){
+        return get_operand_type(tree);
+    }
     // handle NOT, STRLEN
     if(is_singel_op(token)) return match_singal_type(tree->first, token);
     // handle 1 child (might not be used)

@@ -30,6 +30,8 @@ var *new_var(char *id, int type, char *val);
 void print_var(var *v);
 void validate_var_decleration(struct node * tree, int type);
 void func_call_to_args(struct arg_arr *arr, struct node *tree);
+void add_ass_var(struct node *tree, int type);
+void add_empty_var(char *token, int id);
 
 // sym_el
 sym_el *new_sym_el();
@@ -62,7 +64,7 @@ struct node *tree_find(struct node *tree, char *id);
 int validate_func_call(struct node* tree);
 void validate_if(struct node* tree,char* token);
 void validate_for(struct node* tree);
-void validate_assignment(struct node* tree);
+void validate_assignment(struct node* tree, int new_var, int new_var_type);
 
 // expression
 int is_operator(char *token);

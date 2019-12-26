@@ -44,6 +44,11 @@ void validate_return(struct node *tree, struct func *f){
         exit(1);
     }
 
+    if(is_void && got_ret){
+        printf("void function cannot have return statement in function: %s \n", f->id);
+        exit(1);
+    }
+
     if(got_ret){
         validate_rets(tree, f);
     }
@@ -53,11 +58,6 @@ void validate_ret(struct node *tree, struct func *f){
     int f_type = f->type;
     int is_void = f_type == TYPE_VOID;
     int ret_type;
-
-    if(is_void && strcmp(tree->first->token, "VOID") !=0){
-        printf("function: %s must return void\n", f->id);
-        exit(1);
-    }
 
     if(get_operand_type(tree->first) == TYPE_STR){
         printf("function: %s cannot return string\n", f->id);
@@ -92,7 +92,7 @@ void validate_rets(struct node *tree, struct func *f){
 }
 
 void print_func(struct func *f){
-    printf("id:%s\ttype:%d\n", f->id, f->type);
+    printf("id:%s\ttype:%s\n", f->id, type_to_str(f->type));
     // printf("args:\n");
     // print_arg_arr(f->args);
 }
@@ -104,7 +104,7 @@ int validate_func_call(struct node* t){
     int func_args_count , func_call_args_count, wrong_arg;
     struct node* tmp_tree = t;
     struct arg_arr * a_arr = new_arg_arr();
-    
+
     if(!tmp){
         printf("%s is undefined\n",f_id);
         exit(1);

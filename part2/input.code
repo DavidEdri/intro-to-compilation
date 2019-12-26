@@ -1,5 +1,7 @@
 function void func1(int a){
-  return false || true;
+
+  for(var int  x; 3 == 3; x=x + 1 ){}
+ 
 }
 
 

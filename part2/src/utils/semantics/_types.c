@@ -20,6 +20,12 @@ int var_type_to_int(char *type){
         return TYPE_REAL;
     }else if(strcmp(type, "CHAR") == 0){
         return TYPE_CHAR;
+    }else if(strcmp(type, "CHARPTR") == 0){
+        return TYPE_CHARPTR;
+    }else if(strcmp(type, "REALPTR") == 0){
+        return TYPE_REALPTR;
+    }else if(strcmp(type, "INTPTR") == 0){
+        return TYPE_INTPTR;
     }
 
     printf("unexpected type: %s in var_type_to_int\n", type);

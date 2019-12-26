@@ -19,8 +19,10 @@ void handle_token(struct node* tree){
         get_expression_type(tree);
     }else if(strcmp(token, "RET") == 0){
         // skip
-    }else if(strcmp(token, "FUNCTION-CALL") == 0){
-        validate_func_call(tree);
+    }else if(strcmp(token, "IF") == 0 || strcmp(token, "IF-ELSE") == 0 || strcmp(token, "WHILE") == 0 || strcmp(token, "DO-WHILE") == 0){
+            validate_if(tree,token);
+    }else if(strcmp(token, "FOR") == 0){
+        validate_for(tree);
     }else if(strcmp(token, "INT") == 0
             || strcmp(token, "REAL") == 0
             || strcmp(token, "BOOL") == 0
@@ -92,3 +94,31 @@ struct node *tree_find(struct node *tree, char *id){
 
     return res;
 }
+
+
+void validate_if(struct node* tree,char* token){
+    int x;
+
+    x=get_expression_type(tree->first);
+    if(x!=TYPE_BOOL){
+        printf(" %s condition must be of boolean type not %s\n",token,type_to_str(x));
+        exit(1);
+    }
+   handle_children(tree);
+}
+
+void validate_for(struct node* tree){
+   int x;
+   printtree(tree,0,0);
+
+   validate_var_decleration(tree->first,var_type_to_int(tree->first->token));
+    x=get_expression_type(tree->second);
+    if(x!=TYPE_BOOL){
+        printf(" FOR condition must be of boolean type not %s\n",type_to_str(x));
+        exit(1);
+    }
+    validate_assignment(tree->third);
+
+}
+
+void validate_assignment(struct node* tree){}

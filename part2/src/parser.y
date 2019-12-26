@@ -24,7 +24,7 @@ int yyerror(char *s);
 %%
 
 s
-: code_wrapper { apply_semantics($1); } // apply_semantics($1);   printtree($1,0,0);
+: code_wrapper {  apply_semantics($1); } // apply_semantics($1);   printtree($1,0,0);
 ;
 
 code_wrapper
@@ -82,7 +82,8 @@ code_block
 expression
     : additive_expression {$$=$1;}
     | ADDRESS id LEFTBRACKET additive_expression RIGHTBRACKET                   
-            { $$ = mknode("&", mknode($2->token, $4, NULL, NULL, NULL), NULL, NULL, NULL); }
+            { $$ = mknode("&", $2, $4, NULL, NULL); }
+    | ADDRESS id          { $$ = mknode("&", $2, NULL, NULL, NULL); }
     ;
 
 relop
@@ -122,7 +123,6 @@ factor
     | BOOLFALSE                                 { $$ = mknode("FALSE", NULL, NULL, NULL, NULL); }
     | CHARACTER                                 { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
     | STRING                                    { $$ = mknode(yytext, NULL, NULL, NULL, NULL); }
-    | ADDRESS id                                { $$ = mknode("&", $2, NULL, NULL, NULL); }
     | '|' id '|'                                { $$ = mknode("STRLEN", $2, NULL, NULL, NULL); }
     | id LEFTBRACKET expression RIGHTBRACKET    { $$ = mknode("STRCHAR", $1, $3, NULL, NULL); }
     | LEFTPAREN expression RIGHTPAREN           { $$=$2; }

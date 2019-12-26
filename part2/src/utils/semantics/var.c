@@ -54,6 +54,31 @@ void add_ass_var(struct node *tree, int type){
     add_empty_var(tree->first->token, type);
 }
 
+int validate_var_ptr(struct node *tree){
+    char *id = tree->first->token;
+    struct sym_el *el = cs_find(main_stack, id);
+    int el_type;
+
+    if(!el){
+        printf("%s is undefined\n", id);
+        exit(1);
+    }
+
+    el_type = se_get_type(el);
+
+    switch(el_type){
+        case TYPE_INT:
+            return TYPE_INTPTR;
+        case TYPE_REAL:
+            return TYPE_REALPTR;
+        case TYPE_CHAR:
+            return TYPE_CHARPTR;
+        default:
+            printf("& operator can only be used on char,real,int or string[index] but used on: %s with type: %s\n", id, type_to_str(el_type));
+            exit(1);
+    }
+}
+
 void print_var(var *v){
     int is_empty = strcmp(v->val, "") == 0;
     printf("id:%s\ttype:%s\tval:%s\n", v->id, type_to_str(v->type), is_empty ? "empty" : v->val);

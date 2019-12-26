@@ -31,6 +31,9 @@ void handle_token(struct node* tree){
         validate_var_decleration(tree, var_type_to_int(token));
     }else if(strcmp(token, "=") == 0){
         validate_assignment(tree,0,0);
+    }
+    else if(strcmp(token, "STR") == 0){
+        validate_str_declare(tree);
     }else{
         if(strcmp(token, "") != 0){
             printf("unsuported token : %s\n", token);

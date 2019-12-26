@@ -1,11 +1,6 @@
-function int func1(int a){
-  var char aa;
-  
-  function int abc(){ return 5 + 3;}
-
-  aa = abc();
-  
-  return 1;
+function void func1(bool a){
+   string b[50 + a] = 3, c[30];
+   &b[53];
 }
 
 

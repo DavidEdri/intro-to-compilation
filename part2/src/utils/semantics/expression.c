@@ -6,6 +6,7 @@ int is_operator(char *token){
         strcmp(token, "/") == 0 ||
         strcmp(token, "||") == 0 ||
         strcmp(token, "&&") == 0 ||
+        strcmp(token, "&") == 0 ||
         strcmp(token, ">") == 0 ||
         strcmp(token, "<") == 0 ||
         strcmp(token, ">=") == 0 ||
@@ -19,7 +20,8 @@ int is_operator(char *token){
 }
 
 int is_singel_op(char *token){
-    return strcmp(token, "STRLEN") == 0 || strcmp(token, "NOT") == 0;
+    return  strcmp(token, "STRLEN") == 0 || 
+            strcmp(token, "NOT") == 0;
 }
 
 void print_exp_error(char *op, int type1, int type2){
@@ -149,11 +151,26 @@ int match_singal_type(struct node *first, char *op){
     return -1;
 }
 
+int handle_address(struct node *tree){
+    if(tree->second){
+        // trying to get address of string char
+        return validate_str_char(tree);
+    }
+
+    return validate_var_ptr(tree);
+}
+
 int get_expression_type(struct node *tree){
     char *token = tree->token;
     if(strcmp(token, "FUNCTION-CALL") == 0){
         return get_operand_type(tree);
     }
+
+    //handle &
+    if(strcmp(token, "&") == 0){
+        return handle_address(tree);
+    }
+
     // handle NOT, STRLEN
     if(is_singel_op(token)) return match_singal_type(tree->first, token);
     // handle 1 child (might not be used)

@@ -71,6 +71,11 @@ int is_operator(char *token);
 int get_expression_type(struct node *tree);
 int match_exp_types(struct node *first, struct node *second, char *op);
 int get_operand_type(struct node *tree);
+int handle_address(struct node *tree);
+
+// string
+int validate_str_char(struct node *tree);
+void validate_str_declare(struct node *tree);
 
 // types
 int var_type_to_int(char *type);

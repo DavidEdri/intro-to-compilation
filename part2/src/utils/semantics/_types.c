@@ -11,6 +11,7 @@
 #define TYPE_REALPTR    10
 #define TYPE_CHARPTR    11
 #define TYPE_NULL       12
+#define TYPE_ADDRESS    13
 
 int var_type_to_int(char *type){
     if(strcmp(type, "BOOL") == 0){

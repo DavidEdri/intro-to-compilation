@@ -10,6 +10,7 @@
 #define TYPE_INTPTR     9
 #define TYPE_REALPTR    10
 #define TYPE_CHARPTR    11
+#define TYPE_NULL       12
 
 int var_type_to_int(char *type){
     if(strcmp(type, "BOOL") == 0){
@@ -113,6 +114,14 @@ char *type_to_str(int type){
             return "function";
         case 8:
             return "identifier";
+        case 9:
+            return "int ptr";
+        case 10:
+            return "real ptr";
+        case 11:
+            return "char ptr";
+        case 12:
+            return "null";
 
         default:
             return "undefined type";
@@ -129,6 +138,10 @@ int get_operand_type(struct node *tree){
     if(strcmp(token , "FUNCTION-CALL") == 0){
         char *f_id = tree->first->token;
         return validate_func_call(tree);
+    }
+
+    if(strcmp(token , "CSNULL") == 0){
+        return TYPE_NULL;
     }
 
     if(strcmp(token , "TRUE") == 0 || strcmp(token, "FALSE") == 0){

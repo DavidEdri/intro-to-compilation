@@ -1,5 +1,5 @@
-function void func1(int a){
-  return false || true;
+function char func1(int a){
+  
 }
 
 

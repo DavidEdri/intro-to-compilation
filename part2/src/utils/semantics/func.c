@@ -39,13 +39,13 @@ void validate_return(struct node *tree, struct func *f){
     int got_ret = tree_find(tree, "RET") != NULL;
     int is_void = f->type == TYPE_VOID;
 
-    if(got_ret){
-        validate_rets(tree, f);
-    }
-
     if(!got_ret && !is_void){
         printf("func: %s has no return\n", f->id);
         exit(1);
+    }
+
+    if(got_ret){
+        validate_rets(tree, f);
     }
 }
 
@@ -55,11 +55,21 @@ void validate_ret(struct node *tree, struct func *f){
     int ret_type;
 
     if(is_void && strcmp(tree->first->token, "VOID") !=0){
-        printf("func %s must return void\n", f->id);
+        printf("function: %s must return void\n", f->id);
         exit(1);
     }
 
+    if(get_operand_type(tree->first) == TYPE_STR){
+        printf("function: %s cannot return string\n", f->id);
+        exit(1);
+    }
 
+    ret_type = get_expression_type(tree->first);
+
+    if(ret_type != f_type){
+        printf("function %s expected %s return type, but got %s type instead\n",f->id, type_to_str(f->type), type_to_str(ret_type));
+        exit(1);
+    }
 }
 
 void validate_rets(struct node *tree, struct func *f){

@@ -151,6 +151,12 @@ int match_singal_type(struct node *first, char *op){
 
 int get_expression_type(struct node *tree){
     char *token = tree->token;
+
+    // handle NOT, STRLEN
     if(is_singel_op(token)) return match_singal_type(tree->first, token);
+    // handle 1 child (might not be used)
+    if(tree->first && !tree->second) return get_operand_type(tree->first);
+    // handle single element exp
+    if(!tree->first) return get_operand_type(tree);
     return match_exp_types(tree->first, tree->second, token);
 }

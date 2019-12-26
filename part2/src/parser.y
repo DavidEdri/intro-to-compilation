@@ -282,6 +282,7 @@ assignment
 
 return
     : RETURN expression             { $$ = mknode("RET", $2, NULL, NULL, NULL); }
+    | RETURN csnull                 { $$ = mknode("RET", $2, NULL, NULL, NULL); }
     | RETURN                        { $$ = mknode("RET", mknode("VOID", NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
 
 id

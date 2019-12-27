@@ -88,6 +88,12 @@ int match_exp_types(struct node *first, struct node *second, char *op){
         }
     }
 
+     if(strcmp(op, "STRCHAR") == 0){
+       
+        return validate_str_char(mknode("STRCHAR",first,second,NULL,NULL));
+        
+    }
+
     if(is_additive_op(op)){
         if(!is_numbers(type1, type2)){
             print_exp_error(op, type1, type2);
@@ -164,8 +170,10 @@ int match_singal_type(struct node *first, char *op){
 
 int handle_address(struct node *tree){
     if(tree->second){
+    
         // trying to get address of string char
-        return validate_str_char(tree);
+        validate_str_char(tree);
+        return TYPE_CHARPTR;
     }
 
     return validate_var_ptr(tree);

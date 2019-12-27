@@ -24,7 +24,7 @@ int yyerror(char *s);
 %%
 
 s
-: code_wrapper {  apply_semantics($1); } // apply_semantics($1);   printtree($1,0,0);
+: code_wrapper {  printtree($1,0,0); } // apply_semantics($1);   printtree($1,0,0);
 ;
 
 code_wrapper
@@ -271,11 +271,9 @@ assignment
     | id ASSIGNMENT csnull
         { $$ = mknode("=", $1, $3, NULL, NULL); }
     | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT expression 
-        { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
-    | id LEFTBRACKET expression RIGHTBRACKET ASSIGNMENT csnull
-        { $$ = mknode("=", mknode($1->token, $3, NULL, NULL, NULL), $6, NULL, NULL); }
+        { $$ = mknode("=", mknode("STRCHAR", $1, $3, NULL, NULL), $6, NULL, NULL); }
     | MULTI id ASSIGNMENT expression       
-        { $$ = mknode("=", mknode("ADDRESS", $2, NULL, NULL, NULL), $4, NULL, NULL); }
+        { $$ = mknode("=", mknode("DREF", $2, NULL, NULL, NULL), $4, NULL, NULL); }
     ;
 
 return

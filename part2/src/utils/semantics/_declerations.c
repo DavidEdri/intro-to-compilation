@@ -65,7 +65,9 @@ int validate_func_call(struct node* tree);
 void validate_if(struct node* tree,char* token);
 void validate_for(struct node* tree);
 void validate_assignment(struct node* tree, int new_var, int new_var_type);
-void validate_dref(struct node *tree);
+int validate_dref(struct node *tree);
+void validate_main(struct node* tree);
+
 
 // expression
 int is_operator(char *token);

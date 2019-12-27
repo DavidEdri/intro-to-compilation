@@ -13,6 +13,8 @@ void handle_token(struct node* tree){
         handle_children(tree);
     }else if(strcmp(token, "FUNCTION") == 0){
         ast_to_func(tree);
+    }else if(strcmp(token, "MAIN") == 0){
+        validate_main(tree);
     }else if(strcmp(token, "BLOCK") == 0){
         handle_code_block(tree, NULL);
     }else if(is_operator(token)){
@@ -30,10 +32,12 @@ void handle_token(struct node* tree){
     }
     else if(strcmp(token, "STR") == 0){
         validate_str_declare(tree);
+    }else if(strcmp(token, "STRCHAR") == 0){
+        validate_str_char(tree);
     }else if(strcmp(token, "DREF") == 0){
         validate_dref(tree);
     }else{
-        if(strcmp(token, "") != 0){
+        if(strcmp(token, "") != 0 && strcmp(token, "TRUE") != 0 && strcmp(token, "FALSE") != 0){
             printf("unsuported token : %s\n", token);
         }
         handle_children(tree);
@@ -127,7 +131,21 @@ void validate_assignment(struct node* tree, int new_var, int new_var_type){
     char *id = tree->first->token;
     struct sym_el *id_el = cs_find(main_stack, id);
     int ltype, rtype;
+    
+    if(strcmp(id,"DREF")==0){
+        new_var_type = validate_dref(tree->first);
+        new_var = 1; 
+        id = (char*)malloc(strlen(tree->first->first->token) + 9);
+        strcpy(id,"dref of ");
+        strcat(id,tree->first->first->token);
+    }
 
+    if(strcmp(id,"STRCHAR")==0){
+        validate_str_char(tree->first);
+        new_var = 1;
+        new_var_type = TYPE_CHAR;
+    }
+    
     if(!id_el && !new_var){
         printf("%s is undefined\n", id);
         exit(1);
@@ -154,11 +172,19 @@ void validate_assignment(struct node* tree, int new_var, int new_var_type){
     }
 }
 
-void validate_dref(struct node *tree){
+int validate_dref(struct node *tree){
     int type = get_expression_type(tree->first);
 
     if(!is_ptr(type)){
         printf("operator * can only be used on pointers but used on %s\n", type_to_str(type));
         exit(1);
     }
+    if(type==TYPE_INTPTR) return TYPE_INT;
+    if(type==TYPE_REALPTR) return TYPE_REAL;
+    if(type==TYPE_CHARPTR) return TYPE_CHAR;
 }
+
+ void validate_main(struct node* tree){
+     struct func* f = new_func("MAIN",TYPE_VOID);
+     handle_code_block(tree->first->first,f);
+ }

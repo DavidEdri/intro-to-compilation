@@ -47,6 +47,7 @@ int se_get_type(struct sym_el *se){
 }
 
 int se_cmp_id(struct sym_el *se, char *id){
+    if(!se) return 0;
     return strcmp(se_get_id(se), id) == 0;
 }
 

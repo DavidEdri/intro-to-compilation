@@ -1,6 +1,6 @@
 void validate_str_declare(struct node *tree){
     char *token = tree->token;
-
+    
     if(strcmp(token, "STR") == 0 || strcmp(token, "") == 0 ){
         if(tree->first){
             validate_str_declare(tree->first);
@@ -65,7 +65,7 @@ int validate_str_char(struct node *tree){
 
     index_type = get_expression_type(tree->second);
     if(index_type != TYPE_INT){
-        printf("operator: [] can contain only iny, but id: %s got type: %s\nb", id, type_to_str(index_type));
+        printf("operator: [] can contain only int, but id: %s got type: %s\nb", id, type_to_str(index_type));
         exit(1);
     }
 

@@ -1,15 +1,16 @@
-function void main(){
-/*var char* x; /* x is a pointer to a character variable */
-var int x, z;
-var real* y;
-z = *y; /* Dereference y, and assign to z the value that y
-points to (which is 6). */
-/*y = null; /* y is now the NULL pointer */
-
+function int foo(int i, j, k)
+{
+    function bool fee(int l, m, n; real x, y)
+    {
+        return true;
+    }
+    return 0;
 }
-
-
-
-
-
-
+function void goo(int i, j, k)
+{
+    function bool fee(int l, m, n)
+    {
+    return true;
+    }
+    fee(2,3,4);
+}

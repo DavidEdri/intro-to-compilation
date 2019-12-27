@@ -1,6 +1,6 @@
-function void func1(bool a){
-   string b[50 + a] = 3, c[30];
-   &b[53];
+function void func1(int a){
+   string b[50 + a] = "asdas", bb[30]="asda";
+   &a[53];
 }
 
 

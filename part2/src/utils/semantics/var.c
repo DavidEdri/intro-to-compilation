@@ -55,6 +55,7 @@ int validate_var_ptr(struct node *tree){
     int el_type;
 
     if(!el){
+        print_line(tree);
         printf("%s is undefined\n", id);
         exit(1);
     }
@@ -69,6 +70,7 @@ int validate_var_ptr(struct node *tree){
         case TYPE_CHAR:
             return TYPE_CHARPTR;
         default:
+            print_line(tree);
             printf("& operator can only be used on char,real,int or string[index] but used on: %s with type: %s\n", id, type_to_str(el_type));
             exit(1);
     }

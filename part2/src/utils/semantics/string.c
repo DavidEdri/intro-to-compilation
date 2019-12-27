@@ -23,12 +23,14 @@ void validate_str(struct node *tree){
     int size_type;
 
     if(el){
+        print_line(tree);
         printf("%s is already declared\n", token);
         exit(1);
     }
 
     size_type = get_expression_type(tree->first);
     if(size_type != TYPE_INT){
+        print_line(tree);
         printf("string size can be integer only but %s got size type of %s\n", token, type_to_str(size_type));
         exit(1);
     }
@@ -39,9 +41,10 @@ void validate_str(struct node *tree){
 }
 
 void validate_str_assingment(struct node *tree){
-    struct node *adjusted = mknode(tree->first->first->token, tree->first->second,NULL,NULL,NULL); // converting from tree with strchar to tree of declertation
+    struct node *adjusted = mknode(tree->first->first->token, tree->first->second,NULL,NULL,NULL, -1); // converting from tree with strchar to tree of declertation
     int assingment_type = get_expression_type(tree->second);
     if(assingment_type != TYPE_STR){
+        print_line(tree);
         printf("string can only be assinged to string but %s was assigned to %s\n", tree->first->token, type_to_str(assingment_type));
         exit(1);
     }
@@ -54,18 +57,21 @@ int validate_str_char(struct node *tree){
     int el_type, index_type;
 
     if(!el){
+        print_line(tree);
         printf("%s is undefined\n", id);
         exit(1);
     }
 
     el_type = se_get_type(el);
     if(el_type != TYPE_STR){
+        print_line(tree);
         printf("operator: [] can be used only on strings, but used on: %s with type: %s\nb", id, type_to_str(el_type));
         exit(1);
     }
 
     index_type = get_expression_type(tree->second);
     if(index_type != TYPE_INT){
+        print_line(tree);
         printf("operator: [] can contain only int, but id: %s got type: %s\nb", id, type_to_str(index_type));
         exit(1);
     }

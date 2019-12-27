@@ -80,6 +80,7 @@ int match_exp_types(struct node *first, struct node *second, char *op){
     if(strcmp(op, "+") == 0 || strcmp(op, "-") == 0){
         if(is_ptr(type1)){
             if(type2 != TYPE_INT){
+                print_line(second);
                 printf("you can only add/reduce integer from pointer, but used %s\n", type_to_str(type2));
                 exit(1);
             }
@@ -90,12 +91,13 @@ int match_exp_types(struct node *first, struct node *second, char *op){
 
      if(strcmp(op, "STRCHAR") == 0){
        
-        return validate_str_char(mknode("STRCHAR",first,second,NULL,NULL));
+        return validate_str_char(mknode("STRCHAR",first,second,NULL,NULL, -1));
         
     }
 
     if(is_additive_op(op)){
         if(!is_numbers(type1, type2)){
+            print_line(first);
             print_exp_error(op, type1, type2);
         }
 
@@ -108,6 +110,7 @@ int match_exp_types(struct node *first, struct node *second, char *op){
 
     if(is_bool_op(op)){
         if(type1 != TYPE_BOOL || type2 != TYPE_BOOL){
+            print_line(first);
             print_exp_error(op, type1, type2);
         }
 
@@ -116,6 +119,7 @@ int match_exp_types(struct node *first, struct node *second, char *op){
 
     if(is_rel_op(op)){
         if(!is_numbers(type1, type2)){
+            print_line(first);
             print_exp_error(op, type1, type2);
         }
 
@@ -124,12 +128,14 @@ int match_exp_types(struct node *first, struct node *second, char *op){
 
     if(is_eq_op(op)){
         if(!eq_is_legal(type1, type2)){
+            print_line(first);
             print_exp_error(op, type1, type2);
         }
 
         return TYPE_BOOL;
     }
 
+    print_line(first);
     printf("error in match_exp_types op:%s\n", op);
     exit(1);
 
@@ -148,6 +154,7 @@ int match_singal_type(struct node *first, char *op){
 
     if(strcmp(op, "NOT") == 0){
         if(type != TYPE_BOOL){
+            print_line(first);
             printf("cannot ! on %s\n", type_to_str(type));
         }
 
@@ -156,12 +163,14 @@ int match_singal_type(struct node *first, char *op){
 
     if(strcmp(op, "STRLEN") == 0){
         if(type != TYPE_STR){
+            print_line(first);
             printf("cannot get len of %s\n", type_to_str(type));
         }
 
         return TYPE_INT;
     }
 
+    print_line(first);
     printf("error in match_singal_type op:%s\n", op);
     exit(1);
 

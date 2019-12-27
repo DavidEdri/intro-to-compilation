@@ -1,7 +1,10 @@
 function int foo_4() { 
-    var int i;
+    var int i, j;
     for(j =0;5 < 3;i = i+1){
-
+        var int a = 3;
+        a = "asd";
+        j = 3.5;
+        j = 3.5;
     }
     return 1;
  }

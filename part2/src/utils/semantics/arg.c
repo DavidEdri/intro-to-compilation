@@ -82,6 +82,7 @@ void add_arg_to_f(struct func *f, struct node *tree, int type){
         }
     }else{
         if(arg_is_declared(f->args, tree->token)){
+            print_line(tree);
             printf("arg: [%s] already declared in func: [%s]\n",tree->token ,f->id );
             exit(1);
         }else{
@@ -106,6 +107,7 @@ void ast_to_args(struct func *f, struct node *tree){
     }else if(is_arg_type(token)){
         add_arg_to_f(f,tree, arg_type_to_int(token));
     }else{
+        print_line(tree);
         printf("ast_to_args error\n");    
     }
 }

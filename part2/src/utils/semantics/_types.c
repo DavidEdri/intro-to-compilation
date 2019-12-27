@@ -177,11 +177,13 @@ int get_operand_type(struct node *tree){
     if(check_id){
         struct sym_el *id = cs_find(main_stack, token);
         if(!id){
+            print_line(tree);
             printf("%s is undefined\n", token);
             exit(1);
         }
 
         if(id->type == TYPE_FUNC){
+            print_line(tree);
             printf("%s is a function and cannot be used in expression\n", token);
             exit(1);
         }

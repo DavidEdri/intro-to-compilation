@@ -69,7 +69,7 @@ void printtree(node *tree, int tab, int one_line)
     }
 }
 
-node *mknode(char *token, node *first, node *second, node *third, node *fourth)
+node *mknode(char *token, node *first, node *second, node *third, node *fourth, int line)
 {
     node *newnode = (node *)malloc(sizeof(node));
     char *newstr = (char *)malloc(sizeof(token) + 1);
@@ -79,5 +79,6 @@ node *mknode(char *token, node *first, node *second, node *third, node *fourth)
     newnode->third = third;
     newnode->fourth = fourth;
     newnode->token = newstr;
+    newnode->line = line;
     return newnode;
 }

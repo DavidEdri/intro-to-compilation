@@ -40,6 +40,7 @@ void handle_token(struct node* tree){
         validate_dref(tree);
     }else{
         if(strcmp(token, "") != 0 && strcmp(token, "TRUE") != 0 && strcmp(token, "FALSE") != 0){
+            print_line(tree);
             printf("unsuported token : %s\n", token);
         }
         handle_children(tree);
@@ -110,6 +111,7 @@ void validate_if(struct node* tree,char* token){
 
     x=get_expression_type(tree->first);
     if(x!=TYPE_BOOL){
+        print_line(tree);
         printf(" %s condition must be of boolean type not %s\n",token,type_to_str(x));
         exit(1);
     }
@@ -126,7 +128,8 @@ void validate_for(struct node* tree){
    
     x=get_expression_type(tree->second);
     if(x!=TYPE_BOOL){
-        printf(" FOR condition must be of boolean type not %s\n",type_to_str(x));
+        print_line(tree);
+        printf("FOR condition must be of boolean type not %s\n",type_to_str(x));
         exit(1);
     }
     validate_assignment(tree->third, 0, 0);
@@ -153,11 +156,13 @@ void validate_assignment(struct node* tree, int new_var, int new_var_type){
     }
     
     if(!id_el && !new_var){
+        print_line(tree);
         printf("%s is undefined\n", id);
         exit(1);
     }
 
     if(!new_var && id_el->type == TYPE_FUNC){
+        print_line(tree);
         printf("%s is a function, cannot assign to function\n", id);
         exit(1);
     }
@@ -172,10 +177,14 @@ void validate_assignment(struct node* tree, int new_var, int new_var_type){
             validate_dref(tree->second) :
             get_expression_type(tree->second);
 
+    printtree(tree->second, 0,1);
+
+    printf("%s %s\n", type_to_str(ltype), type_to_str(rtype));
     if( ltype != rtype && 
         !(ltype == TYPE_REAL && rtype == TYPE_INT) &&
         !(is_ptr(ltype) && rtype == TYPE_NULL)
       ){
+        print_line(tree);
         printf("%s is %s cannot assign %s\n", id, type_to_str(ltype), type_to_str(rtype));
         exit(1);
     }
@@ -185,6 +194,7 @@ int validate_dref(struct node *tree){
     int type = get_expression_type(tree->first);
 
     if(!is_ptr(type)){
+        print_line(tree);
         printf("operator * can only be used on pointers but used on %s\n", type_to_str(type));
         exit(1);
     }
@@ -197,3 +207,11 @@ int validate_dref(struct node *tree){
      struct func* f = new_func("MAIN",TYPE_VOID);
      handle_code_block(tree->first->first,f);
  }
+
+void print_line(struct node *tree){
+    int line = tree->line;
+
+    if(line != -1){
+        printf("line %d: ", tree->line);
+    } 
+}

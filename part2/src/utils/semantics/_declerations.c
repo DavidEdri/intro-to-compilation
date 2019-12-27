@@ -67,6 +67,7 @@ void validate_for(struct node* tree);
 void validate_assignment(struct node* tree, int new_var, int new_var_type);
 int validate_dref(struct node *tree);
 void validate_main(struct node* tree);
+void print_line(struct node *tree);
 
 
 // expression

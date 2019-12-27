@@ -133,7 +133,7 @@ void validate_for(struct node* tree){
         exit(1);
     }
     validate_assignment(tree->third, 0, 0);
-
+    handle_children(tree->fourth);
 }
 
 void validate_assignment(struct node* tree, int new_var, int new_var_type){
@@ -177,9 +177,6 @@ void validate_assignment(struct node* tree, int new_var, int new_var_type){
             validate_dref(tree->second) :
             get_expression_type(tree->second);
 
-    printtree(tree->second, 0,1);
-
-    printf("%s %s\n", type_to_str(ltype), type_to_str(rtype));
     if( ltype != rtype && 
         !(ltype == TYPE_REAL && rtype == TYPE_INT) &&
         !(is_ptr(ltype) && rtype == TYPE_NULL)

@@ -1,8 +1,8 @@
 function void func1(int a){
-  var int* aa = null;
-
-  *(a + 3 + 6);
-
+  function int f2(int a, b;bool b2){
+    return 1;
+  }
+  a = f2(5,3, 5 < 2) + 53;
 }
 
 

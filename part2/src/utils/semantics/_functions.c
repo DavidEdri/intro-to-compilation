@@ -1,7 +1,7 @@
 void apply_semantics(struct node* tree){
     handle_token(tree);
+    // cs_pop(main_stack);
     print_cs(main_stack);
-    cs_pop(main_stack);
 }
 
 void handle_token(struct node* tree){
@@ -72,7 +72,7 @@ void handle_code_block(struct node* tree, struct func *f){
     }
     
     handle_children(tree);
-    cs_pop(main_stack);
+    // cs_pop(main_stack);
 }
 
 struct node *tree_find(struct node *tree, char *id){

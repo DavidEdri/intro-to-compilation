@@ -1,18 +1,7 @@
 function int foo_4() { 
-    if(true){
-        var int x;
-        x = x + 5;
-        {
-            {}
-        }
-        return 0;
-    }
-    while(true){
-        var int a = 6;
-        while(false){
-            var int a = 3;
-            return 5;
-        }
+    var int i;
+    for(j =0;5 < 3;i = i+1){
+
     }
     return 1;
  }

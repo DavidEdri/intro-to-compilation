@@ -118,8 +118,12 @@ void validate_if(struct node* tree,char* token){
 
 void validate_for(struct node* tree){
    int x;
-
-   validate_var_decleration(tree->first,var_type_to_int(tree->first->token));
+    if(strcmp(tree->first->token, "=") == 0){
+        validate_assignment(tree->first,0,0);
+    }else{
+        validate_var_decleration(tree->first,var_type_to_int(tree->first->token));
+    }
+   
     x=get_expression_type(tree->second);
     if(x!=TYPE_BOOL){
         printf(" FOR condition must be of boolean type not %s\n",type_to_str(x));

@@ -13,6 +13,8 @@ void handle_token(struct node* tree){
         handle_children(tree);
     }else if(strcmp(token, "FUNCTION") == 0){
         ast_to_func(tree);
+    }else if(strcmp(token, "FUNCTION-CALL") == 0){
+        validate_func_call(tree);
     }else if(strcmp(token, "MAIN") == 0){
         validate_main(tree);
     }else if(strcmp(token, "BLOCK") == 0){

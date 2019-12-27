@@ -76,17 +76,19 @@ void validate_rets(struct node *tree, struct func *f){
     if(strcmp(tree->token, "RET") == 0){
         validate_ret(tree, f);
     }else{
-        if(tree->first){
-            validate_rets(tree->first, f);
-        }
-        if(tree->second){
-            validate_rets(tree->second, f);
-        }
-        if(tree->third){
-            validate_rets(tree->third, f);
-        }
-        if(tree->fourth){
-            validate_rets(tree->fourth, f);
+        if(strcmp(tree->token, "FUNCTION") != 0){
+            if(tree->first){
+                validate_rets(tree->first, f);
+            }
+            if(tree->second){
+                validate_rets(tree->second, f);
+            }
+            if(tree->third){
+                validate_rets(tree->third, f);
+            }
+            if(tree->fourth){
+                validate_rets(tree->fourth, f);
+            }
         }
     }
 }

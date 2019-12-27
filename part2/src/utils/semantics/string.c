@@ -39,12 +39,13 @@ void validate_str(struct node *tree){
 }
 
 void validate_str_assingment(struct node *tree){
+    struct node *adjusted = mknode(tree->first->first->token, tree->first->second,NULL,NULL,NULL); // converting from tree with strchar to tree of declertation
     int assingment_type = get_expression_type(tree->second);
     if(assingment_type != TYPE_STR){
         printf("string can only be assinged to string but %s was assigned to %s\n", tree->first->token, type_to_str(assingment_type));
         exit(1);
     }
-    validate_str(tree->first);
+    validate_str(adjusted);
 }
 
 int validate_str_char(struct node *tree){

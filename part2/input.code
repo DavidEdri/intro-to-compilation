@@ -1,11 +1,14 @@
-function int foo(int i, j, k)
+function void foo(int ia, j, k)
 {
-    function bool square(int t){
-        var int temp;
-        temp = t*t;
-        return false;
-    }
-    var int total;
-    total = 1;
-    return total;
+    string a[30], b[100] = "moshe";
+    var char c;
+    var int i;
+    c = 'e';
+    a[19] = 'f';
+    a[4+2] = 'g';
+    b = a;
+    b[3] = c;
+    a = "test"; 
+
+    i = |b|; 
 }

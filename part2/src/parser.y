@@ -75,8 +75,18 @@ code_block_wrapper
 code_block
     : LEFTBRACE RIGHTBRACE                           { $$ = NULL; }
     | LEFTBRACE declerations statements RIGHTBRACE   { $$ = mknode("", $2, $3, NULL, NULL); }
-    | LEFTBRACE declerations RIGHTBRACE              { $$ = mknode("", $2, $3, NULL, NULL); }
-    | LEFTBRACE statements RIGHTBRACE                { $$ = mknode("", $2, $3, NULL, NULL); }
+    | LEFTBRACE declerations RIGHTBRACE              { $$ = mknode("", $2, NULL, NULL, NULL); }
+    | LEFTBRACE statements RIGHTBRACE                { $$ = mknode("", $2, NULL, NULL, NULL); }
+    ;
+
+code_block_return
+    : LEFTBRACE return SEMICOLON RIGHTBRACE          { $$ = $2; }
+    | LEFTBRACE declerations statements return SEMICOLON RIGHTBRACE 
+        { $$ = mknode("", $2, $3, $4, NULL); }
+    | LEFTBRACE declerations return SEMICOLON RIGHTBRACE              
+        { $$ = mknode("", $2, $3, NULL, NULL); }
+    | LEFTBRACE statements return SEMICOLON RIGHTBRACE
+        { $$ = mknode("", $2, $3, NULL, NULL); } 
     ;
 
 expression
@@ -149,14 +159,25 @@ function_types
     | CHARPTR   { $$ = mknode("TYPE CHARPTR", NULL, NULL, NULL, NULL); }
     | BOOL      { $$ = mknode("TYPE BOOL", NULL, NULL, NULL, NULL); }
     | STR       { $$ = mknode("TYPE STR", NULL, NULL, NULL, NULL); }
-    | VOID      { $$ = mknode("TYPE VOID", NULL, NULL, NULL, NULL); }
     ;
 
 function_decleration
-    : FUNCTION function_types id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block
+    : func_void     { $$ = $1; }
+    | func_not_void { $$ = $1; }
+    ;
+
+func_not_void
+    : FUNCTION function_types id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block_return
         { $$ = mknode("FUNCTION", $3, $5, $2, mknode("BODY", $7, NULL, NULL, NULL)); }
-    | FUNCTION function_types id LEFTPAREN  RIGHTPAREN code_block
+    | FUNCTION function_types id LEFTPAREN  RIGHTPAREN code_block_return
         { $$ = mknode("FUNCTION", $3, mknode("ARGS",mknode("NONE",NULL,NULL,NULL,NULL),NULL,NULL,NULL), $2, mknode("BODY", $6, NULL, NULL, NULL)); }
+    ;
+
+func_void
+    : FUNCTION VOID id LEFTPAREN function_args_decleration_wrapper RIGHTPAREN code_block
+        { $$ = mknode("FUNCTION", $3, $5, mknode("TYPE VOID", NULL, NULL, NULL, NULL), mknode("BODY", $7, NULL, NULL, NULL)); }
+    | FUNCTION VOID id LEFTPAREN  RIGHTPAREN code_block
+        { $$ = mknode("FUNCTION", $3, mknode("ARGS",mknode("NONE",NULL,NULL,NULL,NULL),NULL,NULL,NULL), mknode("TYPE VOID", NULL, NULL, NULL, NULL), mknode("BODY", $6, NULL, NULL, NULL)); }
     ;
 
 function_args_decleration_wrapper

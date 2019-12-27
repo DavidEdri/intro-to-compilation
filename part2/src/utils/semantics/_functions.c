@@ -161,7 +161,10 @@ void validate_assignment(struct node* tree, int new_var, int new_var_type){
     }else{
         ltype = se_get_type(id_el);
     }
-    rtype = get_expression_type(tree->second);
+
+    rtype = strcmp(tree->second->token,"DREF") == 0 ? // handle assingment to *y
+            validate_dref(tree->second) :
+            get_expression_type(tree->second);
 
     if( ltype != rtype && 
         !(ltype == TYPE_REAL && rtype == TYPE_INT) &&

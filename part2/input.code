@@ -1,11 +1,7 @@
 function void main(){
 /*var char* x; /* x is a pointer to a character variable */
 var int x, z;
-var int* y;
-x = 5;
-y = &x; /* We take the address of x and assign it to y.
-As a result, y points to x, which is 5. */
-x = 6; /* y still points to x, which is 6 now */
+var real* y;
 z = *y; /* Dereference y, and assign to z the value that y
 points to (which is 6). */
 /*y = null; /* y is now the NULL pointer */

@@ -36,7 +36,8 @@ void ast_to_func(struct node* tree){
 }
 
 void validate_return(struct node *tree, struct func *f){
-    int got_ret = tree_find(tree, "RET") != NULL;
+    struct node *t = tree;
+    int got_ret = tree_find(t, "RET") != NULL;
     int is_void = f->type == TYPE_VOID;
 
     if(!got_ret && !is_void){
@@ -50,7 +51,7 @@ void validate_return(struct node *tree, struct func *f){
     }
 
     if(got_ret){
-        validate_rets(tree, f);
+        validate_rets(t, f);
     }
 }
 

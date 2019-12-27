@@ -1,7 +1,7 @@
 void apply_semantics(struct node* tree){
     handle_token(tree);
-    // cs_pop(main_stack);
-    print_cs(main_stack);
+    cs_pop(main_stack);
+    // print_cs(main_stack);
 }
 
 void handle_token(struct node* tree){
@@ -47,23 +47,19 @@ void handle_token(struct node* tree){
 }
 
 void handle_children(struct node* tree){
-if (tree->first)
-    {
+    if (tree->first){
         handle_token(tree->first);
     }
 
-    if (tree->second)
-    {
+    if (tree->second){
         handle_token(tree->second);
     }
 
-    if (tree->third)
-    {
+    if (tree->third){
         handle_token(tree->third);
     }
 
-    if (tree->fourth)
-    {
+    if (tree->fourth){
         handle_token(tree->fourth);
     }
 }
@@ -71,14 +67,18 @@ if (tree->first)
 
 void handle_code_block(struct node* tree, struct func *f){
     cs_push(main_stack, new_sym_table());
-   
+
     if(f){
         args_to_st(f);
+    }
+
+    handle_children(tree);
+
+    if(f){
         validate_return(tree, f);
     }
-    
-    handle_children(tree);
-    // cs_pop(main_stack);
+
+    cs_pop(main_stack);
 }
 
 struct node *tree_find(struct node *tree, char *id){

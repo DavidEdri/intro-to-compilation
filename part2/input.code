@@ -1,16 +1,11 @@
 function int foo(int i, j, k)
 {
-    function bool fee(int l, m, n; real x, y)
-    {
-        return true;
+    function bool square(int t){
+        var int temp;
+        temp = t*t;
+        return false;
     }
-    return 0;
-}
-function void goo(int i, j, k)
-{
-    function bool fee(int l, m, n)
-    {
-    return true;
-    }
-    fee(2,3,4);
+    var int total;
+    total = 1;
+    return total;
 }

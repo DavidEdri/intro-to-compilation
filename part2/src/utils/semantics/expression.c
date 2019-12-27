@@ -77,6 +77,17 @@ int match_exp_types(struct node *first, struct node *second, char *op){
         type2 = get_operand_type(second);
     }
 
+    if(strcmp(op, "+") == 0 || strcmp(op, "-") == 0){
+        if(is_ptr(type1)){
+            if(type2 != TYPE_INT){
+                printf("you can only add/reduce integer from pointer, but used %s\n", type_to_str(type2));
+                exit(1);
+            }
+
+            return type1;
+        }
+    }
+
     if(is_additive_op(op)){
         if(!is_numbers(type1, type2)){
             print_exp_error(op, type1, type2);

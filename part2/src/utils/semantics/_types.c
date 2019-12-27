@@ -101,6 +101,10 @@ int arg_type_to_int(char *token){
     }
 }
 
+int is_ptr(int type){
+    return type == TYPE_REALPTR || type == TYPE_CHARPTR || type == TYPE_INTPTR;
+}
+
 char *type_to_str(int type){
     switch(type){
         case 0:

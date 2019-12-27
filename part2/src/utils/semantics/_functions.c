@@ -23,17 +23,15 @@ void handle_token(struct node* tree){
             validate_if(tree,token);
     }else if(strcmp(token, "FOR") == 0){
         validate_for(tree);
-    }else if(strcmp(token, "INT") == 0
-            || strcmp(token, "REAL") == 0
-            || strcmp(token, "BOOL") == 0
-            || strcmp(token, "CHAR") == 0
-        ){
+    }else if(is_arg_type(token)){
         validate_var_decleration(tree, var_type_to_int(token));
     }else if(strcmp(token, "=") == 0){
         validate_assignment(tree,0,0);
     }
     else if(strcmp(token, "STR") == 0){
         validate_str_declare(tree);
+    }else if(strcmp(token, "DREF") == 0){
+        validate_dref(tree);
     }else{
         if(strcmp(token, "") != 0){
             printf("unsuported token : %s\n", token);
@@ -147,8 +145,20 @@ void validate_assignment(struct node* tree, int new_var, int new_var_type){
     }
     rtype = get_expression_type(tree->second);
 
-    if(ltype != rtype && !(ltype == TYPE_REAL && rtype == TYPE_INT)){
+    if( ltype != rtype && 
+        !(ltype == TYPE_REAL && rtype == TYPE_INT) &&
+        !(is_ptr(ltype) && rtype == TYPE_NULL)
+      ){
         printf("%s is %s cannot assign %s\n", id, type_to_str(ltype), type_to_str(rtype));
+        exit(1);
+    }
+}
+
+void validate_dref(struct node *tree){
+    int type = get_expression_type(tree->first);
+
+    if(!is_ptr(type)){
+        printf("operator * can only be used on pointers but used on %s\n", type_to_str(type));
         exit(1);
     }
 }

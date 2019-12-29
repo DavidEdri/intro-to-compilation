@@ -1,25 +1,10 @@
-function int foo_4() { 
-    var int x;
-    var int* y;
+function void main(){
+	var int x;
+	var real y;
+	x = x + x;
+	x = x - x;
+	y = x + y;
+	x = x + y;
+	
 
-
-    y = &x;
-    x = 6;
-
-    if( &x == y && *y == x)
-        *y = 9;
-    {
-        var char* x;
-        string y[50];
-        var char z;
-        y = "foobar";
-        x = &y[5];
-        z = *(x- 5);
-        y="barfoo";
-    }
-
-    return 0;
-}
-
-function void main2(){
 }

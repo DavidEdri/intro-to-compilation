@@ -71,7 +71,8 @@ void validate_ret(struct node *tree, struct func *f){
 
     ret_type = get_expression_type(tree->first);
 
-    if(ret_type != f_type){
+    if(ret_type != f_type && !(is_ptr(f_type) && ret_type == TYPE_NULL)){
+        print_line(tree->first);
         printf("function %s expected %s return type, but got %s type instead\n",f->id, type_to_str(f->type), type_to_str(ret_type));
         exit(1);
     }

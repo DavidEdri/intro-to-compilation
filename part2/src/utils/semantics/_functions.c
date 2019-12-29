@@ -1,7 +1,9 @@
 void apply_semantics(struct node* tree){
+    // printtree(tree->first,0,1);
     handle_token(tree);
-    cs_pop(main_stack);
     // print_cs(main_stack);
+    got_main();
+    cs_pop(main_stack);
 }
 
 void handle_token(struct node* tree){
@@ -108,7 +110,6 @@ struct node *tree_find(struct node *tree, char *id){
 
 void validate_if(struct node* tree,char* token){
     int x;
-
     x=get_expression_type(tree->first);
     if(x!=TYPE_BOOL){
         print_line(tree);
@@ -201,8 +202,15 @@ int validate_dref(struct node *tree){
 }
 
  void validate_main(struct node* tree){
-     struct func* f = new_func("MAIN",TYPE_VOID);
-     handle_code_block(tree->first->first,f);
+     struct func *f = new_func("main", TYPE_VOID);
+     struct sym_el *tmp = NULL;
+
+    // add main to symbol table
+     tmp = new_sym_el();
+     se_add_func(tmp, f);
+     st_add_item(main_stack->top, tmp);
+
+     handle_code_block(tree->first,f);
  }
 
 void print_line(struct node *tree){
@@ -211,4 +219,13 @@ void print_line(struct node *tree){
     if(line != -1){
         printf("line %d: ", tree->line);
     } 
+}
+
+void got_main(){
+    struct sym_el *main = cs_find(main_stack, "main");
+    
+    if(!main){
+        printf("legal program must have main!\n");
+        exit(1);
+    }
 }

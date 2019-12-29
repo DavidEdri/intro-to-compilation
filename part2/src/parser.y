@@ -89,11 +89,9 @@ code_block_return
         { $$ = mknode("", $2, $3, NULL, NULL, yylineno); } 
     ;
 
-expression
-    : additive_expression {$$=$1;}
-    | ADDRESS id LEFTBRACKET additive_expression RIGHTBRACKET                   
-            { $$ = mknode("&", $2, $4, NULL, NULL, yylineno); }
-    | ADDRESS id          { $$ = mknode("&", $2, NULL, NULL, NULL, yylineno); }
+and_or
+    : AND           { $$ = mknode("&&", NULL, NULL, NULL, NULL, yylineno); } 
+    | OR            { $$ = mknode("||", NULL, NULL, NULL, NULL, yylineno); }
     ;
 
 relop
@@ -103,10 +101,19 @@ relop
     | LESS          { $$ = mknode("<", NULL, NULL, NULL, NULL, yylineno); }
     | LESSEQUAL     { $$ = mknode("<=", NULL, NULL, NULL, NULL, yylineno); }  
     | NOTEQUAL      { $$ = mknode("!=", NULL, NULL, NULL, NULL, yylineno); } 
-    | AND           { $$ = mknode("&&", NULL, NULL, NULL, NULL, yylineno); } 
-    | OR            { $$ = mknode("||", NULL, NULL, NULL, NULL, yylineno); }
     | MINUS         { $$ = mknode("-", NULL, NULL, NULL, NULL, yylineno); }
     | PLUS          { $$ = mknode("+", NULL, NULL, NULL, NULL, yylineno); }
+    ;
+
+expression
+    : first_expression {$$=$1;}
+    ;
+
+first_expression
+    : additive_expression                           
+        { $$ = $1; }
+    | first_expression and_or additive_expression   
+        { $$ = mknode($2 -> token, $1, $3, NULL, NULL, yylineno); } 
     ;
 
 additive_expression
@@ -137,6 +144,9 @@ factor
     | id LEFTBRACKET expression RIGHTBRACKET    { $$ = mknode("STRCHAR", $1, $3, NULL, NULL, yylineno); }
     | LEFTPAREN expression RIGHTPAREN           { $$=$2; }
     | not                                       { $$ = $1;}
+    | ADDRESS id LEFTBRACKET additive_expression RIGHTBRACKET                   
+            { $$ = mknode("&", $2, $4, NULL, NULL, yylineno); }
+    | ADDRESS id          { $$ = mknode("&", $2, NULL, NULL, NULL, yylineno); }
     ;
 
 not

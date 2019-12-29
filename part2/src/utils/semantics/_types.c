@@ -150,6 +150,10 @@ int get_operand_type(struct node *tree){
         return validate_func_call(tree);
     }
 
+    if(strcmp(token, "STRCHAR") == 0){
+        return validate_str_char(tree);
+    }
+
     if(strcmp(token , "DREF") == 0){
         return validate_dref(tree);
     }

@@ -89,12 +89,6 @@ int match_exp_types(struct node *first, struct node *second, char *op){
         }
     }
 
-     if(strcmp(op, "STRCHAR") == 0){
-       
-        return validate_str_char(mknode("STRCHAR",first,second,NULL,NULL, -1));
-        
-    }
-
     if(is_additive_op(op)){
         if(!is_numbers(type1, type2)){
             print_line(first);

@@ -41,8 +41,12 @@ void handle_token(struct node* tree){
     }else if(strcmp(token, "DREF") == 0){
         validate_dref(tree);
     }else{
-        if(strcmp(token, "") != 0 && strcmp(token, "TRUE") != 0 && strcmp(token, "FALSE") != 0){
-            print_line(tree);
+        // show unhandled tokens
+        if( strcmp(token, "") != 0 && 
+            strcmp(token, "TRUE") != 0 && 
+            strcmp(token, "FALSE") != 0 &&
+            strcmp(token, "GLOBAL") != 0 
+        ){
             printf("unsuported token : %s\n", token);
         }
         handle_children(tree);

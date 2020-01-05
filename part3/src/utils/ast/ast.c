@@ -35,7 +35,19 @@ void printtree(node *tree, int tab, int one_line)
         {
             printf("(");
         }
-        printf("%s\n", token);
+
+        printf("%s\t", token);
+
+        if(tree->next){
+            printf("next: %s, ", tree->next);
+        }
+        if(tree->trueLabel){
+            printf("trueLabel: %s, ", tree->trueLabel);
+        }
+        if(tree->falseLabel){
+            printf("falseLabel: %s", tree->falseLabel);
+        }
+        printf("\n");
     }
 
     if (tree->first)
@@ -80,5 +92,20 @@ node *mknode(char *token, node *first, node *second, node *third, node *fourth, 
     newnode->fourth = fourth;
     newnode->token = newstr;
     newnode->line = line;
+    newnode->trueLabel = NULL;
+    newnode->falseLabel = NULL;
+    newnode->next = NULL;
     return newnode;
+}
+
+void add_true_label(struct node *n, char *l){
+    n->trueLabel = l;
+}
+
+void add_false_label(struct node *n, char *l){
+    n->falseLabel = l;
+}
+
+void add_next(struct node *n, char *l){
+    n->next = l;
 }

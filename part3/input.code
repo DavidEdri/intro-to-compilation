@@ -1,5 +1,10 @@
-function void foo(int a,b,c){
-
+function void foo(){
+    var int a;
+    if(a == 23){
+        a = 10;
+    }else{
+        a = 19;
+    }
 }
 
 function void main(){}

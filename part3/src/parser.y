@@ -1,4 +1,5 @@
 %{
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -9,6 +10,7 @@
 #include "utils/3ac/_declerations.c"
 
 struct code_stack *main_stack = NULL;
+int label_count = 0;
 #include "utils/index.c"
 
 int yylex();

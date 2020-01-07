@@ -1,13 +1,14 @@
 function void foo(){
-    var int a;
-    if(a == 23){
-        a = 10;
-    }else{
-        if(a == 23){
+    var int a,b;
+    if(a == 23){/*
+        if(a == b){
             a = 10;
         }else{
             a = 19;
-        }
+        }*/
+        a = 1;
+    }else{
+        a = 11;
     }
 }
 

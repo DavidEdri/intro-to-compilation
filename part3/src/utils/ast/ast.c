@@ -109,3 +109,7 @@ void add_false_label(struct node *n, char *l){
 void add_next(struct node *n, char *l){
     n->next = l;
 }
+
+void add_code(struct node *n, char *c){
+    n->code = c;
+}

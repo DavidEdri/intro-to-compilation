@@ -3,7 +3,11 @@ function void foo(){
     if(a == 23){
         a = 10;
     }else{
-        a = 19;
+        if(a == 23){
+            a = 10;
+        }else{
+            a = 19;
+        }
     }
 }
 

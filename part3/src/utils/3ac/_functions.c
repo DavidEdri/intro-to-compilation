@@ -10,7 +10,7 @@ void cg_handle_token(struct node *tree)
     char *token = tree->token;
     if (strcmp(token, "IF-ELSE") == 0)
     {
-        if_else_lables(tree);
+        cg_if_else(tree);
         printtree(tree,0,1);
     }
     else
@@ -18,7 +18,7 @@ void cg_handle_token(struct node *tree)
         // show unhandled tokens
         if (strcmp(token, "") != 0)
         {
-            printf("unsuported token : %s\n", token);
+            // printf("unsuported token : %s\n", token);
         }
         cg_handle_children(tree);
     }
@@ -53,8 +53,15 @@ char *freshLabel(){
     return res;
 }
 
-void if_else_lables(struct node *tree){
+void cg_if_else(struct node *tree){
+    // add true label
     add_true_label(tree->first, freshLabel());
+    // handle true body labels
+    cg_handle_children(tree->second);
+    // add false label
     add_false_label(tree->first, freshLabel());
+    // handle true body labels
+    cg_handle_children(tree->third);
+    // add next label
     add_next(tree, freshLabel());
 }

@@ -9,7 +9,6 @@ void cg_handle_token(struct node *tree){
     if (strcmp(token, "IF-ELSE") == 0){
         cg_if_else(tree);
     }else if(strcmp(token, "=") == 0){
-        printtree(tree,0,1);
         cg_assignment(tree);
     }else if(is_operator(token)){
         cg_expression(tree);

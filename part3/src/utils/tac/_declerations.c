@@ -9,7 +9,6 @@ void cpy_code(struct node *parent);
 
 //assignment
 void cg_assignment(struct node *tree);
-void cg_assign_strchar(struct node *tree);
 
 // bool_exp
 void cg_bool_exp(struct node *tree);

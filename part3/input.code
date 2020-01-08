@@ -2,8 +2,9 @@ function void foo(){
     string a[5];
     var char b;
     var int c;
-
-    b = a[c];
+    
+    c = 3*6;
+    c = 3*6;
 }
 
 function void main(){

@@ -26,8 +26,8 @@ void labels_if_else(struct node *tree){
 }
 
 void gencode_if_else(struct node *tree){
-    struct node *f = tree->first, *s = tree->second, *t = tree->third;
+    struct node *exp = tree->first, *t_true = tree->second, *t_false = tree->third;
     char *code;
-    asprintf(&code,"%s%s: %s\tgoto %s\n%s: %s\n%s:",f->code, f->trueLabel, s->code, tree->next, f->falseLabel, t->code, tree->next);
+    asprintf(&code,"%s%s: %s\tgoto %s\n%s: %s%s:",exp->code, exp->trueLabel, t_true->code, tree->next, exp->falseLabel, t_false->code, tree->next);
     add_code(tree, code);
 }

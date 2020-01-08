@@ -3,6 +3,7 @@ void codegen(struct node *tree);
 void cg_handle_token(struct node *tree);
 void cg_handle_children(struct node *tree);
 char *freshLabel();
+char *freshVar();
 int should_cpy_code(char *token);
 void cpy_code(struct node *parent);
 
@@ -13,6 +14,9 @@ void cg_assignment(struct node *tree);
 void cg_bool_exp(struct node *tree);
 int is_relop(char *t);
 void handle_relop(struct node *tree);
+
+//expression
+void cg_expression(struct node *tree);
 
 // if_else
 void cg_if_else(struct node *tree);

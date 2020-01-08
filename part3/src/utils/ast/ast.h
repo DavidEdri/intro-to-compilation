@@ -11,6 +11,7 @@ typedef struct node{
     char *trueLabel;
     char *falseLabel;
     char *next;
+    char *var;
     char *code;
 } node;
 

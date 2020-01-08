@@ -10,6 +10,8 @@ void cg_handle_token(struct node *tree){
         cg_if_else(tree);
     }else if(strcmp(token, "=") == 0){
         cg_assignment(tree);
+    }else if(is_operator(token)){
+        cg_expression(tree);
     }else{
         // show unhandled tokens
         if (strcmp(token, "") != 0){
@@ -43,6 +45,12 @@ void cg_handle_children(struct node *tree){
     if (tree->fourth){
         cg_handle_token(tree->fourth);
     }
+}
+
+char *freshVar(){
+    char* res;
+    asprintf(&res,"t%d",var_count++);
+    return res;
 }
 
 char *freshLabel(){

@@ -116,3 +116,7 @@ void add_next(struct node *n, char *l){
 void add_code(struct node *n, char *c){
     n->code = c;
 }
+
+void add_var(struct node *n, char *v){
+    n->var = v;
+}

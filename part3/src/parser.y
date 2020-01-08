@@ -11,6 +11,7 @@
 
 struct code_stack *main_stack = NULL;
 int label_count = 0;
+int var_count = 0;
 #include "utils/index.c"
 
 int yylex();

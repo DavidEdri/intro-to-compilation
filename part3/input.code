@@ -1,15 +1,9 @@
 function void foo(){
-    var int a,b;
-    if(a == 23){
-        5 * -1 + 7*6;
-    }else{
-        a = 7;
-    }
-    if(a == 33){
-        a = 311;
-    }else{
-        a = 73;
-    }
+    string a[5];
+    var char b;
+    var int c;
+
+    b = a[c];
 }
 
 function void main(){

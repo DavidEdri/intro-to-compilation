@@ -3,8 +3,11 @@ function void foo(){
     var char b;
     var int c;
     
-    c = 3*6;
-    c = 3*6;
+    if(c < 6){
+        b = a[5- 2];
+    }else{
+        b = a[5];
+    }
 }
 
 function void main(){

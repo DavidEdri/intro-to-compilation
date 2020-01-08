@@ -6,13 +6,13 @@ void cg_if_else(struct node *tree){
 void labels_if_else(struct node *tree){
     add_true_label(tree->first, freshLabel());
     // handle true body
-    cg_handle_children(tree->second);
+    cg_handle_token(tree->second);
     // cpy code from block children
     cpy_code(tree->second);
 
     add_false_label(tree->first, freshLabel());
     // handle true body
-    cg_handle_children(tree->third);
+    cg_handle_token(tree->third);
     // cpy code from block children
     cpy_code(tree->third);
 

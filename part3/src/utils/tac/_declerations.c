@@ -6,6 +6,7 @@ char *freshLabel();
 char *freshVar();
 int should_cpy_code(char *token);
 void cpy_code(struct node *parent);
+void write_code(struct node *tree);
 
 //assignment
 void cg_assignment(struct node *tree);

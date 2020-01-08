@@ -1,7 +1,8 @@
 void codegen(struct node *tree){
-    // printtree(tree,0,1);
+    printtree(tree,0,1);
     cg_handle_token(tree);
     //print_cs(main_stack);
+    write_code(tree);
 }
 
 void cg_handle_token(struct node *tree){
@@ -23,9 +24,6 @@ void cg_handle_token(struct node *tree){
 
         if(should_cpy_code(token)){
             cpy_code(tree);
-            if(strcmp(token, "BODY") == 0){
-                printf("%s\n", tree->code);
-            }
         }
     }
 }
@@ -63,14 +61,33 @@ char *freshLabel(){
 int should_cpy_code(char *token){
     return  strcmp(token, "") == 0 ||
             strcmp(token, "BLOCK") == 0 ||
+            strcmp(token, "FUNCTION") == 0 ||
+            strcmp(token, "GLOBAL") == 0 ||
+            strcmp(token, "CODE") == 0 ||
             strcmp(token, "BODY") == 0;
 }
 
 void cpy_code(struct node *parent){
-    struct node *f = parent->first, *s = parent->second;
+    struct node *f = parent->first, *s = parent->second, *t = parent->third, *fo = parent->fourth;
     char *tmp;
 
     // check that first/second exists and if they got code
-    asprintf(&tmp,"%s%s",f && f->code ? f->code : "", s && s->code ? s->code : "");
+    asprintf(&tmp,"%s%s%s%s",
+        f && f->code ? f->code : "", 
+        s && s->code ? s->code : "", 
+        t && t->code ? t->code : "", 
+        fo && fo->code ? fo->code : "");
     add_code(parent, tmp);
+}
+
+void write_code(struct node *tree){
+    FILE *f = fopen("output.txt", "w");
+
+    if (f == NULL){
+        printf("Error opening file!\n");
+        exit(1);
+    }
+    
+    printf("%s\n", tree->code);
+    fprintf(f, "%s\n", tree->code);
 }

@@ -47,6 +47,9 @@ void printtree(node *tree, int tab, int one_line)
         if(tree->falseLabel){
             printf("falseLabel: %s", tree->falseLabel);
         }
+        if(tree->code){
+            printf("code: %ld", strlen(tree->code));
+        }
         printf("\n");
     }
 

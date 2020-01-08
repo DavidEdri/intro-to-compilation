@@ -166,6 +166,10 @@ int get_operand_type(struct node *tree){
         return TYPE_BOOL;
     }
 
+    if(strcmp(token , "UMINUS") == 0){
+        return TYPE_INT;
+    }
+
     if(token[0] == '\''){
         return TYPE_CHAR;
     }

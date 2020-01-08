@@ -5,6 +5,19 @@ int is_additive_exp(char *token){
             strcmp(token, "/") == 0 ;
 }
 
+int is_bool_exp(char *token){
+    return  strcmp(token, "||") == 0 ||
+            strcmp(token, "&&") == 0 ||
+            strcmp(token, ">") == 0 ||
+            strcmp(token, "<") == 0 ||
+            strcmp(token, ">=") == 0 ||
+            strcmp(token, "<=") == 0 ||
+            strcmp(token, "!=") == 0 ||
+            strcmp(token, "==") == 0 ||
+            strcmp(token, "NOT") == 0 
+        ;
+}
+
 void cg_expression(struct node *tree){
     struct node *f = tree->first, *s = tree->second;
     char *token = tree->token, *code;

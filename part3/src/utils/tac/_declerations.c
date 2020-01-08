@@ -24,3 +24,6 @@ void cg_strchar(struct node *tree);
 void cg_if_else(struct node *tree);
 void labels_if_else(struct node *tree);
 void gencode_if_else(struct node *tree);
+void cg_if(struct node *tree);
+void labels_if(struct node *tree);
+void gencode_if(struct node *tree);

@@ -1,7 +1,7 @@
 void codegen(struct node *tree){
     printtree(tree,0,1);
     cg_handle_token(tree);
-    //print_cs(main_stack);
+    // print_cs(main_stack);
     write_code(tree);
 }
 
@@ -9,11 +9,14 @@ void cg_handle_token(struct node *tree){
     char *token = tree->token;
     if (strcmp(token, "IF-ELSE") == 0){
         cg_if_else(tree);
+    }else if(strcmp(token, "IF") == 0){
+        cg_if(tree);
     }else if(strcmp(token, "=") == 0){
         cg_assignment(tree);
     }else if(is_operator(token)){
         cg_expression(tree);
-        var_count = 0;
+    }else if(is_arg_type(token)){
+        // check for assignments
     }else{
         // show unhandled tokens
         if (strcmp(token, "") != 0){

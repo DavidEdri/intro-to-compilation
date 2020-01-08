@@ -144,12 +144,12 @@ int get_operand_type(struct node *tree){
     char f = token[0];
     int len = strlen(token);
     int check_real = f == '+' || f == '-' || f == '.' || isdigit(f);
-    int check_id = isalpha(f);
+    int check_id = isalpha(f) || (f == '-' && isalpha(token[1]));
 
     if(strcmp(token , "FUNCTION-CALL") == 0){
         return validate_func_call(tree);
     }
-
+    
     if(strcmp(token, "STRCHAR") == 0){
         return validate_str_char(tree);
     }
@@ -166,9 +166,6 @@ int get_operand_type(struct node *tree){
         return TYPE_BOOL;
     }
 
-    if(strcmp(token , "UMINUS") == 0){
-        return TYPE_INT;
-    }
 
     if(token[0] == '\''){
         return TYPE_CHAR;
@@ -184,6 +181,10 @@ int get_operand_type(struct node *tree){
                 return TYPE_REAL;
             }
         }
+    }
+
+    if(strcmp(token , "UMINUS") == 0){
+        return TYPE_INT;
     }
     
     if(check_id){

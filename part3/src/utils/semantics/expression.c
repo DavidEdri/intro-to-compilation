@@ -188,6 +188,7 @@ int handle_address(struct node *tree){
 
 int get_expression_type(struct node *tree){
     char *token = tree->token;
+
     if(strcmp(token, "FUNCTION-CALL") == 0){
         return get_operand_type(tree);
     }

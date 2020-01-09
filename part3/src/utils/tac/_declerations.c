@@ -11,10 +11,11 @@ void write_code(struct node *tree);
 // assignment
 void cg_assignment(struct node *tree);
 
-// bool_exp
-void cg_bool_exp(struct node *tree);
+// condition
+void cg_condition(struct node *tree);
+void condition_lables(struct node *tree);
 int is_relop(char *t);
-void handle_relop(struct node *tree);
+void cg_relop(struct node *tree);
 
 // expression
 void cg_expression(struct node *tree);

@@ -4,20 +4,23 @@ void cg_if_else(struct node *tree){
 }
 
 void labels_if_else(struct node *tree){
+    //gen labels for condition
+    condition_lables(tree->first);
     add_true_label(tree->first, freshLabel());
+
     // handle true body
     cg_handle_token(tree->second);
     // cpy code from block children
     cpy_code(tree->second);
 
     add_false_label(tree->first, freshLabel());
-    // handle true body
+    // codgen condition
+    cg_condition(tree->first);
+
+    // handle false body
     cg_handle_token(tree->third);
     // cpy code from block children
     cpy_code(tree->third);
-
-    // handle bool expression
-    cg_bool_exp(tree->first);
 
     // add next labels
     add_next(tree, freshLabel());
@@ -38,7 +41,10 @@ void cg_if(struct node *tree){
 }
 
 void labels_if(struct node *tree){
+    //gen labels for condition
+    condition_lables(tree->first);
     add_true_label(tree->first, freshLabel());
+
     // handle true body
     cg_handle_token(tree->second);
     // cpy code from block children
@@ -47,8 +53,8 @@ void labels_if(struct node *tree){
     add_next(tree, freshLabel());
     add_next(tree->second, tree->next);
     add_false_label(tree->first, tree->next); 
-    // handle bool expression
-    cg_bool_exp(tree->first);
+    // handle condition
+    cg_condition(tree->first);
 }
 
 void gencode_if(struct node *tree){

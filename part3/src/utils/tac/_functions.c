@@ -1,5 +1,5 @@
 void codegen(struct node *tree){
-    printtree(tree,0,1);
+    // printtree(tree,0,1);
     cg_handle_token(tree);
     // print_cs(main_stack);
     write_code(tree);

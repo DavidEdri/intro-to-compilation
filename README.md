@@ -14,6 +14,6 @@ ask if u need to reset var count
 # TODO :
 
 loops  
-functions  
+functions push params, pop params
 bool_experssions  
 address and dref expressions

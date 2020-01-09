@@ -2,4 +2,5 @@
 #include "assignment.c"
 #include "bool_exp.c"
 #include "expression.c"
+#include "function.c"
 #include "if_else.c"

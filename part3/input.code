@@ -1,4 +1,4 @@
-function void foo(){
+function int foo(){
     string b[3];
     var int a;
     a = -a;
@@ -6,11 +6,13 @@ function void foo(){
         b[2*1] = 'c';
 
         if(5 < 6){
-            b[1] = 'c';
+            return 3;
         }
     }else{
         b[2*1] = 'd';
     }
+
+    return a;
 }
 
 function void main(){

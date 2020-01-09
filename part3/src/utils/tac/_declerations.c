@@ -8,7 +8,7 @@ int should_cpy_code(char *token);
 void cpy_code(struct node *parent);
 void write_code(struct node *tree);
 
-//assignment
+// assignment
 void cg_assignment(struct node *tree);
 
 // bool_exp
@@ -16,9 +16,14 @@ void cg_bool_exp(struct node *tree);
 int is_relop(char *t);
 void handle_relop(struct node *tree);
 
-//expression
+// expression
 void cg_expression(struct node *tree);
 void cg_strchar(struct node *tree);
+
+// function
+void cg_function(struct node *tree);
+void cg_main(struct node *tree);
+void cg_return(struct node *tree);
 
 // if_else
 void cg_if_else(struct node *tree);

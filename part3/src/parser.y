@@ -10,6 +10,7 @@
 #include "utils/tac/_declerations.c"
 
 struct code_stack *main_stack = NULL;
+int is_test = 0; // to avoid printing in tests
 int label_count = 0;
 int var_count = 0;
 #include "utils/index.c"
@@ -324,8 +325,8 @@ id
 
 number
     : INTEGER   { $$ = mknode(yytext, NULL, NULL, NULL, NULL, yylineno); }
-    | UMINUS    { $$ = mknode("UMINUS", mknode(yytext, NULL, NULL, NULL, NULL, yylineno), NULL, NULL, NULL, yylineno); }
-    | MINUSID    { $$ = mknode("UMINUS", mknode(yytext, NULL, NULL, NULL, NULL, yylineno), NULL, NULL, NULL, yylineno); }
+    | UMINUS    { $$ = mknode("UMINUS", mknode(++yytext, NULL, NULL, NULL, NULL, yylineno), NULL, NULL, NULL, yylineno); }
+    | MINUSID    { $$ = mknode("UMINUS", mknode(++yytext, NULL, NULL, NULL, NULL, yylineno), NULL, NULL, NULL, yylineno); }
     | HEX       { $$ = mknode(yytext, NULL, NULL, NULL, NULL, yylineno); }
     | REALVALUE { $$ = mknode(yytext, NULL, NULL, NULL, NULL, yylineno); }
     ;
@@ -336,7 +337,11 @@ csnull
 
 %%
 
-int main(){
+int main(int argc, char *argv[]){
+   if(argc > 1 && strcmp(argv[1], "test") == 0){
+       is_test = 1;
+   }
+
    return yyparse();
 }
 

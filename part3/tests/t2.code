@@ -1,7 +1,7 @@
 function void foo(){
     string b[3];
     var int a;
-    a = -a;
+
     if(a == 3){
         b[2*1] = 'c';
 

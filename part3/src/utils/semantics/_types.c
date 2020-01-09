@@ -144,7 +144,7 @@ int get_operand_type(struct node *tree){
     char f = token[0];
     int len = strlen(token);
     int check_real = f == '+' || f == '-' || f == '.' || isdigit(f);
-    int check_id = isalpha(f) || (f == '-' && isalpha(token[1]));
+    int check_id = isalpha(f);
 
     if(strcmp(token , "FUNCTION-CALL") == 0){
         return validate_func_call(tree);
@@ -183,10 +183,6 @@ int get_operand_type(struct node *tree){
         }
     }
 
-    if(strcmp(token , "UMINUS") == 0){
-        return TYPE_INT;
-    }
-    
     if(check_id){
         struct sym_el *id = cs_find(main_stack, token);
         if(!id){

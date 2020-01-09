@@ -91,6 +91,6 @@ void write_code(struct node *tree){
         exit(1);
     }
     
-    printf("%s\n", tree->code);
+    printf("%s\n", !is_test ? tree->code : "");
     fprintf(f, "%s\n", tree->code);
 }

@@ -17,5 +17,3 @@ loops
 functions  
 bool_experssions  
 address and dref expressions
-
-## fix uminus for id

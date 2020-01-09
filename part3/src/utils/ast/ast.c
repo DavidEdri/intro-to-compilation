@@ -24,6 +24,10 @@ void printtree(node *tree, int tab, int one_line)
     char *token = tree->token;
     int print_value = 1;//should_print(token);
 
+    if(is_test){
+        return;
+    }
+
     if (print_value)
     {
         for (i = 0; i < tab; i++)

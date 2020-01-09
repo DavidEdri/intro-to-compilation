@@ -10,3 +10,6 @@ run:
 	$(MAKE) all
 	@./dist/output < input.code
 
+test:
+	$(MAKE) all
+	./test.sh

@@ -49,19 +49,14 @@ void cg_condition(struct node *tree){
 void condition_lables(struct node *tree){
     char *token = tree->token;
 
-    if(strcmp(token, "||") == 0 || strcmp(token, "&&") == 0){
-        if(tree->first){
-            condition_lables(tree->first);
-        }
-
-        if(tree->second){
-            condition_lables(tree->second);
-        }
-    }
-
     if(strcmp(token, "||") == 0){
         add_false_label(tree->first, freshLabel());
+        // || labels need to be first
+        condition_lables(tree->first);
+        condition_lables(tree->second);
     }else if(strcmp(token, "&&") == 0){
+        condition_lables(tree->first);
+        condition_lables(tree->second);
         add_true_label(tree->first, freshLabel());
     }
 

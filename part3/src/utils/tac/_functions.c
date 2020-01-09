@@ -1,5 +1,5 @@
 void codegen(struct node *tree){
-    // printtree(tree,0,1);
+    printtree(tree,0,1);
     cg_handle_token(tree);
     // print_cs(main_stack);
     write_code(tree);
@@ -23,6 +23,10 @@ void cg_handle_token(struct node *tree){
         cg_expression(tree);
     }else if(is_arg_type(token) || strcmp(token, "STR") == 0){
         // check for assignments
+        check_for_assignment(tree);
+    }else if(strcmp(token, "STR") == 0){
+        // check for assignments
+        check_for_str_assignment(tree);
     }else{
         cg_handle_children(tree);
 

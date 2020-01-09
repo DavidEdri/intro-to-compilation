@@ -1,0 +1,23 @@
+foo:
+	BeginFunc
+	if a < b goto L2
+	goto L0
+L0:	if c < d goto L1
+	goto L3
+L1:	if e < f goto L2
+	goto L3
+L2:	
+L3:	if 3 < 5 goto L5
+	goto L4
+L4:	goto L5
+L5:	if 4 != 6 goto L6
+	goto L7
+L6:	
+	goto L8
+L7:	
+L8:	EndFunc
+
+main:
+	BeginFunc
+	EndFunc
+

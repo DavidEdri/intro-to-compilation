@@ -1,0 +1,10 @@
+function void foo(){
+    var int a = 3, aa= 5 + 3, j, xz = 300;
+    var char c = 't';
+    var real rl = a + 3;
+    string b[50] = "asd";
+}
+
+function void main(){
+
+}

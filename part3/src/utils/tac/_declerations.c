@@ -10,6 +10,8 @@ void write_code(struct node *tree);
 
 // assignment
 void cg_assignment(struct node *tree);
+void check_for_assignment(struct node *tree);
+void check_for_str_assignment(struct node *tree);
 
 // condition
 void cg_condition(struct node *tree);

@@ -1,0 +1,16 @@
+foo:
+	BeginFunc
+	a = 3
+	t0 = 5 + 3
+	aa = t0
+	xz = 300
+	c = 't'
+	t1 = a + 3
+	rl = t1
+	b = "asd"
+	EndFunc
+
+main:
+	BeginFunc
+	EndFunc
+

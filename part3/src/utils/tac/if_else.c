@@ -12,6 +12,7 @@ void labels_if_else(struct node *tree){
     cg_handle_token(tree->second);
     // cpy code from block children
     cpy_code(tree->second);
+    if(strcmp(tree->second->code, "") == 0) add_code(tree->second, "\n");
 
     add_false_label(tree->first, freshLabel());
     // codgen condition
@@ -21,6 +22,7 @@ void labels_if_else(struct node *tree){
     cg_handle_token(tree->third);
     // cpy code from block children
     cpy_code(tree->third);
+    if(strcmp(tree->third->code, "") == 0 )  add_code(tree->third, "\n");
 
     // add next labels
     add_next(tree, freshLabel());
@@ -49,6 +51,7 @@ void labels_if(struct node *tree){
     cg_handle_token(tree->second);
     // cpy code from block children
     cpy_code(tree->second);
+    if(strcmp(tree->second->code, "") == 0) add_code(tree->second, "\n");
     // add next labels
     add_next(tree, freshLabel());
     add_next(tree->second, tree->next);

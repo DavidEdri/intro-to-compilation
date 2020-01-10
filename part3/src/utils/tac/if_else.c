@@ -75,15 +75,16 @@ void if_else_2(struct node *tree){
     // handle true body
     cg_handle_token(t_body);
     // cpy code from block children
-    cpy_code(t_body);
-    if(strcmp(t_body->code, "") == 0) add_code(t_body, "\n");
+    if(should_cpy_code(t_body->token)) cpy_code(t_body);
+    // if(strcmp(t_body->code, "") == 0) add_code(t_body, "\n");
 
     if(strcmp(token, "IF-ELSE") == 0){
+        printtree(tree,0,1);
         add_false_label(condition, freshLabel());
         cg_handle_token(f_body);
         // cpy code from block children
-        cpy_code(f_body);
-        if(strcmp(f_body->code, "") == 0 )  add_code(f_body, "\n");
+        if(should_cpy_code(f_body->token)) cpy_code(f_body);
+        if(strcmp(f_body->code, "") == 0 )  add_code(f_body, "\n"); // if empty false body
 
         // add next labels
         add_next(tree, freshLabel());
@@ -104,7 +105,7 @@ void if_else_2(struct node *tree){
         add_false_label(condition, tree->next);         
 
         // codegen if
-        asprintf(&code, "%s\tifz %s Goto %s\n\t%s%s:\t",condition->code, condition->var, condition->falseLabel, t_body->code, tree->next);
+        asprintf(&code, "%s\tifz %s Goto %s\n%s%s:\t",condition->code, condition->var, condition->falseLabel, t_body->code, tree->next);
         add_code(tree, code);
     }
 

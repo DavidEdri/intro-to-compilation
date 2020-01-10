@@ -1,8 +1,13 @@
 function int foo(){
     var int a;
     a = 23;
-    if (a == 23){
-        a = 10;}
+    if (a == 23)
+        a = 10;
+
+           if (a != 23)
+                a = 13;
+        
+
 
     return a;
 

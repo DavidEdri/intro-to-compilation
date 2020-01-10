@@ -109,12 +109,7 @@ void cg_bool_exp(struct node *tree){
         asprintf(&code, "%s%s\t%s = %s || %s\n", f->code, s->code, tree->var, f->var, s->var);
         add_code(tree, code);
     }else if(is_relop(token)){
-        // if adding between number and id add id to temp var
-        if_temp_needed(tree);
-        
-        add_var(tree, freshVar());
-        asprintf(&code, "%s%s\t%s = %s %s %s\n", f->code, s->code, tree->var, f->var, token, s->var);
-        add_code(tree, code);      
+        cg_relop2(tree);
     }else if(strcmp(token, "NOT") == 0){
         add_var(tree, freshVar());
         asprintf(&code, "%s\t%s = %s == 0\n", f->code, tree->var, f->var);
@@ -141,6 +136,12 @@ int is_relop(char *t){
             strcmp(t, ">=") == 0 ;
 }
 
+int is_synthesize_relop(char *t){
+    return  strcmp(t, "!=") == 0 ||
+            strcmp(t, "<=") == 0 ||
+            strcmp(t, ">=") == 0 ; 
+}
+
 void if_temp_needed(struct node *tree){
     struct node *f = tree->first, *s = tree->second;
     char *token = tree->token, *code;
@@ -155,5 +156,46 @@ void if_temp_needed(struct node *tree){
         add_var(f, freshVar());
         asprintf(&code, "\t%s = %s\n", f->var, val);
         add_code(f, code);
+    }
+}
+
+void cg_relop2(struct node *tree){
+    struct node *f = tree->first, *s = tree->second;
+    char *token = tree->token, *code;
+
+    // if adding between number and id add id to temp var
+    if_temp_needed(tree);
+    if(is_synthesize_relop(token)){
+        if(strcmp(token, "!=") == 0){
+            char *t1 = freshVar(), *c1, *c2;
+
+            add_var(tree, freshVar());
+
+            asprintf(&c1, "\t%s = %s == %s\n", t1, f->var, s->var);
+            asprintf(&c2, "\t%s = %s == 0\n", tree->var, t1);
+
+            asprintf(&code, "%s%s%s%s\t", f->code, s->code,c1, c2);
+            add_code(tree, code); 
+        }else if(strcmp(token, "<=") == 0){
+            char *t1 = freshVar(), *t2 = freshVar(), *c1, *c2;
+
+            add_var(tree, freshVar());
+            asprintf(&c1, "\t%s = %s < %s\n", t1, f->var, s->var);
+            asprintf(&c2, "\t%s = %s == %s\n", t2, f->var, s->var);           
+            asprintf(&code, "%s%s%s%s\t%s = %s || %s\n", f->code, s->code, c1, c2, tree->var, t1, t2);
+            add_code(tree, code); 
+        }else{ // >=
+            char *t1 = freshVar(), *t2 = freshVar(), *c1, *c2;
+
+            add_var(tree, freshVar());
+            asprintf(&c1, "\t%s = %s > %s\n", t1, f->var, s->var);
+            asprintf(&c2, "\t%s = %s == %s\n", t2, f->var, s->var);           
+            asprintf(&code, "%s%s%s%s\t%s = %s || %s\n", f->code, s->code, c1, c2, tree->var, t1, t2);
+            add_code(tree, code); 
+        }
+    }else{
+        add_var(tree, freshVar());
+        asprintf(&code, "%s%s\t%s = %s %s %s\n", f->code, s->code, tree->var, f->var, token, s->var);
+        add_code(tree, code);  
     }
 }

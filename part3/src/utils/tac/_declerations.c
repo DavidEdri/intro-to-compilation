@@ -25,6 +25,7 @@ void cg_strchar(struct node *tree);
 void cg_bool_exp(struct node *tree);
 int is_relop(char *t);
 void if_temp_needed(struct node *tree);
+void cg_relop2(struct node *tree);
 
 // function
 void cg_function(struct node *tree);

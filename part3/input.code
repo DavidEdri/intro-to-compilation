@@ -1,7 +1,9 @@
 function int foo(){
     var int a = 23;
-    var bool b = false;
-    string s[3] = "asd";
+
+    if(a <= (5 + 3) && a >= 0){
+        a = 9;
+    }
         
     return a;
 }

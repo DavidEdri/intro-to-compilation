@@ -8,6 +8,7 @@ int should_cpy_code(char *token);
 void cpy_code(struct node *parent);
 void write_code(struct node *tree);
 int is_var(char *token);
+char* my_str_cat(char *a, char *b);
 
 // assignment
 void cg_assignment(struct node *tree);
@@ -26,6 +27,10 @@ void cg_relop(struct node *tree);
 void cg_function(struct node *tree);
 void cg_main(struct node *tree);
 void cg_return(struct node *tree);
+void cg_func_call(struct node *tree, char *assignment_id);
+void cg_func_args(struct node *tree);
+void cg_push_params(struct node *tree, char **code);
+int get_params_size(char *id);
 
 // if_else
 void cg_if_else(struct node *tree);

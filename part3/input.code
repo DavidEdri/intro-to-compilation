@@ -1,4 +1,4 @@
-function int foo(){
+function int foo(int a2; bool b, b2; real c){
     var int a = 23;
 
     if(a <= (5 + 3) && a >= 0){
@@ -9,5 +9,6 @@ function int foo(){
 }
 
 function void main(){
-
+    var int a, b;
+    a = b + foo(a + 3, 3 < 5 || false, true, 3.14);
 }

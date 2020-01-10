@@ -15,5 +15,3 @@ ask if u need to reset var count
 
 functions push params, pop params
 address and dref expressions
-for the code: a = 1 try to output t0 = 1; a = t0;
-seperate the relops (<= ,>=, !=)

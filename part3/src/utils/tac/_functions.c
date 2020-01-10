@@ -1,5 +1,5 @@
 void codegen(struct node *tree){
-    // printtree(tree,0,1);
+    printtree(tree,0,1);
     cg_handle_token(tree);
     // print_cs(main_stack);
     write_code(tree);
@@ -11,6 +11,7 @@ void cg_handle_token(struct node *tree){
         cg_if_else(tree);
     }else if(strcmp(token, "FUNCTION") == 0){
         cg_function(tree);
+        var_count = 0;
     }else if(strcmp(token, "MAIN") == 0){
         cg_main(tree);
     }else if(strcmp(token, "WHILE") == 0){
@@ -19,6 +20,8 @@ void cg_handle_token(struct node *tree){
         cg_do_while(tree);
     }else if(strcmp(token, "FOR") == 0){
         cg_for(tree);
+    }else if(strcmp(token, "FUNCTION-CALL") == 0){
+        cg_func_call(tree, NULL);
     }else if(strcmp(token, "=") == 0){
         cg_assignment(tree);
     }else if(strcmp(token, "RET") == 0){
@@ -75,7 +78,7 @@ char *freshLabel(){
 }
 
 int is_var(char *token){
-    return  isalpha(token[0]) &&
+    return  isalpha(token[0]) != 0 &&
             strcmp(token, "TRUE") != 0 &&
             strcmp(token, "FALSE") != 0 &&
             strcmp(token, "FUNCTION-CALL") != 0 &&
@@ -127,4 +130,13 @@ void write_code(struct node *tree){
 
     printf("%s", !is_test ? code : "");
     fprintf(f, "%s", code);
+}
+
+char* my_str_cat(char *a, char *b){
+    char *res = (char*)malloc(strlen(a) + strlen(b) + 1);
+
+    strcpy(res, a);
+    strcat(res, b);
+
+    return res;
 }

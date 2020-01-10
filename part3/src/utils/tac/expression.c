@@ -50,6 +50,8 @@ void cg_expression(struct node *tree){
         exit(1);
     }else if(strcmp(token, "STRCHAR") == 0){
         cg_strchar(tree);
+    }else if(strcmp(token, "FUNCTION-CALL") == 0){
+        cg_func_call(tree, "assignment");
     }else{
             add_var(tree, token);
             add_code(tree, "");
@@ -129,13 +131,24 @@ int is_synthesize_relop(char *t){
 void if_temp_needed(struct node *tree){
     struct node *f = tree->first, *s = tree->second;
     char *token = tree->token, *code;
+    
     // if adding between number and id add id to temp var
-    if(is_var(f->token) && !is_var(s->token) && !is_additive_exp(s->token)){
+    if(
+            is_var(f->token) && 
+            !is_var(s->token) && 
+            !is_additive_exp(s->token) && 
+            strcmp(s->token, "FUNCTION-CALL") != 0
+        ){
         char *val = s->var;
         add_var(s, freshVar());
         asprintf(&code, "\t%s = %s\n", s->var, val);
         add_code(s, code);
-    }else if (!is_var(f->token) && is_var(s->token) && !is_additive_exp(f->token)){
+    }else if (
+            !is_var(f->token) && 
+            is_var(s->token) && 
+            !is_additive_exp(f->token) &&
+            strcmp(f->token, "FUNCTION-CALL") != 0
+            ){
         char *val = f->var;
         add_var(f, freshVar());
         asprintf(&code, "\t%s = %s\n", f->var, val);

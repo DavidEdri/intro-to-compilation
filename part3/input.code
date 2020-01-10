@@ -1,14 +1,11 @@
-function void foo(){
-    var int a,b,c,d,e,f=3;
-    if(a<b || (c < d && e < f)){
+function int foo(){
+    var int a;
+    a = 23;
+    if (a == 23){
+        a = 10;}
 
-    }
+    return a;
 
-    if(3 < 5 || !false && 4 != 6){
-
-    }else{
-        
-    }
 }
 
 function void main(){

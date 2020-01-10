@@ -50,10 +50,10 @@ void condition_lables(struct node *tree){
     char *token = tree->token;
 
     if(strcmp(token, "||") == 0){
-        add_false_label(tree->first, freshLabel());
-        // || labels need to be first
         condition_lables(tree->first);
         condition_lables(tree->second);
+        add_false_label(tree->first, freshLabel());
+        // || labels need to be first
     }else if(strcmp(token, "&&") == 0){
         condition_lables(tree->first);
         condition_lables(tree->second);

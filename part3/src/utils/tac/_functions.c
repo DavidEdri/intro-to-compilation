@@ -8,9 +8,11 @@ void codegen(struct node *tree){
 void cg_handle_token(struct node *tree){
     char *token = tree->token;
     if (strcmp(token, "IF-ELSE") == 0){
-        cg_if_else(tree);
+        // cg_if_else(tree);
+        if_else_2(tree);
     }else if(strcmp(token, "IF") == 0){
-        cg_if(tree);
+        // cg_if(tree);
+        if_else_2(tree);
     }else if(strcmp(token, "FUNCTION") == 0){
         cg_function(tree);
     }else if(strcmp(token, "MAIN") == 0){

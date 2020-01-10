@@ -22,6 +22,7 @@ void cg_relop(struct node *tree);
 // expression
 void cg_expression(struct node *tree);
 void cg_strchar(struct node *tree);
+void cg_bool_exp(struct node *tree);
 
 // function
 void cg_function(struct node *tree);
@@ -35,3 +36,4 @@ void gencode_if_else(struct node *tree);
 void cg_if(struct node *tree);
 void labels_if(struct node *tree);
 void gencode_if(struct node *tree);
+void if_else_2(struct node *tree);

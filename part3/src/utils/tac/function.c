@@ -24,7 +24,7 @@ void cg_return(struct node *tree){
 
     cg_expression(exp);
 
-    asprintf(&code, "%s%sReturn %s\n", exp->code, 
+    asprintf(&code, "%s%s\tReturn %s\n", exp->code, 
             strcmp(exp->code, "") != 0 ? "\n\t" : "", // if returning expression add \n \t
             exp->var
             );

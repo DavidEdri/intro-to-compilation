@@ -37,3 +37,8 @@ void cg_if(struct node *tree);
 void labels_if(struct node *tree);
 void gencode_if(struct node *tree);
 void if_else_2(struct node *tree);
+
+// loops
+void cg_while(struct node *tree);
+void cg_for(struct node *tree);
+void cg_do_while(struct node *tree);

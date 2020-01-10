@@ -1,11 +1,9 @@
 function int foo(){
-    var int a;
-    a = 23;
-    if (a == 23)
-        a = 10;
+    var int a = 23;
 
-           if (a != 23)
-                a = 13;
+    do{
+        a = a + 1;
+    }while(a < 100);
         
 
 

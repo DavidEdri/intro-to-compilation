@@ -13,7 +13,7 @@ ask if u need to reset var count
 
 # TODO :
 
-loops  
 functions push params, pop params
-bool_experssions  
 address and dref expressions
+for the code: a = 1 try to output t0 = 1; a = t0;
+seperate the relops (<= ,>=, !=)

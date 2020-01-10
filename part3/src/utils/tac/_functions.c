@@ -17,6 +17,12 @@ void cg_handle_token(struct node *tree){
         cg_function(tree);
     }else if(strcmp(token, "MAIN") == 0){
         cg_main(tree);
+    }else if(strcmp(token, "WHILE") == 0){
+        cg_while(tree);
+    }else if(strcmp(token, "DO-WHILE") == 0){
+        cg_do_while(tree);
+    }else if(strcmp(token, "FOR") == 0){
+        cg_for(tree);
     }else if(strcmp(token, "=") == 0){
         cg_assignment(tree);
     }else if(strcmp(token, "RET") == 0){

@@ -35,7 +35,7 @@ void cg_expression(struct node *tree){
 
         asprintf(&code, "%s%s\t%s = %s %s %s\n", f->code, s->code, tree->var, f->var, token, s->var);
         add_code(tree, code);
-    }else if(is_bool_exp(token)){
+    }else if(is_bool_exp(token) || strcmp(token, "TRUE") == 0|| strcmp(token, "FALSE") == 0){
         cg_bool_exp(tree);
     }else if(strcmp(token, "UMINUS") == 0){
         add_var(tree, freshVar());
@@ -43,8 +43,8 @@ void cg_expression(struct node *tree){
         asprintf(&code, "\t%s%s = -%s\n", f->code, tree->var, f->var);
         add_code(tree, code);
     }else if(is_operator(token)){
-            printf("%s in cg_expresssion not handled yet\n", token);
-            exit(1);
+        printf("%s in cg_expresssion not handled yet\n", token);
+        exit(1);
     }else if(strcmp(token, "STRCHAR") == 0){
         cg_strchar(tree);
     }else{

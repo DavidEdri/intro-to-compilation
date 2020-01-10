@@ -1,14 +1,9 @@
 function int foo(){
     var int a = 23;
-
-    do{
-        a = a + 1;
-    }while(a < 100);
+    var bool b = false;
+    string s[3] = "asd";
         
-
-
     return a;
-
 }
 
 function void main(){

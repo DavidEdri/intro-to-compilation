@@ -62,17 +62,11 @@ void condition_lables(struct node *tree){
 
 }
 
-int is_relop(char *t){
-    return  strcmp(t, "==") == 0 ||
-            strcmp(t, "!=") == 0 ||
-            strcmp(t, "<") == 0 ||
-            strcmp(t, ">") == 0 ||
-            strcmp(t, "<=") == 0 ||
-            strcmp(t, ">=") == 0 ;
-}
-
 void cg_relop(struct node *tree){
+    struct node *f = tree->first, *s = tree->second;
     char *code;
+
+
     asprintf(&code,"\tif %s %s %s goto %s\n\tgoto %s\n",tree->first->token, tree->token, tree->second->token, tree->trueLabel, tree->falseLabel);
 
     add_code(tree, code);

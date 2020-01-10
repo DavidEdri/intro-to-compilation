@@ -30,6 +30,9 @@ void cg_expression(struct node *tree){
         if(s){
             cg_expression(s);
         }
+        
+        // if adding between number and id add id to temp var
+        if_temp_needed(tree);
 
         add_var(tree, freshVar());
 
@@ -106,6 +109,9 @@ void cg_bool_exp(struct node *tree){
         asprintf(&code, "%s%s\t%s = %s || %s\n", f->code, s->code, tree->var, f->var, s->var);
         add_code(tree, code);
     }else if(is_relop(token)){
+        // if adding between number and id add id to temp var
+        if_temp_needed(tree);
+        
         add_var(tree, freshVar());
         asprintf(&code, "%s%s\t%s = %s %s %s\n", f->code, s->code, tree->var, f->var, token, s->var);
         add_code(tree, code);      
@@ -123,5 +129,31 @@ void cg_bool_exp(struct node *tree){
         add_code(tree, code);      
     }else{
         cg_expression(tree);
+    }
+}
+
+int is_relop(char *t){
+    return  strcmp(t, "==") == 0 ||
+            strcmp(t, "!=") == 0 ||
+            strcmp(t, "<") == 0 ||
+            strcmp(t, ">") == 0 ||
+            strcmp(t, "<=") == 0 ||
+            strcmp(t, ">=") == 0 ;
+}
+
+void if_temp_needed(struct node *tree){
+    struct node *f = tree->first, *s = tree->second;
+    char *token = tree->token, *code;
+    // if adding between number and id add id to temp var
+    if(is_var(f->token) && !is_var(s->token) && !is_additive_exp(s->token)){
+        char *val = s->var;
+        add_var(s, freshVar());
+        asprintf(&code, "\t%s = %s\n", s->var, val);
+        add_code(s, code);
+    }else if (!is_var(f->token) && is_var(s->token) && !is_additive_exp(f->token)){
+        char *val = f->var;
+        add_var(f, freshVar());
+        asprintf(&code, "\t%s = %s\n", f->var, val);
+        add_code(f, code);
     }
 }

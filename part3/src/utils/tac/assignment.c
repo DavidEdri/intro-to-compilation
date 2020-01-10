@@ -3,7 +3,14 @@ void cg_assignment(struct node *tree){
     char *code, *token = tree->token;
 
     // handle expression
-    cg_expression(exp);
+    if(!exp->first && strcmp(exp->token, "TRUE") != 0 && strcmp(exp->token, "FALSE") != 0){
+        char *val = exp->token;
+        add_var(exp, freshVar());
+        asprintf(&code, "\t%s = %s\n", exp->var, val);
+        add_code(exp, code);
+    }else{
+        cg_expression(exp);
+    }
     cg_expression(id);
 
     // add assignment to code

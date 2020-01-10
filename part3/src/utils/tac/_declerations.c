@@ -7,6 +7,7 @@ char *freshVar();
 int should_cpy_code(char *token);
 void cpy_code(struct node *parent);
 void write_code(struct node *tree);
+int is_var(char *token);
 
 // assignment
 void cg_assignment(struct node *tree);
@@ -16,13 +17,14 @@ void check_for_str_assignment(struct node *tree);
 // condition
 void cg_condition(struct node *tree);
 void condition_lables(struct node *tree);
-int is_relop(char *t);
 void cg_relop(struct node *tree);
 
 // expression
 void cg_expression(struct node *tree);
 void cg_strchar(struct node *tree);
 void cg_bool_exp(struct node *tree);
+int is_relop(char *t);
+void if_temp_needed(struct node *tree);
 
 // function
 void cg_function(struct node *tree);

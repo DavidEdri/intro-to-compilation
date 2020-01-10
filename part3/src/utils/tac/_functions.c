@@ -1,5 +1,5 @@
 void codegen(struct node *tree){
-    printtree(tree,0,1);
+    // printtree(tree,0,1);
     cg_handle_token(tree);
     // print_cs(main_stack);
     write_code(tree);
@@ -76,6 +76,16 @@ char *freshLabel(){
     char* res;
     asprintf(&res,"L%d",label_count++);
     return res;
+}
+
+int is_var(char *token){
+    return  isalpha(token[0]) &&
+            strcmp(token, "TRUE") != 0 &&
+            strcmp(token, "FALSE") != 0 &&
+            strcmp(token, "FUNCTION-CALL") != 0 &&
+            strcmp(token, "STRCHAR") != 0 &&
+            strcmp(token, "CSNULL") != 0 &&
+            strcmp(token, "DREF") != 0 ;
 }
 
 int should_cpy_code(char *token){

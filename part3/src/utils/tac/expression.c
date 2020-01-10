@@ -76,22 +76,6 @@ void cg_bool_exp(struct node *tree){
     struct node *f = tree->first, *s = tree->second;
     char *token = tree->token, *code;
     
-    /* opt 1
-    condition_lables(tree);
-    add_true_label(tree, freshLabel());
-    add_false_label(tree, freshLabel()); 
-    cg_condition(tree);
-    add_next(tree, freshLabel()); 
-
-    add_var(tree, freshVar());
-
-    asprintf(&code,"%s%s:\t%s = 1\n\tgoto %s\n%s:\t%s = 0\n%s:", tree->code,tree->trueLabel,tree->var,tree->next,tree->falseLabel, tree->var, tree->next);
-
-    add_code(tree, code);
-
-    */
-
-    // opt 2
     if(f){
         cg_bool_exp(f);
     }
@@ -109,7 +93,7 @@ void cg_bool_exp(struct node *tree){
         asprintf(&code, "%s%s\t%s = %s || %s\n", f->code, s->code, tree->var, f->var, s->var);
         add_code(tree, code);
     }else if(is_relop(token)){
-        cg_relop2(tree);
+        cg_relop(tree);
     }else if(strcmp(token, "NOT") == 0){
         add_var(tree, freshVar());
         asprintf(&code, "%s\t%s = %s == 0\n", f->code, tree->var, f->var);
@@ -159,7 +143,7 @@ void if_temp_needed(struct node *tree){
     }
 }
 
-void cg_relop2(struct node *tree){
+void cg_relop(struct node *tree){
     struct node *f = tree->first, *s = tree->second;
     char *token = tree->token, *code;
 

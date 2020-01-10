@@ -8,7 +8,13 @@ function int foo(int a2; bool b, b2; real c){
     return a;
 }
 
+function bool foo2(){
+    return true;
+}
+
 function void main(){
     var int a, b;
+    var bool b2;
     a = b + foo(a + 3, 3 < 5 || false, true, 3.14);
+    b2 = true || foo2();
 }

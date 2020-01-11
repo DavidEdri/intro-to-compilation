@@ -13,7 +13,6 @@ char* my_str_cat(char *a, char *b);
 // assignment
 void cg_assignment(struct node *tree);
 void check_for_assignment(struct node *tree);
-void check_for_str_assignment(struct node *tree);
 
 // expression
 void cg_expression(struct node *tree);

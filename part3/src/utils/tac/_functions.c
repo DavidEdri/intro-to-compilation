@@ -26,14 +26,13 @@ void cg_handle_token(struct node *tree){
         cg_assignment(tree);
     }else if(strcmp(token, "RET") == 0){
         cg_return(tree);
+    }else if(strcmp(token, "STRCHAR") == 0){
+        cg_expression(tree);
     }else if(is_operator(token)){
         cg_expression(tree);
     }else if(is_arg_type(token) || strcmp(token, "STR") == 0){
         // check for assignments
         check_for_assignment(tree);
-    }else if(strcmp(token, "STR") == 0){
-        // check for assignments
-        check_for_str_assignment(tree);
     }else{
         cg_handle_children(tree);
 

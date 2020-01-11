@@ -61,7 +61,3 @@ void check_for_assignment(struct node *tree){
         cpy_code(tree);
     }
 }
-
-void check_for_str_assignment(struct node *tree){
-
-}

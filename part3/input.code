@@ -1,9 +1,23 @@
-function int foo(real x)
+function bool foo(int a, b;real t)
 {
-    return 5;
+    var int* d;
+    string s[50],s2[50] = "asd";
+    if(a<b && t == 0.3){
+        if(s[3]==s2[5-b]){
+            s[*d+b] = 'c';
+        }
+        else{
+            a=4;
+        }   
+    }
+    else{
+        b=5;
+    }
+    return false;
 }
-
 function void main()
 {
-    foo(3);
+var int c;
+var int d;
+foo(c, d,3.5);
 }

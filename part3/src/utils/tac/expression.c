@@ -78,8 +78,8 @@ void cg_expression(struct node *tree){
         printf("%s in cg_expresssion not handled yet\n", token);
         exit(1);
     }else{
-            add_var(tree, token);
-            add_code(tree, "");
+        add_var(tree, token);
+        add_code(tree, "");
     }
 }
 
@@ -104,9 +104,9 @@ void cg_strchar(struct node *tree){
 void cg_bool_exp(struct node *tree){
     struct node *f = tree->first, *s = tree->second;
     char *token = tree->token, *code;
-    
-    if(f) cg_bool_exp(f);
-    if(s) cg_bool_exp(s);
+
+    if(f) cg_expression(f);
+    if(s) cg_expression(s);
 
     if(strcmp(token, "&&") == 0){
         add_var(tree, freshVar());
@@ -153,7 +153,7 @@ int is_synthesize_relop(char *t){
 void if_temp_needed(struct node *tree){
     struct node *f = tree->first, *s = tree->second;
     char *token = tree->token, *code;
-    
+   
     // if adding between number and id add id to temp var
     if(
             is_var(f->token) && 
@@ -161,7 +161,8 @@ void if_temp_needed(struct node *tree){
             !is_additive_exp(s->token) && 
             strcmp(s->token, "FUNCTION-CALL") != 0 &&
             strcmp(s->token, "TRUE") != 0 &&
-            strcmp(s->token, "FALSE") != 0 
+            strcmp(s->token, "FALSE") != 0 &&
+            strcmp(s->token, "DREF") != 0 
         ){
         char *val = s->var;
         add_var(s, freshVar());
@@ -173,7 +174,8 @@ void if_temp_needed(struct node *tree){
             !is_additive_exp(f->token) &&
             strcmp(f->token, "FUNCTION-CALL") != 0 &&
             strcmp(s->token, "TRUE") != 0 &&
-            strcmp(s->token, "FALSE") != 0 
+            strcmp(s->token, "FALSE") != 0 &&  
+            strcmp(f->token, "DREF") != 0 
             ){
         char *val = f->var;
         add_var(f, freshVar());
@@ -208,7 +210,7 @@ void cg_relop(struct node *tree){
             asprintf(&code, "%s%s%s%s\t%s = %s || %s\n", f->code, s->code, c1, c2, tree->var, t1, t2);
             add_code(tree, code); 
         }else{ // >=
-            char *t1 = freshVar(), *t2 = freshVar(), *c1, *c2;
+            char *t1 = "", *t2 = "", *c1, *c2;
 
             add_var(tree, freshVar());
             asprintf(&c1, "\t%s = %s > %s\n", t1, f->var, s->var);

@@ -1,21 +1,16 @@
-function int foo(real x)
+function int foo()
 {
-    var int a;
-    var real a2;
-    a = 3+5-3;
-    if (a == 23)
-    a = 10;
-    else
-    a = 19;
-    return a;
+    var char* x, y2;
+    var int aaa;
+    var char c;
+    string y[50];
+
+    x = null;
+    y2 =x;
+    return 5;
 }
 
 function void main()
 {
-    var int a, b;
-    a = 0;
-    while(a < 10) {
-        b = foo(3.14);
-        a = a + b;
-    }
+
 }

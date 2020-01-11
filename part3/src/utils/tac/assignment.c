@@ -9,7 +9,8 @@ void cg_assignment(struct node *tree){
     }else{
         // check if need to assign first to temp var
         if(!exp->first && strcmp(exp->token, "TRUE") != 0 && 
-            strcmp(exp->token, "FALSE") != 0 && !is_var(exp->token)
+            strcmp(exp->token, "FALSE") != 0 && !is_var(exp->token) &&
+            strcmp(exp->token, "CSNULL") != 0 && !is_var(exp->token) 
             ){
             char *val = exp->token;
 

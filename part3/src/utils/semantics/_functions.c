@@ -85,7 +85,7 @@ void handle_token(struct node *tree)
                 exit(1);
             }
 
-            if(el->type != TYPE_ID){
+            if(el->type == TYPE_FUNC){
                 print_line(tree);
                 printf("%s must be a function call\n", token);
                 exit(1);                

@@ -14,7 +14,7 @@ function bool foo(int a, b;real t)
         b=5;
     }
     {
-        x;
+        foo;
     }
     return false;
 }

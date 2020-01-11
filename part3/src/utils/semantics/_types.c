@@ -149,6 +149,10 @@ int get_operand_type(struct node *tree){
     if(strcmp(token , "FUNCTION-CALL") == 0){
         return validate_func_call(tree);
     }
+
+    if(strcmp(token , "UMINUS") == 0){
+        return get_operand_type(tree->first);
+    }
     
     if(strcmp(token, "STRCHAR") == 0){
         return validate_str_char(tree);

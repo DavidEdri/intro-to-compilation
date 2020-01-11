@@ -1,7 +1,8 @@
 function int foo(real x)
 {
     var int a;
-    a = 23;
+    var real a2;
+    a = 3+5-3;
     if (a == 23)
     a = 10;
     else

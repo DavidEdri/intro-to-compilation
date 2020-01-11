@@ -19,7 +19,7 @@ int yylex();
 int yyerror(char *s);
 %}
 
-%token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL DO MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS HEX STR STRING REALVALUE UMINUS MINUSID
+%token FUNCTION VOID INT REAL FOR VAR SEMICOLON IF ELSE WHILE ASSIGNMENT REALPTR GREATER PLUS LEFTBRACE RIGHTBRACE LEFTPAREN RIGHTPAREN ID INTEGER CHARACTER CHAR RETURN COMMA BOOL DO MAIN INTPTR CHARPTR DOUBLEPTR STRDECLARE BOOLTRUE BOOLFALSE CSNULL LEFTBRACKET RIGHTBRACKET QUOTES DOUBLEQUOTES AND DIVISION EQUAL GREATEREQUAL LESS LESSEQUAL MINUS NOT NOTEQUAL OR MULTI ADDRESS HEX STR STRING REALVALUE
 
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
@@ -140,6 +140,10 @@ factor
     : dref                                      { $$ = $1; }
     | id                                        { $$ = $1; }
     | number                                    { $$ = $1; }
+    | MINUS number                              
+        { $$ = mknode("UMINUS", $2, NULL, NULL, NULL,yylineno); }
+    | MINUS id                              
+        { $$ = mknode("UMINUS", $2, NULL, NULL, NULL,yylineno); }
     | function_call                             { $$ = $1; }
     | BOOLTRUE                                  { $$ = mknode("TRUE", NULL, NULL, NULL, NULL, yylineno); }
     | BOOLFALSE                                 { $$ = mknode("FALSE", NULL, NULL, NULL, NULL, yylineno); }
@@ -325,8 +329,6 @@ id
 
 number
     : INTEGER   { $$ = mknode(yytext, NULL, NULL, NULL, NULL, yylineno); }
-    | UMINUS    { $$ = mknode("UMINUS", mknode(++yytext, NULL, NULL, NULL, NULL, yylineno), NULL, NULL, NULL, yylineno); }
-    | MINUSID    { $$ = mknode("UMINUS", mknode(++yytext, NULL, NULL, NULL, NULL, yylineno), NULL, NULL, NULL, yylineno); }
     | HEX       { $$ = mknode(yytext, NULL, NULL, NULL, NULL, yylineno); }
     | REALVALUE { $$ = mknode(yytext, NULL, NULL, NULL, NULL, yylineno); }
     ;

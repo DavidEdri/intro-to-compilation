@@ -1,16 +1,9 @@
-function int foo()
+function int foo(real x)
 {
-    var char* x, y2;
-    var int aaa;
-    var char c;
-    string y[50];
-
-    x = null;
-    y2 =x;
     return 5;
 }
 
 function void main()
 {
-
+    foo(3);
 }

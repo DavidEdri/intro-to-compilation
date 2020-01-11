@@ -1,7 +1,7 @@
 void cg_if_else(struct node *tree){
     struct node *condition = tree->first, *t_body = tree->second, *f_body = tree->third;
     char *token = tree->token, *code;
-
+    
     cg_expression(condition);
     // handle true body
     cg_handle_token(t_body);
@@ -10,7 +10,6 @@ void cg_if_else(struct node *tree){
     // if(strcmp(t_body->code, "") == 0) add_code(t_body, "\n");
 
     if(strcmp(token, "IF-ELSE") == 0){
-        printtree(tree,0,1);
         add_false_label(condition, freshLabel());
         cg_handle_token(f_body);
         // cpy code from block children

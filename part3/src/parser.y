@@ -11,7 +11,7 @@
 
 struct code_stack *main_stack = NULL;
 int is_test = 0; // to avoid printing in tests
-int label_count = 0;
+int label_count = 1;
 int var_count = 0;
 #include "utils/index.c"
 

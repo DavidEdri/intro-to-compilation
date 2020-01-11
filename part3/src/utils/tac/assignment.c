@@ -8,8 +8,11 @@ void cg_assignment(struct node *tree){
         add_code(tree, code);
     }else{
         // check if need to assign first to temp var
-        if(!exp->first && strcmp(exp->token, "TRUE") != 0 && strcmp(exp->token, "FALSE") != 0){
+        if(!exp->first && strcmp(exp->token, "TRUE") != 0 && 
+            strcmp(exp->token, "FALSE") != 0 && !is_var(exp->token)
+            ){
             char *val = exp->token;
+
             add_var(exp, freshVar());
             asprintf(&code, "\t%s = %s\n", exp->var, val);
             add_code(exp, code);
@@ -19,12 +22,10 @@ void cg_assignment(struct node *tree){
         cg_expression(id);
 
         // add assignment to code
-        asprintf(&code,"%s%s\t%s%s = %s%s\n",
+        asprintf(&code,"%s%s\t%s = %s\n",
             exp->code, // expression temp vars
             strcmp(id->code, "") != 0 ? id->code : "", // if assigning to strchar(x[i] = 'a')
-            strcmp(id->token, "STRCHAR") == 0 ? "*" : "", // if assigning to strchar(x[i] = 'a')
             id->var, // assignment target
-            strcmp(exp->token, "STRCHAR") == 0 ? "*" : "", // if assiging from strchar (a = x[i])
             exp->var); // last var used on expression
         add_code(tree, code);
     }

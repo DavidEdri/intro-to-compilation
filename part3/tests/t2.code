@@ -1,8 +1,17 @@
-function void foo(){
-    var int a = 3, aa= 5 + 3, j, xz = 300;
-    var char c = 't';
-    var real rl = a + 3;
-    string b[50] = "asd";
+function int foo2()
+{
+    string s1[100]="aba", s2[40], s3[20]="";
+    var int i, j=0, cnt;
+    cnt = 1;
+    for(i=0; i<20; i=i+1){
+	do{
+	    if (s1[i] == s2[j])
+		cnt = cnt*2;
+	    j=j+1;
+	}while(j<10/2);
+	    j=i*2;
+    }
+    return cnt;
 }
 
 function void main(){

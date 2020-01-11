@@ -1,16 +1,24 @@
-function void foo(){
-    string b[3];
-    var int a;
-    a = -a;
-    if(a == 3){
-        b[2*1] = 'c';
-
-        if(5 < 6){
-            b[1] = 'c';
+    function bool fee2()
+    {
+        var int i, l, m;
+        var bool x, j; /* declarations */
+        var char k;
+        k = '@'; /* statements */
+        i = l + l;
+        if ((k == '*') || (x != false) && (l + m < i)){
+            x = l < m;
         }
-    }else{
-        b[2*1] = 'd';
+        return x;
     }
+
+    function void fee1(int i, j, k, x)
+{
+    {
+	var char x;
+	var bool k;
+	k = fee2() || false;
+     }
+    x = k;
 }
 
 function void main(){

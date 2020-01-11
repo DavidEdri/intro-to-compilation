@@ -1,23 +1,32 @@
 foo:
 	BeginFunc
-	if a < b goto L2
-	goto L0
-L0:	if c < d goto L1
-	goto L3
-L1:	if e < f goto L2
-	goto L3
-L2:	
-L3:	if 3 < 5 goto L5
-	goto L4
-L4:	goto L5
-L5:	if 4 != 6 goto L6
-	goto L7
-L6:	
-	goto L8
-L7:	
-L8:	EndFunc
+	t0 = 23
+	a = t0
+	t1 = 23
+	t2 = a == t1
+	ifz t2 Goto L1
+	t3 = 10
+	a = t3
+	Goto L2
+L1:	t4 = 19
+	a = t4
+L2:	Return a
+	EndFunc
 
 main:
 	BeginFunc
-	EndFunc
+	t0 = 0
+	a = t0
+L3:	t1 = 10
+	t2 = a < t1
+	ifz t2 Goto L4
+	t3 = 3.14
+	PushParam t3
+	t4 = LCall foo
+	PopParams 8
+	b = t4
+	t5 = a + b
+	a = t5
+	Goto L3
+L4:	EndFunc
 

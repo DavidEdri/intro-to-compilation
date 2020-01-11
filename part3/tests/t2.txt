@@ -1,13 +1,42 @@
-foo:
+foo2:
 	BeginFunc
-	a = 3
-	t0 = 5 + 3
-	aa = t0
-	xz = 300
-	c = 't'
-	t1 = a + 3
-	rl = t1
-	b = "asd"
+	t0 = "aba"
+	s1 = t0
+	t1 = ""
+	s3 = t1
+	t2 = 0
+	j = t2
+	t3 = 1
+	cnt = t3
+	t4 = 0
+	i = t4
+L1:	t5 = 20
+	t6 = i < t5
+	ifz Goto L5
+L2:	t7 = &s1
+	t8 = t7 + i
+	t9 = &s2
+	t10 = t9 + j
+	t11 = *t8 == *t10
+	ifz t11 Goto L3
+	t12 = 2
+	t13 = cnt * t12
+	cnt = t13
+L3:	t14 = 1
+	t15 = j + t14
+	j = t15
+	t16 = 10 / 2
+	t17 = j < t16
+	ifz t17 Goto L4
+	Goto L2
+L4:	t18 = 2
+	t19 = i * t18
+	j = t19
+	t20 = 1
+	t21 = i + t20
+	i = t21
+	Goto L1
+L5:	Return cnt
 	EndFunc
 
 main:

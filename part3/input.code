@@ -1,20 +1,20 @@
-function int foo(int a2; bool b, b2; real c){
-    var int a = 23;
-
-    if(a <= (5 + 3) && a >= 0){
-        a = 9;
-    }
-        
+function int foo(real x)
+{
+    var int a;
+    a = 23;
+    if (a == 23)
+    a = 10;
+    else
+    a = 19;
     return a;
 }
 
-function bool foo2(){
-    return true;
-}
-
-function void main(){
+function void main()
+{
     var int a, b;
-    var bool b2;
-    a = b + foo(a + 3, 3 < 5 || false, true, 3.14);
-    b2 = true || foo2();
+    a = 0;
+    while(a < 10) {
+        b = foo(3.14);
+        a = a + b;
+    }
 }

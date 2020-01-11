@@ -70,21 +70,18 @@ void cg_strchar(struct node *tree){
 
     add_var(tree,freshVar());
 
-    asprintf(&code, "%s = %s\n%s\t%s = %s + %s\n", id->var, id->code, exp->code, tree->var, id->var, exp->var);
+    asprintf(&code, "\t%s = %s\n%s\t%s = %s + %s\n", id->var, id->code, exp->code, tree->var, id->var, exp->var);
     add_code(tree, code);
+
+    add_var(tree, my_str_cat("*", tree->var));
 }
 
 void cg_bool_exp(struct node *tree){
     struct node *f = tree->first, *s = tree->second;
     char *token = tree->token, *code;
     
-    if(f){
-        cg_bool_exp(f);
-    }
-
-    if(s){
-        cg_bool_exp(s);
-    }
+    if(f) cg_bool_exp(f);
+    if(s) cg_bool_exp(s);
 
     if(strcmp(token, "&&") == 0){
         add_var(tree, freshVar());
@@ -107,7 +104,7 @@ void cg_bool_exp(struct node *tree){
     }else if(strcmp(token, "FALSE") == 0){
         add_var(tree, freshVar());
         asprintf(&code, "\t%s = 0\n", tree->var);
-        add_code(tree, code);      
+        add_code(tree, code);  
     }else{
         cg_expression(tree);
     }
@@ -137,7 +134,9 @@ void if_temp_needed(struct node *tree){
             is_var(f->token) && 
             !is_var(s->token) && 
             !is_additive_exp(s->token) && 
-            strcmp(s->token, "FUNCTION-CALL") != 0
+            strcmp(s->token, "FUNCTION-CALL") != 0 &&
+            strcmp(s->token, "TRUE") != 0 &&
+            strcmp(s->token, "FALSE") != 0 
         ){
         char *val = s->var;
         add_var(s, freshVar());
@@ -147,7 +146,9 @@ void if_temp_needed(struct node *tree){
             !is_var(f->token) && 
             is_var(s->token) && 
             !is_additive_exp(f->token) &&
-            strcmp(f->token, "FUNCTION-CALL") != 0
+            strcmp(f->token, "FUNCTION-CALL") != 0 &&
+            strcmp(s->token, "TRUE") != 0 &&
+            strcmp(s->token, "FALSE") != 0 
             ){
         char *val = f->var;
         add_var(f, freshVar());
@@ -171,7 +172,7 @@ void cg_relop(struct node *tree){
             asprintf(&c1, "\t%s = %s == %s\n", t1, f->var, s->var);
             asprintf(&c2, "\t%s = %s == 0\n", tree->var, t1);
 
-            asprintf(&code, "%s%s%s%s\t", f->code, s->code,c1, c2);
+            asprintf(&code, "%s%s%s%s", f->code, s->code,c1, c2);
             add_code(tree, code); 
         }else if(strcmp(token, "<=") == 0){
             char *t1 = freshVar(), *t2 = freshVar(), *c1, *c2;

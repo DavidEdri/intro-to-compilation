@@ -77,7 +77,19 @@ void handle_token(struct node *tree)
             strcmp(token, "FALSE") != 0 &&
             strcmp(token, "GLOBAL") != 0)
         {
-            printf("unsuported token : %s\n", token);
+            struct sym_el *el = cs_find(main_stack, token);
+            
+            if(!el){
+                print_line(tree);
+                printf("%s is undefined\n", token);
+                exit(1);
+            }
+
+            if(el->type != TYPE_ID){
+                print_line(tree);
+                printf("%s must be a function call\n", token);
+                exit(1);                
+            }
         }
         handle_children(tree);
     }

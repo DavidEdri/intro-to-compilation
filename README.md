@@ -7,5 +7,4 @@ what to do with strlen |str|
 
 # TODO :
 
-dref expressions
-in func call when got real allow int also
+handle x; in block and check if declared

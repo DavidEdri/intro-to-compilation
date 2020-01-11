@@ -13,6 +13,9 @@ function bool foo(int a, b;real t)
     else{
         b=5;
     }
+    {
+        x;
+    }
     return false;
 }
 function void main()

@@ -47,6 +47,11 @@ void cg_expression(struct node *tree){
         add_code(tree, code);
     }else if(strcmp(token, "STRCHAR") == 0){
         cg_strchar(tree);
+    }else if(strcmp(token, "STRLEN") == 0){
+        cg_expression(f);
+        add_var(tree, freshVar());
+        asprintf(&code, "%s\t%s = len(%s)\n", f->code, tree->var, f->var);
+        add_code(tree, code);
     }else if(strcmp(token, "FUNCTION-CALL") == 0){
         cg_func_call(tree, "assignment");
     }else if(strcmp(token, "&") == 0){

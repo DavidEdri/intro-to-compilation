@@ -1,26 +1,13 @@
-function bool foo(int a, b;real t)
+function void foo()
 {
-    var int* d;
-    string s[50],s2[50] = "asd";
-    if(a<b && t == 0.3){
-        if(s[3]==s2[5-b]){
-            s[*d+b] = 'c';
-        }
-        else{
-            a=4;
-        }   
-    }
-    else{
-        b=5;
-    }
-    {
-        foo;
-    }
-    return false;
+    string s1[50],s2[50] = "asd";
+    
+    |s1|;
+    s1;
+    true;
 }
+
 function void main()
 {
-var int c;
-var int d;
-foo(c, d,3.5);
+
 }

@@ -28,7 +28,7 @@ void cg_handle_token(struct node *tree){
         cg_return(tree);
     }else if(strcmp(token, "STRCHAR") == 0){
         cg_expression(tree);
-    }else if(is_operator(token)){
+    }else if(is_operator(token) || strcmp(token, "TRUE") == 0 || strcmp(token, "FALSE") == 0){
         cg_expression(tree);
     }else if(is_arg_type(token) || strcmp(token, "STR") == 0){
         // check for assignments
@@ -39,9 +39,11 @@ void cg_handle_token(struct node *tree){
         if(should_cpy_code(token)){
             cpy_code(tree);
         }else{
-            // show unhandled tokens
-            printf("unsuported token : %s\n", token);
-            
+            // printf("unsuported token : %s\n", token);
+            // add useless statment to code
+            char *tmp;
+            asprintf(&tmp, "\t%s\n", token);
+            add_code(tree, tmp);
         }
     }
 }

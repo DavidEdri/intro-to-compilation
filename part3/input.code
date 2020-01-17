@@ -1,11 +1,17 @@
-function void foo()
+function int foo(int a, b)
 {
-    string s1[50],s2[50] = "asd";
-    
-    |s1|;
-    s1;
-    true;
+    var int sum;
+    sum=0;
+    while(a<b) {
+    if((a==0)||(a==0))
+    sum= sum + a;
+    else
+    sum= sum +b;
+    a = a + 1;
 }
+return sum;
+}
+
 
 function void main()
 {

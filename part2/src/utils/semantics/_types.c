@@ -150,6 +150,10 @@ int get_operand_type(struct node *tree){
         return validate_func_call(tree);
     }
 
+    if(strcmp(token , "UMINUS") == 0){
+        return get_operand_type(tree->first);
+    }
+    
     if(strcmp(token, "STRCHAR") == 0){
         return validate_str_char(tree);
     }
@@ -166,6 +170,7 @@ int get_operand_type(struct node *tree){
         return TYPE_BOOL;
     }
 
+
     if(token[0] == '\''){
         return TYPE_CHAR;
     }
@@ -181,7 +186,7 @@ int get_operand_type(struct node *tree){
             }
         }
     }
-    
+
     if(check_id){
         struct sym_el *id = cs_find(main_stack, token);
         if(!id){

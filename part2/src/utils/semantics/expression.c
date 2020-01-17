@@ -129,6 +129,10 @@ int match_exp_types(struct node *first, struct node *second, char *op){
         return TYPE_BOOL;
     }
 
+    if(strcmp(op, "STRCHAR") == 0){
+        return validate_str_char(mknode("STRCHAR", first, second, NULL, NULL, first->line));
+    }
+
     print_line(first);
     printf("error in match_exp_types op:%s\n", op);
     exit(1);
@@ -184,6 +188,7 @@ int handle_address(struct node *tree){
 
 int get_expression_type(struct node *tree){
     char *token = tree->token;
+
     if(strcmp(token, "FUNCTION-CALL") == 0){
         return get_operand_type(tree);
     }

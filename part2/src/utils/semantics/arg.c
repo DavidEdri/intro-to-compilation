@@ -217,7 +217,10 @@ int comapre_args(struct arg_arr *a1, struct arg_arr *a2){
     if(!a1->data) return 0;
 
     while(a1){
-        if(a1->data->type != a2->data->type){
+        if( a1->data->type != a2->data->type && 
+            !(a1->data->type == TYPE_INT && a2->data->type == TYPE_REAL) 
+            // if func arg (a2) is real and got int
+        ){
             return x;
         }
         a1 = a1->next;

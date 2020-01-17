@@ -4,7 +4,7 @@ void apply_semantics(struct node *tree)
     handle_token(tree);
     // print_cs(main_stack);
     got_main();
-    // cs_pop(main_stack);
+    cs_pop(main_stack);
 }
 
 void handle_token(struct node *tree)
@@ -249,9 +249,10 @@ void validate_assignment(struct node *tree, int new_var, int new_var_type)
         ltype = se_get_type(id_el);
     }
 
-    rtype = strcmp(tree->second->token, "DREF") == 0 ? // handle assingment to *y
-                validate_dref(tree->second)
-                                                     : get_expression_type(tree->second);
+    rtype = 
+        strcmp(tree->second->token, "DREF") == 0 // handle assingment to *y
+            ? validate_dref(tree->second)
+            : get_expression_type(tree->second);
 
     if (ltype != rtype &&
         !(ltype == TYPE_REAL && rtype == TYPE_INT) &&

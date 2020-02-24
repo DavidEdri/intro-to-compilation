@@ -1,19 +1,10 @@
 %{
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "lex.yy.c" 
-#include "utils/semantics/_structs.h"
-#include "utils/semantics/_declerations.c"
-#include "utils/tac/_declerations.c"
-
-struct code_stack *main_stack = NULL;
-int is_test = 0; // to avoid printing in tests
-int label_count = 1;
-int var_count = 0;
-#include "utils/index.c"
+#include "utils/functions.c"
 
 int yylex();
 int yyerror(char *s);
@@ -29,7 +20,7 @@ int yyerror(char *s);
 %%
 
 s
-: code_wrapper {  apply_semantics($1); codegen($1); } // apply_semantics($1); printtree($1,0,0);
+: code_wrapper {  printtree($1,0,0); } 
 ;
 
 code_wrapper
@@ -339,11 +330,7 @@ csnull
 
 %%
 
-int main(int argc, char *argv[]){
-   if(argc > 1 && strcmp(argv[1], "test") == 0){
-       is_test = 1;
-   }
-
+int main(){
    return yyparse();
 }
 

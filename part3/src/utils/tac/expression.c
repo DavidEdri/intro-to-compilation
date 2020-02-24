@@ -200,7 +200,6 @@ void cg_relop(struct node *tree){
             char *t1 = freshVar(), *c1, *c2;
 
             add_var(tree, freshVar());
-
             asprintf(&c1, "\t%s = %s == %s\n", t1, f->var, s->var);
             asprintf(&c2, "\t%s = %s == 0\n", tree->var, t1);
 
@@ -215,7 +214,7 @@ void cg_relop(struct node *tree){
             asprintf(&code, "%s%s%s%s\t%s = %s || %s\n", f->code, s->code, c1, c2, tree->var, t1, t2);
             add_code(tree, code); 
         }else{ // >=
-            char *t1 = "", *t2 = "", *c1, *c2;
+            char *t1 = freshVar(), *t2 = freshVar(), *c1, *c2;
 
             add_var(tree, freshVar());
             asprintf(&c1, "\t%s = %s > %s\n", t1, f->var, s->var);

@@ -1,19 +1,40 @@
-function int foo(int a, b)
+function int f1() 
 {
-    var int sum;
-    sum=0;
-    while(a<b) {
-    if((a==0)||(a==0))
-    sum= sum + a;
-    else
-    sum= sum +b;
-    a = a + 1;
+	var int a;
+	a = 71;
+	if (a == 71)
+		a = 15;
+	else
+		a = 59;
+	return a;
 }
-return sum;
+
+
+function int p1(int a, b) 
+{
+	var int sum1, sum2;
+	sum1 = 0;
+	sum2 = 0;
+	while (a < b){
+		if (a / 2 == 0 && (a * b < 100 || sum1 >= (sum2 - a + b)))
+			sum1 = sum1 + a;
+		else
+			sum2 = sum2 + 1;
+		a = a + 1;
+	}
+	return   sum1 + sum2;
 }
+
 
 
 function void main()
 {
+	var int a;
+	var int b;
 
+	for(a=0; a < 10; a= a * 2) {
+		b = f1();
+		a = a + b;
+		a = a + p1(a, b);
+	}
 }

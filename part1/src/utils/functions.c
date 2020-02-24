@@ -22,7 +22,7 @@ void printtree(node *tree, int tab, int one_line)
 {
     int i;
     char *token = tree->token;
-    int print_value = should_print(token);
+    int print_value = 1;//should_print(token);
 
     if (print_value)
     {
@@ -35,7 +35,9 @@ void printtree(node *tree, int tab, int one_line)
         {
             printf("(");
         }
-        printf("%s\n", token);
+
+        printf("%s\t", token);
+        printf("\n");
     }
 
     if (tree->first)
@@ -69,7 +71,7 @@ void printtree(node *tree, int tab, int one_line)
     }
 }
 
-node *mknode(char *token, node *first, node *second, node *third, node *fourth)
+node *mknode(char *token, node *first, node *second, node *third, node *fourth, int line)
 {
     node *newnode = (node *)malloc(sizeof(node));
     char *newstr = (char *)malloc(sizeof(token) + 1);
@@ -79,5 +81,9 @@ node *mknode(char *token, node *first, node *second, node *third, node *fourth)
     newnode->third = third;
     newnode->fourth = fourth;
     newnode->token = newstr;
+    newnode->line = line;
     return newnode;
 }
+
+
+
